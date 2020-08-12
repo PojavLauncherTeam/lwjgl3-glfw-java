@@ -13,8 +13,6 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import android.opengl.*;
 
 import org.lwjgl.PointerBuffer;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
