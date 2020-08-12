@@ -457,8 +457,8 @@ public class GLFW
 	GLFW_OSMESA_CONTEXT_API = 0x36003;
 
 	// GLFW Error simulation
-	private static GLFWErrorCallback mGLFWErrorCallback;
-	private static GLFWKeyCallback mGLFWKeyCallback;
+	public static GLFWErrorCallback mGLFWErrorCallback;
+	public static GLFWKeyCallback mGLFWKeyCallback;
 	private static int mGLFW_currentError = GLFW_NO_ERROR;
 	private static boolean mGLFW_inited = false;
 	private static boolean mGLFW_shouldClose = false;
@@ -590,7 +590,10 @@ public class GLFW
 	
 	public static GLFWErrorCallback glfwSetErrorCallback(@Nullable GLFWErrorCallbackI cbfun) {
         GLFWErrorCallback lastErrorCallback = mGLFWErrorCallback;
-		mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
+		
+		if (cbfun == null) {
+			mGLFWErrorCallback = null;
+		} else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
 		
 		priGlfwNoError();
 		return lastErrorCallback;
@@ -598,8 +601,11 @@ public class GLFW
 
 	public static GLFWKeyCallback glfwSetKeyCallback(long window, GLFWKeyCallbackI cbfun) {
 		GLFWKeyCallback lastKeyCallback = mGLFWKeyCallback;
-		mGLFWKeyCallback = GLFWKeyCallback.create(cbfun);
-
+		
+		if (cbfun == null) {
+			mGLFWKeyCallback = null;
+		} else mGLFWKeyCallback = GLFWKeyCallback.create(cbfun);
+		
 		priGlfwNoError();
 		return lastKeyCallback;
 	}
@@ -620,6 +626,12 @@ public class GLFW
     public static long glfwCreateWindow(int width, int height, CharSequence title, long monitor, long share) {
         EventLoop.OffScreen.check();
 		
+		priGlfwNoError();
+
+		// Prevent NULL check
+		return 1L;
+		
+/*
 		try {
 			Display.setTitle(title.toString());
 			Display.setDisplayMode(new DisplayMode(width, height));
@@ -641,7 +653,9 @@ public class GLFW
 			// Failure
 			return MemoryUtil.NULL;
 		}
+*/
 		
+// Original
 /*
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
@@ -655,9 +669,11 @@ public class GLFW
 	}
 	
 	public static void glfwDestroyWindow(long window) {
+/*
 		Mouse.destroy();
 		Keyboard.destroy();
 		Display.destroy();
+*/
 		
 		priGlfwNoError();
 	}
