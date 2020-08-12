@@ -669,7 +669,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWJoystickCallback glfwSetJoystickCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWjoystickfun") GLFWJoystickCallbackI cbfun) {
+	public static GLFWJoystickCallback glfwSetJoystickCallback(/* @NativeType("GLFWwindow *") long window, */ @Nullable @NativeType("GLFWjoystickfun") GLFWJoystickCallbackI cbfun) {
 		GLFWJoystickCallback lastCallback = mGLFWJoystickCallback;
 		if (cbfun == null) mGLFWJoystickCallback = null;
 		else mGLFWJoystickCallback = GLFWJoystickCallback.create(cbfun);
