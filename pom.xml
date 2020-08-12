@@ -61,6 +61,20 @@
 			<version>3.0.2</version>
 		</dependency>
 		<dependency>
+			<groupId>android</groupId>
+			<artifactId>egl-gles</artifactId>
+			<scope>system</scope>
+			<version>1.0</version>
+			<systemPath>${basedir}/lib/android-egl-gles.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.lwjgl</groupId>
+			<artifactId>boardwalk-lwjgl</artifactId>
+			<scope>system</scope>
+			<version>2.9.1</version>
+			<systemPath>${basedir}/lib/boardwalk-lwjgl.jar</systemPath>
+		</dependency>
+		<dependency>
 			<groupId>lwjgl</groupId>
 			<artifactId>lwjgl-core</artifactId>
 			<scope>system</scope>
