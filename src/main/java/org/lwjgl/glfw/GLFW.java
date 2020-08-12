@@ -454,9 +454,28 @@ public class GLFW
 	GLFW_EGL_CONTEXT_API    = 0x36002,
 	GLFW_OSMESA_CONTEXT_API = 0x36003;
 
-	// GLFW Error simulation
+	// GLFW Callbacks
+	public static GLFWCharCallback mGLFWCharCallback;
+	public static GLFWCharModsCallback mGLFWCharModsCallback;
+	public static GLFWCursorEnterCallback mGLFWCursorEnterCallback;
+	public static GLFWCursorPosCallback mGLFWCursorPosCallback;
+	public static GLFWDropCallback mGLFWDropCallback;
 	public static GLFWErrorCallback mGLFWErrorCallback;
+	public static GLFWFramebufferSizeCallback mGLFWFramebufferSizeCallback;
+	public static GLFWJoystickCallback mGLFWJoystickCallback;
 	public static GLFWKeyCallback mGLFWKeyCallback;
+	public static GLFWMonitorCallback mGLFWMonitorCallback;
+	public static GLFWMouseButtonCallback mGLFWMouseButtonCallback;
+	public static GLFWScrollCallback mGLFWScrollCallback;
+	public static GLFWWindowCloseCallback mGLFWWindowCloseCallback;
+	public static GLFWWindowContentScaleCallback mGLFWWindowContentScaleCallback;
+	public static GLFWWindowFocusCallback mGLFWWindowFocusCallback;
+	public static GLFWWindowIconifyCallback mGLFWWindowIconifyCallback;
+	public static GLFWWindowMaximizeCallback mGLFWWindowMaximizeCallback;
+	public static GLFWWindowPosCallback mGLFWWindowPosCallback;
+	public static GLFWWindowRefreshCallback mGLFWWindowRefreshCallback;
+	public static GLFWWindowSizeCallback mGLFWWindowSizeCallback;
+	
 	private static int mGLFW_currentError = GLFW_NO_ERROR;
 	private static boolean mGLFW_inited = false;
 	private static boolean mGLFW_shouldClose = false;
@@ -586,26 +605,185 @@ public class GLFW
 		priGlfwNoError();
 	}
 	
-	public static GLFWErrorCallback glfwSetErrorCallback(@Nullable GLFWErrorCallbackI cbfun) {
-        GLFWErrorCallback lastErrorCallback = mGLFWErrorCallback;
-		
-		if (cbfun == null) {
-			mGLFWErrorCallback = null;
-		} else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
-		
-		priGlfwNoError();
-		return lastErrorCallback;
-    }
+// Generated stub callback methods
+	public static GLFWCharCallback glfwSetCharCallback(@Nullable GLFWCharCallbackI cbfun) {
+		GLFWCharCallback lastCallback = mGLFWCharCallback;
+		if (cbfun == null) mGLFWCharCallback = null;
+		else mGLFWCharCallback = GLFWCharCallback.create(cbfun);
 
-	public static GLFWKeyCallback glfwSetKeyCallback(long window, GLFWKeyCallbackI cbfun) {
-		GLFWKeyCallback lastKeyCallback = mGLFWKeyCallback;
-		
-		if (cbfun == null) {
-			mGLFWKeyCallback = null;
-		} else mGLFWKeyCallback = GLFWKeyCallback.create(cbfun);
-		
 		priGlfwNoError();
-		return lastKeyCallback;
+		return lastCallback;
+	}
+
+	public static GLFWCharModsCallback glfwSetCharModsCallback(@Nullable GLFWCharModsCallbackI cbfun) {
+		GLFWCharModsCallback lastCallback = mGLFWCharModsCallback;
+		if (cbfun == null) mGLFWCharModsCallback = null;
+		else mGLFWCharModsCallback = GLFWCharModsCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWCursorEnterCallback glfwSetCursorEnterCallback(@Nullable GLFWCursorEnterCallbackI cbfun) {
+		GLFWCursorEnterCallback lastCallback = mGLFWCursorEnterCallback;
+		if (cbfun == null) mGLFWCursorEnterCallback = null;
+		else mGLFWCursorEnterCallback = GLFWCursorEnterCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWCursorPosCallback glfwSetCursorPosCallback(@Nullable GLFWCursorPosCallbackI cbfun) {
+		GLFWCursorPosCallback lastCallback = mGLFWCursorPosCallback;
+		if (cbfun == null) mGLFWCursorPosCallback = null;
+		else mGLFWCursorPosCallback = GLFWCursorPosCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWDropCallback glfwSetDropCallback(@Nullable GLFWDropCallbackI cbfun) {
+		GLFWDropCallback lastCallback = mGLFWDropCallback;
+		if (cbfun == null) mGLFWDropCallback = null;
+		else mGLFWDropCallback = GLFWDropCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWErrorCallback glfwSetErrorCallback(@Nullable GLFWErrorCallbackI cbfun) {
+		GLFWErrorCallback lastCallback = mGLFWErrorCallback;
+		if (cbfun == null) mGLFWErrorCallback = null;
+		else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWFramebufferSizeCallback glfwSetFramebufferSizeCallback(@Nullable GLFWFramebufferSizeCallbackI cbfun) {
+		GLFWFramebufferSizeCallback lastCallback = mGLFWFramebufferSizeCallback;
+		if (cbfun == null) mGLFWFramebufferSizeCallback = null;
+		else mGLFWFramebufferSizeCallback = GLFWFramebufferSizeCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWJoystickCallback glfwSetJoystickCallback(@Nullable GLFWJoystickCallbackI cbfun) {
+		GLFWJoystickCallback lastCallback = mGLFWJoystickCallback;
+		if (cbfun == null) mGLFWJoystickCallback = null;
+		else mGLFWJoystickCallback = GLFWJoystickCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWKeyCallback glfwSetKeyCallback(@Nullable GLFWKeyCallbackI cbfun) {
+		GLFWKeyCallback lastCallback = mGLFWKeyCallback;
+		if (cbfun == null) mGLFWKeyCallback = null;
+		else mGLFWKeyCallback = GLFWKeyCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWMonitorCallback glfwSetMonitorCallback(@Nullable GLFWMonitorCallbackI cbfun) {
+		GLFWMonitorCallback lastCallback = mGLFWMonitorCallback;
+		if (cbfun == null) mGLFWMonitorCallback = null;
+		else mGLFWMonitorCallback = GLFWMonitorCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWMouseButtonCallback glfwSetMouseButtonCallback(@Nullable GLFWMouseButtonCallbackI cbfun) {
+		GLFWMouseButtonCallback lastCallback = mGLFWMouseButtonCallback;
+		if (cbfun == null) mGLFWMouseButtonCallback = null;
+		else mGLFWMouseButtonCallback = GLFWMouseButtonCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWScrollCallback glfwSetScrollCallback(@Nullable GLFWScrollCallbackI cbfun) {
+		GLFWScrollCallback lastCallback = mGLFWScrollCallback;
+		if (cbfun == null) mGLFWScrollCallback = null;
+		else mGLFWScrollCallback = GLFWScrollCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWWindowCloseCallback glfwSetWindowCloseCallback(@Nullable GLFWWindowCloseCallbackI cbfun) {
+		GLFWWindowCloseCallback lastCallback = mGLFWWindowCloseCallback;
+		if (cbfun == null) mGLFWWindowCloseCallback = null;
+		else mGLFWWindowCloseCallback = GLFWWindowCloseCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWWindowContentScaleCallback glfwSetWindowContentScaleCallback(@Nullable GLFWWindowContentScaleCallbackI cbfun) {
+		GLFWWindowContentScaleCallback lastCallback = mGLFWWindowContentScaleCallback;
+		if (cbfun == null) mGLFWWindowContentScaleCallback = null;
+		else mGLFWWindowContentScaleCallback = GLFWWindowContentScaleCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWWindowFocusCallback glfwSetWindowFocusCallback(@Nullable GLFWWindowFocusCallbackI cbfun) {
+		GLFWWindowFocusCallback lastCallback = mGLFWWindowFocusCallback;
+		if (cbfun == null) mGLFWWindowFocusCallback = null;
+		else mGLFWWindowFocusCallback = GLFWWindowFocusCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWWindowIconifyCallback glfwSetWindowIconifyCallback(@Nullable GLFWWindowIconifyCallbackI cbfun) {
+		GLFWWindowIconifyCallback lastCallback = mGLFWWindowIconifyCallback;
+		if (cbfun == null) mGLFWWindowIconifyCallback = null;
+		else mGLFWWindowIconifyCallback = GLFWWindowIconifyCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWWindowMaximizeCallback glfwSetWindowMaxmizeCallback(@Nullable GLFWWindowMaximizeCallbackI cbfun) {
+		GLFWWindowMaximizeCallback lastCallback = mGLFWWindowMaximizeCallback;
+		if (cbfun == null) mGLFWWindowMaximizeCallback = null;
+		else mGLFWWindowMaximizeCallback = GLFWWindowMaximizeCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWWindowPosCallback glfwSetWindowPosCallback(@Nullable GLFWWindowPosCallbackI cbfun) {
+		GLFWWindowPosCallback lastCallback = mGLFWWindowPosCallback;
+		if (cbfun == null) mGLFWWindowPosCallback = null;
+		else mGLFWWindowPosCallback = GLFWWindowPosCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWWindowRefreshCallback glfwSetWindowRefreshCallback(@Nullable GLFWWindowRefreshCallbackI cbfun) {
+		GLFWWindowRefreshCallback lastCallback = mGLFWWindowRefreshCallback;
+		if (cbfun == null) mGLFWWindowRefreshCallback = null;
+		else mGLFWWindowRefreshCallback = GLFWWindowRefreshCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
+	}
+
+	public static GLFWWindowSizeCallback glfwSetWindowSizeCallback(@Nullable GLFWWindowSizeCallbackI cbfun) {
+		GLFWWindowSizeCallback lastCallback = mGLFWWindowSizeCallback;
+		if (cbfun == null) mGLFWWindowSizeCallback = null;
+		else mGLFWWindowSizeCallback = GLFWWindowSizeCallback.create(cbfun);
+
+		priGlfwNoError();
+		return lastCallback;
 	}
 
 	public static void glfwSwapBuffers(long window) {
