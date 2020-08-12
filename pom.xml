@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.lwjgl.glfw</groupId>
+	<artifactId>lwjgl-glfw</artifactId>
+	<!-- 3.2.3? -->
+	<version>1.0</version>
+
+	<!-- FIXME change it to the project's name -->
+	<name>LWJGL-GLFW</name>
+	<!-- FIXME change it to the project's website -->
+	<url>https://github.com/PojavLauncherTeam/lwjgl3-glfw-java</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>8</maven.compiler.source>
+		<maven.compiler.target>8</maven.compiler.target>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>lwjgl</groupId>
+			<artifactId>lwjgl-core</artifactId>
+			<scope>system</scope>
+			<version>3.2.3</version>
+			<systemPath>${basedir}/lib/lwjgl-core-3.2.3.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>lwjgl</groupId>
+			<artifactId>lwjgl-opengl</artifactId>
+			<scope>system</scope>
+			<version>3.2.3</version>
+			<systemPath>${basedir}/lib/lwjgl-opengl-3.2.3.jar</systemPath>
+		</dependency>
+	</dependencies>
+</project>
