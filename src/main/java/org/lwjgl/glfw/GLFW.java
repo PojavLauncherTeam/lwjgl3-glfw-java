@@ -606,7 +606,7 @@ public class GLFW
 	}
 	
 // Generated stub callback methods
-	public static GLFWCharCallback glfwSetCharCallback(@Nullable GLFWCharCallbackI cbfun) {
+	public static GLFWCharCallback glfwSetCharCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWcharfun") GLFWCharCallbackI cbfun) {
 		GLFWCharCallback lastCallback = mGLFWCharCallback;
 		if (cbfun == null) mGLFWCharCallback = null;
 		else mGLFWCharCallback = GLFWCharCallback.create(cbfun);
@@ -615,7 +615,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWCharModsCallback glfwSetCharModsCallback(@Nullable GLFWCharModsCallbackI cbfun) {
+	public static GLFWCharModsCallback glfwSetCharModsCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWcharmodsfun") GLFWCharModsCallbackI cbfun) {
 		GLFWCharModsCallback lastCallback = mGLFWCharModsCallback;
 		if (cbfun == null) mGLFWCharModsCallback = null;
 		else mGLFWCharModsCallback = GLFWCharModsCallback.create(cbfun);
@@ -624,7 +624,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWCursorEnterCallback glfwSetCursorEnterCallback(@Nullable GLFWCursorEnterCallbackI cbfun) {
+	public static GLFWCursorEnterCallback glfwSetCursorEnterCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWcursorenterfun") GLFWCursorEnterCallbackI cbfun) {
 		GLFWCursorEnterCallback lastCallback = mGLFWCursorEnterCallback;
 		if (cbfun == null) mGLFWCursorEnterCallback = null;
 		else mGLFWCursorEnterCallback = GLFWCursorEnterCallback.create(cbfun);
@@ -633,7 +633,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWCursorPosCallback glfwSetCursorPosCallback(@Nullable GLFWCursorPosCallbackI cbfun) {
+	public static GLFWCursorPosCallback glfwSetCursorPosCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWcursorposfun") GLFWCursorPosCallbackI cbfun) {
 		GLFWCursorPosCallback lastCallback = mGLFWCursorPosCallback;
 		if (cbfun == null) mGLFWCursorPosCallback = null;
 		else mGLFWCursorPosCallback = GLFWCursorPosCallback.create(cbfun);
@@ -642,7 +642,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWDropCallback glfwSetDropCallback(@Nullable GLFWDropCallbackI cbfun) {
+	public static GLFWDropCallback glfwSetDropCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWdropfun") GLFWDropCallbackI cbfun) {
 		GLFWDropCallback lastCallback = mGLFWDropCallback;
 		if (cbfun == null) mGLFWDropCallback = null;
 		else mGLFWDropCallback = GLFWDropCallback.create(cbfun);
@@ -651,7 +651,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWErrorCallback glfwSetErrorCallback(@Nullable GLFWErrorCallbackI cbfun) {
+	public static GLFWErrorCallback glfwSetErrorCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWerrorfun") GLFWErrorCallbackI cbfun) {
 		GLFWErrorCallback lastCallback = mGLFWErrorCallback;
 		if (cbfun == null) mGLFWErrorCallback = null;
 		else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
@@ -660,7 +660,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWFramebufferSizeCallback glfwSetFramebufferSizeCallback(@Nullable GLFWFramebufferSizeCallbackI cbfun) {
+	public static GLFWFramebufferSizeCallback glfwSetFramebufferSizeCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWframebuffersizefun") GLFWFramebufferSizeCallbackI cbfun) {
 		GLFWFramebufferSizeCallback lastCallback = mGLFWFramebufferSizeCallback;
 		if (cbfun == null) mGLFWFramebufferSizeCallback = null;
 		else mGLFWFramebufferSizeCallback = GLFWFramebufferSizeCallback.create(cbfun);
@@ -669,7 +669,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWJoystickCallback glfwSetJoystickCallback(@Nullable GLFWJoystickCallbackI cbfun) {
+	public static GLFWJoystickCallback glfwSetJoystickCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWjoystickfun") GLFWJoystickCallbackI cbfun) {
 		GLFWJoystickCallback lastCallback = mGLFWJoystickCallback;
 		if (cbfun == null) mGLFWJoystickCallback = null;
 		else mGLFWJoystickCallback = GLFWJoystickCallback.create(cbfun);
@@ -678,7 +678,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWKeyCallback glfwSetKeyCallback(@Nullable GLFWKeyCallbackI cbfun) {
+	public static GLFWKeyCallback glfwSetKeyCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWkeyfun") GLFWKeyCallbackI cbfun) {
 		GLFWKeyCallback lastCallback = mGLFWKeyCallback;
 		if (cbfun == null) mGLFWKeyCallback = null;
 		else mGLFWKeyCallback = GLFWKeyCallback.create(cbfun);
@@ -687,7 +687,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWMonitorCallback glfwSetMonitorCallback(@Nullable GLFWMonitorCallbackI cbfun) {
+	public static GLFWMonitorCallback glfwSetMonitorCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWmonitorfun") GLFWMonitorCallbackI cbfun) {
 		GLFWMonitorCallback lastCallback = mGLFWMonitorCallback;
 		if (cbfun == null) mGLFWMonitorCallback = null;
 		else mGLFWMonitorCallback = GLFWMonitorCallback.create(cbfun);
@@ -696,7 +696,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWMouseButtonCallback glfwSetMouseButtonCallback(@Nullable GLFWMouseButtonCallbackI cbfun) {
+	public static GLFWMouseButtonCallback glfwSetMouseButtonCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWmousebuttonfun") GLFWMouseButtonCallbackI cbfun) {
 		GLFWMouseButtonCallback lastCallback = mGLFWMouseButtonCallback;
 		if (cbfun == null) mGLFWMouseButtonCallback = null;
 		else mGLFWMouseButtonCallback = GLFWMouseButtonCallback.create(cbfun);
@@ -705,7 +705,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWScrollCallback glfwSetScrollCallback(@Nullable GLFWScrollCallbackI cbfun) {
+	public static GLFWScrollCallback glfwSetScrollCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWscrollfun") GLFWScrollCallbackI cbfun) {
 		GLFWScrollCallback lastCallback = mGLFWScrollCallback;
 		if (cbfun == null) mGLFWScrollCallback = null;
 		else mGLFWScrollCallback = GLFWScrollCallback.create(cbfun);
@@ -714,7 +714,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWWindowCloseCallback glfwSetWindowCloseCallback(@Nullable GLFWWindowCloseCallbackI cbfun) {
+	public static GLFWWindowCloseCallback glfwSetWindowCloseCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWwindowclosefun") GLFWWindowCloseCallbackI cbfun) {
 		GLFWWindowCloseCallback lastCallback = mGLFWWindowCloseCallback;
 		if (cbfun == null) mGLFWWindowCloseCallback = null;
 		else mGLFWWindowCloseCallback = GLFWWindowCloseCallback.create(cbfun);
@@ -723,7 +723,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWWindowContentScaleCallback glfwSetWindowContentScaleCallback(@Nullable GLFWWindowContentScaleCallbackI cbfun) {
+	public static GLFWWindowContentScaleCallback glfwSetWindowContentScaleCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWwindowcontentscalefun") GLFWWindowContentScaleCallbackI cbfun) {
 		GLFWWindowContentScaleCallback lastCallback = mGLFWWindowContentScaleCallback;
 		if (cbfun == null) mGLFWWindowContentScaleCallback = null;
 		else mGLFWWindowContentScaleCallback = GLFWWindowContentScaleCallback.create(cbfun);
@@ -732,7 +732,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWWindowFocusCallback glfwSetWindowFocusCallback(@Nullable GLFWWindowFocusCallbackI cbfun) {
+	public static GLFWWindowFocusCallback glfwSetWindowFocusCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWwindowfocusfun") GLFWWindowFocusCallbackI cbfun) {
 		GLFWWindowFocusCallback lastCallback = mGLFWWindowFocusCallback;
 		if (cbfun == null) mGLFWWindowFocusCallback = null;
 		else mGLFWWindowFocusCallback = GLFWWindowFocusCallback.create(cbfun);
@@ -741,7 +741,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWWindowIconifyCallback glfwSetWindowIconifyCallback(@Nullable GLFWWindowIconifyCallbackI cbfun) {
+	public static GLFWWindowIconifyCallback glfwSetWindowIconifyCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWwindowiconifyfun") GLFWWindowIconifyCallbackI cbfun) {
 		GLFWWindowIconifyCallback lastCallback = mGLFWWindowIconifyCallback;
 		if (cbfun == null) mGLFWWindowIconifyCallback = null;
 		else mGLFWWindowIconifyCallback = GLFWWindowIconifyCallback.create(cbfun);
@@ -750,7 +750,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWWindowMaximizeCallback glfwSetWindowMaxmizeCallback(@Nullable GLFWWindowMaximizeCallbackI cbfun) {
+	public static GLFWWindowMaximizeCallback glfwSetWindowMaximizeCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWwindowmaximizefun") GLFWWindowMaximizeCallbackI cbfun) {
 		GLFWWindowMaximizeCallback lastCallback = mGLFWWindowMaximizeCallback;
 		if (cbfun == null) mGLFWWindowMaximizeCallback = null;
 		else mGLFWWindowMaximizeCallback = GLFWWindowMaximizeCallback.create(cbfun);
@@ -759,7 +759,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWWindowPosCallback glfwSetWindowPosCallback(@Nullable GLFWWindowPosCallbackI cbfun) {
+	public static GLFWWindowPosCallback glfwSetWindowPosCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWwindowposfun") GLFWWindowPosCallbackI cbfun) {
 		GLFWWindowPosCallback lastCallback = mGLFWWindowPosCallback;
 		if (cbfun == null) mGLFWWindowPosCallback = null;
 		else mGLFWWindowPosCallback = GLFWWindowPosCallback.create(cbfun);
@@ -768,7 +768,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWWindowRefreshCallback glfwSetWindowRefreshCallback(@Nullable GLFWWindowRefreshCallbackI cbfun) {
+	public static GLFWWindowRefreshCallback glfwSetWindowRefreshCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWwindowrefreshfun") GLFWWindowRefreshCallbackI cbfun) {
 		GLFWWindowRefreshCallback lastCallback = mGLFWWindowRefreshCallback;
 		if (cbfun == null) mGLFWWindowRefreshCallback = null;
 		else mGLFWWindowRefreshCallback = GLFWWindowRefreshCallback.create(cbfun);
@@ -777,7 +777,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWWindowSizeCallback glfwSetWindowSizeCallback(@Nullable GLFWWindowSizeCallbackI cbfun) {
+	public static GLFWWindowSizeCallback glfwSetWindowSizeCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWwindowsizefun") GLFWWindowSizeCallbackI cbfun) {
 		GLFWWindowSizeCallback lastCallback = mGLFWWindowSizeCallback;
 		if (cbfun == null) mGLFWWindowSizeCallback = null;
 		else mGLFWWindowSizeCallback = GLFWWindowSizeCallback.create(cbfun);
