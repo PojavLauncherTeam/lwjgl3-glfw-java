@@ -531,14 +531,14 @@ public class GLFW
 	public static boolean glfwInit() {
 		if (mGLFW_inited) {
 			priGlfwSetError(GLFW_NOT_INITIALIZED);
-		}
+		} else priGlfwNoError();
         return !mGLFW_inited;
     }
 	
 	public static void glfwTerminate() {
 		if (!mGLFW_inited) {
 			priGlfwSetError(GLFW_NOT_INITIALIZED);
-		}
+		} else priGlfwNoError();
 	}
 	
 	public static void glfwInitHint(int hint, int value) {
@@ -651,7 +651,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWErrorCallback glfwSetErrorCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWerrorfun") GLFWErrorCallbackI cbfun) {
+	public static GLFWErrorCallback glfwSetErrorCallback(@Nullable @NativeType("GLFWerrorfun") GLFWErrorCallbackI cbfun) {
 		GLFWErrorCallback lastCallback = mGLFWErrorCallback;
 		if (cbfun == null) mGLFWErrorCallback = null;
 		else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
@@ -687,7 +687,7 @@ public class GLFW
 		return lastCallback;
 	}
 
-	public static GLFWMonitorCallback glfwSetMonitorCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWmonitorfun") GLFWMonitorCallbackI cbfun) {
+	public static GLFWMonitorCallback glfwSetMonitorCallback(@Nullable @NativeType("GLFWmonitorfun") GLFWMonitorCallbackI cbfun) {
 		GLFWMonitorCallback lastCallback = mGLFWMonitorCallback;
 		if (cbfun == null) mGLFWMonitorCallback = null;
 		else mGLFWMonitorCallback = GLFWMonitorCallback.create(cbfun);

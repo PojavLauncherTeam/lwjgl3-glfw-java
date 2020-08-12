@@ -9,6 +9,7 @@ import org.lwjgl.system.*;
 import static org.lwjgl.system.Checks.*;
 import static org.lwjgl.system.JNI.*;
 import static org.lwjgl.system.MemoryUtil.*;
+import java.lang.reflect.*;
 
 /** Utility class for GLFW callbacks. */
 public final class Callbacks {
@@ -30,7 +31,18 @@ public final class Callbacks {
         if (Checks.CHECKS) {
             check(window);
         }
+		
+		try {
+			for (Field callback : GLFW.class.getFields()) {
+				if (callback.getName().startsWith("mGLFW") && callback.getName().endsWith("Callback")) {
+					callback.set(null, null);
+				}
+			}
+		} catch (IllegalAccessException|NullPointerException e) {
+			throw new RuntimeException("org.lwjgl.GLFW.mGLFWxxxCallbacks must be set to public and static", e);
+		}
 
+/*
         for (long callback : new long[] {
             GLFW.Functions.SetWindowPosCallback,
             GLFW.Functions.SetWindowSizeCallback,
@@ -55,6 +67,6 @@ public final class Callbacks {
                 Callback.free(prevCB);
             }
         }
+*/
     }
-
 }
