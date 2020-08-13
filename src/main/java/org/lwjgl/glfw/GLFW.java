@@ -480,6 +480,10 @@ public class GLFW
 	private static boolean mGLFW_inited = false;
 	private static boolean mGLFW_shouldClose = false;
 	
+	static {
+		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
+	}
+	
 	private static void priGlfwSetError(int error) {
 		mGLFW_currentError = error;
 		if (error != GLFW_NO_ERROR && mGLFWErrorCallback != null) {
