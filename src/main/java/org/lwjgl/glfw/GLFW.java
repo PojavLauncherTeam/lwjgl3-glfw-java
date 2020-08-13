@@ -503,6 +503,19 @@ public class GLFW
                 }
             }
         };
+/*
+		mGLFWMonitorCallback = new GLFWMonitorCallback(){
+
+			// Fake one!!!
+			@Override
+			public void free() {}
+			
+			@Override
+			public void callback(long args) {
+				// TODO: Implement this method
+			}
+		};
+*/
 	}
 	
 	private static void priGlfwSetError(int error) {
@@ -722,7 +735,7 @@ public class GLFW
 	public static GLFWMonitorCallback glfwSetMonitorCallback(@Nullable @NativeType("GLFWmonitorfun") GLFWMonitorCallbackI cbfun) {
 		GLFWMonitorCallback lastCallback = mGLFWMonitorCallback;
 		if (cbfun == null) mGLFWMonitorCallback = null;
-		else mGLFWMonitorCallback = GLFWMonitorCallback.create(cbfun);
+		// else mGLFWMonitorCallback = GLFWMonitorCallback.create(cbfun);
 
 		priGlfwNoError();
 		return lastCallback;
