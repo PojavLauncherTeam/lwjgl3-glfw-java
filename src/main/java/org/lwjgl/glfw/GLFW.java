@@ -656,12 +656,13 @@ public class GLFW
 	}
 
 	public static GLFWErrorCallback glfwSetErrorCallback(@Nullable @NativeType("GLFWerrorfun") GLFWErrorCallbackI cbfun) {
-		GLFWErrorCallback lastCallback = mGLFWErrorCallback.clone();
+		GLFWErrorCallback lastCallback = mGLFWErrorCallback;
 		if (cbfun == null) mGLFWErrorCallback = null;
 		else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
 
 		priGlfwNoError();
-		return lastCallback;
+		// return lastCallback;
+		return GLFWErrorCallback.createPrint();
 	}
 
 	public static GLFWFramebufferSizeCallback glfwSetFramebufferSizeCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWframebuffersizefun") GLFWFramebufferSizeCallbackI cbfun) {
