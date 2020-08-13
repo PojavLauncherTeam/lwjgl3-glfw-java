@@ -598,6 +598,12 @@ public class GLFW
         return videoMode;
     }
 	
+	@NativeType("GLFWwindow *")
+	public static long glfwGetCurrentContext() {
+		// Stub prevent NULL check
+		return 2L;
+	}
+	
 	public static void glfwMakeContextCurrent(long window) {
 		// Stub
 		
