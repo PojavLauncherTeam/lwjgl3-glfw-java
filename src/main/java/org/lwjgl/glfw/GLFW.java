@@ -665,7 +665,8 @@ public class GLFW
 	public static GLFWErrorCallback glfwSetErrorCallback(@Nullable @NativeType("GLFWerrorfun") GLFWErrorCallbackI cbfun) {
 		GLFWErrorCallback lastCallback = mGLFWErrorCallback;
 		if (cbfun == null) mGLFWErrorCallback = null;
-		else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
+		// FIXME can't invoke address()
+		// else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
 
 		priGlfwNoError();
 		return lastCallback;

@@ -53,7 +53,7 @@ public abstract class GLFWErrorCallback extends Callback implements GLFWErrorCal
     public static GLFWErrorCallback create(GLFWErrorCallbackI instance) {
         return instance instanceof GLFWErrorCallback
             ? (GLFWErrorCallback)instance
-            : new Container(/* instance.address() */ 1, instance);
+            : new Container(instance.address(), instance);
     }
 
     protected GLFWErrorCallback() {
