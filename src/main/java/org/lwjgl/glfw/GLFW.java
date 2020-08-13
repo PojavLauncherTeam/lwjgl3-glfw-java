@@ -656,7 +656,7 @@ public class GLFW
 	}
 
 	public static GLFWErrorCallback glfwSetErrorCallback(@Nullable @NativeType("GLFWerrorfun") GLFWErrorCallbackI cbfun) {
-		GLFWErrorCallback lastCallback = mGLFWErrorCallback;
+		GLFWErrorCallback lastCallback = mGLFWErrorCallback.clone();
 		if (cbfun == null) mGLFWErrorCallback = null;
 		else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
 
