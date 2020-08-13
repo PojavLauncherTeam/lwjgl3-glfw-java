@@ -38,6 +38,11 @@ public interface GLFWErrorCallbackI extends CallbackI.V {
             dcbArgPointer(args)
         );
     }
+	
+	// FIXME attempt fix
+	default long address() {
+		return 1;
+	}
 
     /**
      * Will be called with an error code and a human-readable description when a GLFW error occurs.
