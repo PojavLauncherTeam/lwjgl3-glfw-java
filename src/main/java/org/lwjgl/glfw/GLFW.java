@@ -668,24 +668,7 @@ public class GLFW
 		else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
 
 		priGlfwNoError();
-		// return lastCallback;
-		return new GLFWErrorCallback() {
-            private Map<Integer, String> ERROR_CODES = APIUtil.apiClassTokens((field, value) -> 0x10000 < value && value < 0x20000, null, GLFW.class);
-
-            @Override
-            public void invoke(int error, long description) {
-                String msg = getDescription(description);
-
-                System.out.printf("[LWJGL] %s error\n", ERROR_CODES.get(error));
-                System.out.println("\tDescription : " + msg);
-                System.out.println("\tStacktrace  :");
-                StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-                for ( int i = 4; i < stack.length; i++ ) {
-                    System.out.print("\t\t");
-                    System.out.println(stack[i].toString());
-                }
-            }
-        };
+		return lastCallback;
 	}
 
 	public static GLFWFramebufferSizeCallback glfwSetFramebufferSizeCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWframebuffersizefun") GLFWFramebufferSizeCallbackI cbfun) {
