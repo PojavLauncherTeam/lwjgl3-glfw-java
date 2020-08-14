@@ -4,7 +4,7 @@
  */
 package org.lwjgl.opengl;
 
-import static android.opengl.GLES20.*;
+import android.opengl.GLES20;
 
 import org.lwjgl.system.*;
 import org.lwjgl.system.macosx.*;
@@ -121,7 +121,7 @@ public final class GL {
 			public long address() {
 				return 1;
 			}
-		};;
+		};
         create(GL);
     }
 
@@ -321,7 +321,7 @@ public final class GL {
         GLCapabilities caps = null;
 
         try {
-            int errorCode = glGetError();
+            int errorCode = GLES20.glGetError();
             if (errorCode != GL_NO_ERROR) {
                 apiLog(String.format("An OpenGL context was in an error state before the creation of its capabilities instance. Error: 0x%X", errorCode));
             }
@@ -383,7 +383,7 @@ public final class GL {
 
             if (majorVersion < 3) {
                 // Parse EXTENSIONS string
-                String extensionsString = memASCIISafe(callP(GL_EXTENSIONS, GetString));
+                String extensionsString = GLES20.glGetString(GLES20.GL_EXTENSIONS);
                 if (extensionsString != null) {
                     StringTokenizer tokenizer = new StringTokenizer(extensionsString);
                     while (tokenizer.hasMoreTokens()) {
@@ -395,8 +395,7 @@ public final class GL {
                 try (MemoryStack stack = stackPush()) {
                     IntBuffer pi = stack.ints(0);
 
-                    callPV(GL_NUM_EXTENSIONS, memAddress(pi), GetIntegerv);
-                    int extensionCount = pi.get(0);
+                    int extensionCount = GLES20.glGetIntegerv(GLES20.GL_NUM_EXTENSIONS);
 
                     long GetStringi = apiGetFunctionAddress(functionProvider, "glGetStringi");
                     for (int i = 0; i < extensionCount; i++) {
