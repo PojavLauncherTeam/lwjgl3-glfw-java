@@ -4,18 +4,23 @@
  */
 package org.lwjgl.glfw;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
+import android.opengl.*;
+
+import java.lang.reflect.*;
 import java.nio.*;
+
 import javax.annotation.*;
 import javax.microedition.khronos.egl.EGLDisplay;
 
-import android.opengl.*;
-
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.opengl.*;
+import org.lwjgl.*;
+import org.lwjgl.opengl.AndroidDisplay;
 import org.lwjgl.system.*;
-import java.util.*;
+
+import static org.lwjgl.system.APIUtil.*;
+import static org.lwjgl.system.Checks.*;
+import static org.lwjgl.system.JNI.*;
+import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 public class GLFW
 {
@@ -583,6 +588,78 @@ public class GLFW
         priGlfwNoError();
     }
 
+	@NativeType("GLFWwindow *")
+	public static long glfwGetCurrentContext() {
+		// Stub prevent NULL check
+		return 2L;
+	}
+	
+	@Nullable
+    @NativeType("GLFWmonitor **")
+    public static PointerBuffer glfwGetMonitors() {
+        MemoryStack stack = stackPush(); int stackPointer = stack.getPointer();
+        // IntBuffer count = stack.callocInt(1);
+        try {
+            // long __result = nglfwGetMonitors(memAddress(count));
+            // count.put(0);
+            long __result = memAddress(stack.callocLong(1));
+            return memPointerBufferSafe(__result, 1);
+		} finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+    
+    public static void glfwGetMonitorPos(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") IntBuffer xpos, @Nullable @NativeType("int *") IntBuffer ypos) {
+        if (CHECKS) {
+            checkSafe(xpos, 1);
+            checkSafe(ypos, 1);
+        }
+        
+        xpos.put(0);
+        ypos.put(0);
+    }
+
+    public static void glfwGetMonitorWorkarea(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") IntBuffer xpos, @Nullable @NativeType("int *") IntBuffer ypos, @Nullable @NativeType("int *") IntBuffer width, @Nullable @NativeType("int *") IntBuffer height) {
+        if (CHECKS) {
+            checkSafe(xpos, 1);
+            checkSafe(ypos, 1);
+            checkSafe(width, 1);
+            checkSafe(height, 1);
+        }
+        
+        xpos.put(0);
+        ypos.put(0);
+        width.put(AndroidDisplay.windowWidth);
+        height.put(AndroidDisplay.windowHeight);
+    }
+    
+    public static void glfwGetMonitorPos(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") int[] xpos, @Nullable @NativeType("int *") int[] ypos) {
+        if (CHECKS) {
+            // check(monitor);
+            checkSafe(xpos, 1);
+            checkSafe(ypos, 1);
+        }
+        
+        xpos[0] = 0;
+        ypos[0] = 0;
+    }
+
+    /** Array version of: {@link #glfwGetMonitorWorkarea GetMonitorWorkarea} */
+    public static void glfwGetMonitorWorkarea(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") int[] xpos, @Nullable @NativeType("int *") int[] ypos, @Nullable @NativeType("int *") int[] width, @Nullable @NativeType("int *") int[] height) {
+        if (CHECKS) {
+            // check(monitor);
+            checkSafe(xpos, 1);
+            checkSafe(ypos, 1);
+            checkSafe(width, 1);
+            checkSafe(height, 1);
+        }
+        
+        xpos[0] = 0;
+        ypos[0] = 0;
+        width[0] = AndroidDisplay.windowWidth;
+        height[0] = AndroidDisplay.windowHeight;
+    }
+	
     public static long glfwGetPrimaryMonitor() {
 	    priGlfwNoError();
 
@@ -609,10 +686,25 @@ public class GLFW
 		
         return lastError;
     }
-	
+    
+	@Nullable
+    @NativeType("GLFWvidmode const *")
+    public static GLFWVidMode.Buffer glfwGetVideoModes(@NativeType("GLFWmonitor *") long monitor) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        IntBuffer count = stack.callocInt(1);
+        try {
+            // long __result = nglfwGetVideoModes(monitor, memAddress(count));
+            long __result = memAddress(stack.callocLong(1));
+            return GLFWVidMode.createSafe(__result, 1);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+    
 	@Nullable
     public static GLFWVidMode glfwGetVideoMode(long monitor) {
-		ByteBuffer buffer = MemoryStack.stackPush().malloc(6);
+		ByteBuffer buffer = ByteBuffer.allocateDirect(30).order(ByteOrder.nativeOrder());
+		// MemoryStack.stackPush().malloc(6);
 		buffer.put((byte) AndroidDisplay.windowWidth);
 		buffer.put((byte) AndroidDisplay.windowHeight);
 		
@@ -630,12 +722,6 @@ public class GLFW
 		
         return videoMode;
     }
-	
-	@NativeType("GLFWwindow *")
-	public static long glfwGetCurrentContext() {
-		// Stub prevent NULL check
-		return 2L;
-	}
 	
 	public static void glfwMakeContextCurrent(long window) {
 		// Stub
