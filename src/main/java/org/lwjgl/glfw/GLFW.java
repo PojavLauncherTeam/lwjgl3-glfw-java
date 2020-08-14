@@ -610,11 +610,11 @@ public class GLFW
 			
             long __result = memAddress(buffer);
             PointerBuffer pBuffer = memPointerBufferSafe(__result, 1);
-			pBuffer.put(__result);
-		} finally {
+            pBuffer.put(__result);
+            return pBuffer;
+	} finally {
             stack.setPointer(stackPointer);
-			
-			priGlfwNoError();
+            priGlfwNoError();
         }
     }
     
