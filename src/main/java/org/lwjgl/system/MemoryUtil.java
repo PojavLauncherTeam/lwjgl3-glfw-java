@@ -10,6 +10,7 @@ import org.lwjgl.system.MemoryUtil.MemoryAllocationReport.*;
 import org.lwjgl.system.jni.*;
 
 import javax.annotation.*;
+import java.lang.reflect.*;
 import java.nio.*;
 import java.nio.charset.*;
 import java.util.*;
@@ -3205,11 +3206,23 @@ public final class MemoryUtil {
     @SuppressWarnings("unchecked")
     static <T extends Buffer> T wrap(Class<? extends T> clazz, long address, int capacity) {
         T buffer;
+/*
         try {
             buffer = (T)UNSAFE.allocateInstance(clazz);
         } catch (InstantiationException e) {
             throw new UnsupportedOperationException(e);
         }
+*/
+
+        // Android patch
+        try {
+			Constructor bufferConstruct = DirectByteBuffer.class.getDeclaredConstructor(long.class, int.class);
+			bufferConstruct.setAccessible(true);
+			buffer = (T)bufferConstruct.newInstance(address, capacity);
+        } catch (Throwable th) {
+            throw new UnsupportedOperationException(th);
+        }
+		
 
         UNSAFE.putLong(buffer, ADDRESS, address);
         UNSAFE.putInt(buffer, MARK, -1);
