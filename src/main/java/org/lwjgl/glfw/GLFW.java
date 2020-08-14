@@ -590,6 +590,8 @@ public class GLFW
 
 	@NativeType("GLFWwindow *")
 	public static long glfwGetCurrentContext() {
+		priGlfwNoError();
+		
 		// Stub prevent NULL check
 		return 2L;
 	}
@@ -606,6 +608,8 @@ public class GLFW
             return memPointerBufferSafe(__result, 1);
 		} finally {
             stack.setPointer(stackPointer);
+			
+			priGlfwNoError();
         }
     }
     
@@ -617,6 +621,8 @@ public class GLFW
         
         xpos.put(0);
         ypos.put(0);
+		
+		priGlfwNoError();
     }
 
     public static void glfwGetMonitorWorkarea(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") IntBuffer xpos, @Nullable @NativeType("int *") IntBuffer ypos, @Nullable @NativeType("int *") IntBuffer width, @Nullable @NativeType("int *") IntBuffer height) {
@@ -631,6 +637,8 @@ public class GLFW
         ypos.put(0);
         width.put(AndroidDisplay.windowWidth);
         height.put(AndroidDisplay.windowHeight);
+		
+		priGlfwNoError();
     }
     
     public static void glfwGetMonitorPos(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") int[] xpos, @Nullable @NativeType("int *") int[] ypos) {
@@ -642,6 +650,8 @@ public class GLFW
         
         xpos[0] = 0;
         ypos[0] = 0;
+		
+		priGlfwNoError();
     }
 
     /** Array version of: {@link #glfwGetMonitorWorkarea GetMonitorWorkarea} */
@@ -658,6 +668,8 @@ public class GLFW
         ypos[0] = 0;
         width[0] = AndroidDisplay.windowWidth;
         height[0] = AndroidDisplay.windowHeight;
+		
+		priGlfwNoError();
     }
 	
     public static long glfwGetPrimaryMonitor() {
@@ -698,6 +710,8 @@ public class GLFW
             return GLFWVidMode.createSafe(__result, 1);
         } finally {
             stack.setPointer(stackPointer);
+			
+			priGlfwNoError();
         }
     }
     
