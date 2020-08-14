@@ -601,7 +601,7 @@ public final class GL {
      * @param display the X connection handle ({@code DISPLAY})
      */
     public static GLXCapabilities createCapabilitiesGLX(long display) {
-        return createCapabilitiesGLX(display, XDefaultScreen(display));
+        return createCapabilitiesGLX(display, 0 /* XDefaultScreen(display) */);
     }
 
     /**

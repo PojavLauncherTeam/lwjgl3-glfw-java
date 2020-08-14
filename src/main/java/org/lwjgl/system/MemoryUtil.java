@@ -3216,7 +3216,7 @@ public final class MemoryUtil {
 
         // Android patch
         try {
-			Constructor bufferConstruct = DirectByteBuffer.class.getDeclaredConstructor(long.class, int.class);
+			Constructor bufferConstruct = Class.forName("java.nio.DirectByteBuffer").getDeclaredConstructor(long.class, int.class);
 			bufferConstruct.setAccessible(true);
 			buffer = (T)bufferConstruct.newInstance(address, capacity);
         } catch (Throwable th) {
