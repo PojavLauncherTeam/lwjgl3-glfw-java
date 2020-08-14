@@ -4,8 +4,6 @@
  */
 package org.lwjgl.opengl;
 
-import static android.opengl.GLES20.*;
-
 import org.lwjgl.system.*;
 import org.lwjgl.system.macosx.*;
 import org.lwjgl.system.windows.*;
@@ -95,33 +93,24 @@ public final class GL {
 
     /** Loads the OpenGL native library, using the default library name. */
     public static void create() {
-        SharedLibrary GL = new SharedLibrary() {
-			@Override
-			public String getName() {
-				return "GL";
-			}
-
-			@Nullable
-			@Override
-			public String getPath() {
-				return "/data/data/net.kdt.pojavlaunch/lib/libgl04es.so";
-			}
-
-			@Override
-			public long getFunctionAddress(ByteBuffer functionName) {
-				return NULL;
-			}
-
-			@Override
-			public void free() {
-
-			}
-
-			@Override
-			public long address() {
-				return 1;
-			}
-		};;
+        SharedLibrary GL;
+        switch (Platform.get()) {
+            case LINUX:
+                // TODO: change to lib name
+                GL = Library.loadNative(GL.class, "org.lwjgl.opengl", Configuration.OPENGL_LIBRARY_NAME, "libgl04es.so");
+                break;
+            case MACOSX:
+                String override = Configuration.OPENGL_LIBRARY_NAME.get();
+                GL = override != null
+                    ? Library.loadNative(GL.class, "org.lwjgl.opengl", override)
+                    : MacOSXLibrary.getWithIdentifier("com.apple.opengl");
+                break;
+            case WINDOWS:
+                GL = Library.loadNative(GL.class, "org.lwjgl.opengl", Configuration.OPENGL_LIBRARY_NAME, "opengl32");
+                break;
+            default:
+                throw new IllegalStateException();
+        }
         create(GL);
     }
 
@@ -159,12 +148,47 @@ public final class GL {
     private static void create(SharedLibrary OPENGL) {
         FunctionProvider functionProvider;
         try {
-            functionProvider = new SharedLibraryGL(OPENGL) {
-				@Override
-				long getExtensionAddress(long name) {
-					return NULL;
-				}
-			};
+            switch (Platform.get()) {
+                case WINDOWS:
+                    functionProvider = new SharedLibraryGL(OPENGL) {
+                        private final long wglGetProcAddress = library.getFunctionAddress("wglGetProcAddress");
+
+                        @Override
+                        long getExtensionAddress(long name) {
+                            return callPP(name, wglGetProcAddress);
+                        }
+                    };
+                    break;
+                case LINUX:
+                    functionProvider = new SharedLibraryGL(OPENGL) {
+                        private final long glXGetProcAddress;
+
+                        {
+                            long GetProcAddress = library.getFunctionAddress("glXGetProcAddress");
+                            if (GetProcAddress == NULL) {
+                                GetProcAddress = library.getFunctionAddress("glXGetProcAddressARB");
+                            }
+
+                            glXGetProcAddress = GetProcAddress;
+                        }
+
+                        @Override
+                        long getExtensionAddress(long name) {
+                            return glXGetProcAddress == NULL ? NULL : callPP(name, glXGetProcAddress);
+                        }
+                    };
+                    break;
+                case MACOSX:
+                    functionProvider = new SharedLibraryGL(OPENGL) {
+                        @Override
+                        long getExtensionAddress(long name) {
+                            return NULL;
+                        }
+                    };
+                    break;
+                default:
+                    throw new IllegalStateException();
+            }
             create(functionProvider);
         } catch (RuntimeException e) {
             OPENGL.free();
@@ -278,11 +302,11 @@ public final class GL {
     }
 
     private static GLXCapabilities initCapabilitiesGLX(boolean client) {
-        long display = 1; // nXOpenDisplay(NULL);
+        long display = nXOpenDisplay(NULL);
         try {
             return createCapabilitiesGLX(display, client ? -1 : XDefaultScreen(display));
         } finally {
-            // XCloseDisplay(display);
+            XCloseDisplay(display);
         }
     }
 
@@ -321,7 +345,17 @@ public final class GL {
         GLCapabilities caps = null;
 
         try {
-            int errorCode = glGetError();
+            // We don't have a current ContextCapabilities when this method is called
+            // so we have to use the native bindings directly.
+            long GetError    = functionProvider.getFunctionAddress("glGetError");
+            long GetString   = functionProvider.getFunctionAddress("glGetString");
+            long GetIntegerv = functionProvider.getFunctionAddress("glGetIntegerv");
+
+            if (GetError == NULL || GetString == NULL || GetIntegerv == NULL) {
+                throw new IllegalStateException("Core OpenGL functions could not be found. Make sure that the OpenGL library has been loaded correctly.");
+            }
+
+            int errorCode = callI(GetError);
             if (errorCode != GL_NO_ERROR) {
                 apiLog(String.format("An OpenGL context was in an error state before the creation of its capabilities instance. Error: 0x%X", errorCode));
             }
@@ -330,16 +364,18 @@ public final class GL {
             int minorVersion;
 
             try (MemoryStack stack = stackPush()) {
+                IntBuffer version = stack.ints(0);
+
                 // Try the 3.0+ version query first
-                // callPV(GL_MAJOR_VERSION, memAddress(version), GetIntegerv);
-                
-				if (glGetError() == GL_NO_ERROR && 3 <= (majorVersion = version.get(0))) {
+                callPV(GL_MAJOR_VERSION, memAddress(version), GetIntegerv);
+                if (callI(GetError) == GL_NO_ERROR && 3 <= (majorVersion = version.get(0))) {
                     // We're on an 3.0+ context.
-					minorVersion = glGetIntegerv(GL_MINOR_VERSION);
+                    callPV(GL_MINOR_VERSION, memAddress(version), GetIntegerv);
+                    minorVersion = version.get(0);
                 } else {
                     // Fallback to the string query.
-                    String versionString = glGetString(GL_VERSION);
-                    if (versionString == null || glGetError() != GL_NO_ERROR) {
+                    String versionString = memUTF8Safe(callP(GL_VERSION, GetString));
+                    if (versionString == null || callI(GetError) != GL_NO_ERROR) {
                         throw new IllegalStateException("There is no OpenGL context current in the current thread.");
                     }
 
@@ -565,7 +601,7 @@ public final class GL {
      * @param display the X connection handle ({@code DISPLAY})
      */
     public static GLXCapabilities createCapabilitiesGLX(long display) {
-        return createCapabilitiesGLX(display, 0 /* XDefaultScreen(display) */);
+        return createCapabilitiesGLX(display, XDefaultScreen(display));
     }
 
     /**
@@ -582,8 +618,23 @@ public final class GL {
             throw new IllegalStateException("OpenGL library has not been loaded.");
         }
 
-        int majorVersion = 1;
-		int minorVersion = 4;
+        int majorVersion;
+        int minorVersion;
+
+        try (MemoryStack stack = stackPush()) {
+            IntBuffer piMajor = stack.ints(0);
+            IntBuffer piMinor = stack.ints(0);
+
+            if (!glXQueryVersion(display, piMajor, piMinor)) {
+                throw new IllegalStateException("Failed to query GLX version");
+            }
+
+            majorVersion = piMajor.get(0);
+            minorVersion = piMinor.get(0);
+            if (majorVersion != 1) {
+                throw new IllegalStateException("Invalid GLX major version: " + majorVersion);
+            }
+        }
 
         Set<String> supportedExtensions = new HashSet<>(32);
 
@@ -601,8 +652,8 @@ public final class GL {
         }
 
         if (1 <= minorVersion) {
-            String extensionsString = null;
-/*
+            String extensionsString;
+
             if (screen == -1) {
                 long glXGetClientString = functionProvider.getFunctionAddress("glXGetClientString");
                 extensionsString = memASCIISafe(callPP(display, GLX_EXTENSIONS, glXGetClientString));
@@ -610,7 +661,6 @@ public final class GL {
                 long glXQueryExtensionsString = functionProvider.getFunctionAddress("glXQueryExtensionsString");
                 extensionsString = memASCIISafe(callPP(display, screen, glXQueryExtensionsString));
             }
-*/
 
             if (extensionsString != null) {
                 StringTokenizer tokenizer = new StringTokenizer(extensionsString);
