@@ -82,7 +82,6 @@ org/lwjgl/glfw/GLFWWindowPosCallback.class
 org/lwjgl/glfw/GLFWCharModsCallback.class
 org/lwjgl/glfw/GLFWJoystickCallbackI.class
 org/lwjgl/glfw/GLFWErrorCallback$1.class
-org/lwjgl/system/Checks.class
 org/lwjgl/glfw/GLFW.class
 org/lwjgl/glfw/GLFWCharCallbackI.class
 org/lwjgl/glfw/GLFWMonitorCallbackI.class

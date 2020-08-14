@@ -96,6 +96,7 @@ public final class GL {
         SharedLibrary GL;
         switch (Platform.get()) {
             case LINUX:
+                // TODO: change to lib name
                 GL = Library.loadNative(GL.class, "org.lwjgl.opengl", Configuration.OPENGL_LIBRARY_NAME, "libgl04es.so");
                 break;
             case MACOSX:
