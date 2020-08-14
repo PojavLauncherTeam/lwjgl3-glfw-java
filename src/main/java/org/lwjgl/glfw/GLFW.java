@@ -601,11 +601,16 @@ public class GLFW
     public static PointerBuffer glfwGetMonitors() {
         MemoryStack stack = stackPush(); int stackPointer = stack.getPointer();
         // IntBuffer count = stack.callocInt(1);
+		
+		LongBuffer buffer = stack.callocLong(1);
+		buffer.put(glfwGetPrimaryMonitor());
         try {
             // long __result = nglfwGetMonitors(memAddress(count));
             // count.put(0);
-            long __result = memAddress(stack.callocLong(1));
-            return memPointerBufferSafe(__result, 1);
+			
+            long __result = memAddress(buffer);
+            PointerBuffer buffer = memPointerBufferSafe(__result, 1);
+			buffer.put(result);
 		} finally {
             stack.setPointer(stackPointer);
 			
