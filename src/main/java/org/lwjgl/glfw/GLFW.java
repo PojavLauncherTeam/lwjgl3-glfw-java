@@ -599,21 +599,13 @@ public class GLFW
 	@Nullable
     @NativeType("GLFWmonitor **")
     public static PointerBuffer glfwGetMonitors() {
-        MemoryStack stack = stackPush(); int stackPointer = stack.getPointer();
-        // IntBuffer count = stack.callocInt(1);
-		
-		LongBuffer buffer = stack.callocLong(1);
-		buffer.put(glfwGetPrimaryMonitor());
         try {
-            // long __result = nglfwGetMonitors(memAddress(count));
-            // count.put(0);
-			
-            long __result = memAddress(buffer);
-            PointerBuffer pBuffer = memPointerBufferSafe(__result, 1);
-            pBuffer.put(__result);
+            // long __result = memAddress(buffer);
+            PointerBuffer pBuffer = PointerBuffer.allocateDirect(1);
+            // memPointerBufferSafe(__result, 1);
+            pBuffer.put(glfwGetPrimaryMonitor());
             return pBuffer;
-	} finally {
-            stack.setPointer(stackPointer);
+        } finally {
             priGlfwNoError();
         }
     }
@@ -682,6 +674,12 @@ public class GLFW
 
 	    // Prevent NULL check
         return 1L;
+    }
+
+    @NativeType("GLFWmonitor *")
+    public static long glfwGetWindowMonitor(@NativeType("GLFWwindow *") long window) {
+        // Prevent NULL check
+        return 3L;
     }
 
     public static void glfwGetVersion(IntBuffer major, IntBuffer minor, IntBuffer rev) {
