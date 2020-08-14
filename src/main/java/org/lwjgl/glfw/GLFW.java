@@ -609,8 +609,8 @@ public class GLFW
             // count.put(0);
 			
             long __result = memAddress(buffer);
-            PointerBuffer buffer = memPointerBufferSafe(__result, 1);
-			buffer.put(result);
+            PointerBuffer pBuffer = memPointerBufferSafe(__result, 1);
+			pBuffer.put(__result);
 		} finally {
             stack.setPointer(stackPointer);
 			
