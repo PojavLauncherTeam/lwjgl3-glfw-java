@@ -3222,7 +3222,7 @@ public final class MemoryUtil {
 			if (clazz.getSimpleName().endsWith("ByteBuffer")) {
 				buffer = (T) bbuffer;
 			} else {
-				buffer = (T) bbuffer.getClass().getMethod("as" + clazz.getSimpleName().replace("Direct", "")).invoke(bbuffer);
+				buffer = (T) bbuffer.getClass().getMethod("as" + clazz.getSimpleName().replace("Direct", "").replace("ByteBufferAs", "")).invoke(bbuffer);
 			}
         } catch (Throwable th) {
             throw new UnsupportedOperationException(th);
