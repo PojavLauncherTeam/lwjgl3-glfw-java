@@ -3218,7 +3218,12 @@ public final class MemoryUtil {
         try {
 			Constructor bufferConstruct = Class.forName("java.nio.DirectByteBuffer").getDeclaredConstructor(long.class, int.class);
 			bufferConstruct.setAccessible(true);
-			buffer = (T)bufferConstruct.newInstance(address, capacity);
+			ByteBuffer bbuffer = (ByteBuffer) bufferConstruct.newInstance(address, capacity);
+			if (clazz.getSimpleName().endsWith("ByteBuffer")) {
+				buffer = (T) bbuffer;
+			} else {
+				buffer = (T) bbuffer.getClass().getMethod("as" + clazz.getSimpleName().replace("Direct", "")).invoke(bbuffer);
+			}
         } catch (Throwable th) {
             throw new UnsupportedOperationException(th);
         }
