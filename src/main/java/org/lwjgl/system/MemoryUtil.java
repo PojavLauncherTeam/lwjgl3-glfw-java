@@ -49,6 +49,11 @@ import static org.lwjgl.system.libc.LibCString.*;
  */
 public final class MemoryUtil {
 
+	static {
+		System.setProperty("org.lwjgl.util.Debug", "true");
+		System.setProperty("org.lwjgl.util.DebugLoader", "true");
+	}
+	
     /** Alias for the null pointer address. */
     public static final long NULL = 0L;
 
