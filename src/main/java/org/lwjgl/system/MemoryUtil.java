@@ -2074,6 +2074,12 @@ public final class MemoryUtil {
             ? encodeASCIIUnsafe64(text, nullTerminated, address)
             : encodeASCIIUnsafe32(text, nullTerminated, (int)address);
     }
+	
+	static int encodeASCII(CharSequence text, boolean nullTerminated, long target) {
+		return BITS64
+            ? encodeASCIIUnsafe64(text, nullTerminated, target)
+            : encodeASCIIUnsafe32(text, nullTerminated, (int)target);
+	}
 
     static int encodeASCIIUnsafe64(CharSequence text, boolean nullTerminated, long target) {
         long p = target;
