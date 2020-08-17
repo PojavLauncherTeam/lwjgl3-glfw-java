@@ -1898,7 +1898,7 @@ public final class MemoryUtil {
     }
 
     public static void memPutAddress(long ptr, long value) {
-		if (ptr == 4073626084l) new Throwable("No 4073626084").printStackTrace();
+		// if (ptr == 4073626084l) new Throwable("No 4073626084").printStackTrace();
         if (BITS64) {
             UNSAFE.putLong(null, ptr, value);
         } else {

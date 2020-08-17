@@ -96,7 +96,7 @@ public final class GL {
         switch (Platform.get()) {
             case LINUX:
                 // TODO: change to lib name
-                GL = Library.loadNative(GL.class, "org.lwjgl.opengl", Configuration.OPENGL_LIBRARY_NAME, "libgl04es.so");
+                GL = Library.loadNative(GL.class, "org.lwjgl.opengl", Configuration.OPENGL_LIBRARY_NAME, "libGL.so", "libGL.so.1");
                 break;
             case MACOSX:
                 String override = Configuration.OPENGL_LIBRARY_NAME.get();
@@ -206,7 +206,8 @@ public final class GL {
         }
 
         GL.functionProvider = functionProvider;
-        ThreadLocalUtil.setFunctionMissingAddresses(GLCapabilities.class, 3);
+		// FIXME line below make crash
+        // ThreadLocalUtil.setFunctionMissingAddresses(GLCapabilities.class, 3);
     }
 
     /** Unloads the OpenGL native library. */
