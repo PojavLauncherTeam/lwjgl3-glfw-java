@@ -389,7 +389,11 @@ public final class GL {
 
             if (majorVersion < 1 || (majorVersion == 1 && minorVersion < 1)) {
                 throw new IllegalStateException("OpenGL 1.1 is required.");
-            }
+            } else if (majorVersion > 4) {
+				apiLog("FIXME: OpenGL version out of range (" + majorVersion + "." + minorVersion + "). Defaulting to 2.1");
+				majorVersion = 2;
+				minorVersion = 1;
+			}
 
             int[] GL_VERSIONS = {
                 5, // OpenGL 1.1 to 1.5
@@ -418,9 +422,6 @@ public final class GL {
                 }
             }
 			
-
-			apiLog("TEMPDBG: OpenGL version " + majorVersion + "." + minorVersion);
-
             if (majorVersion < 3) {
                 // Parse EXTENSIONS string
                 String extensionsString = memASCIISafe(callP(GL_EXTENSIONS, GetString));
