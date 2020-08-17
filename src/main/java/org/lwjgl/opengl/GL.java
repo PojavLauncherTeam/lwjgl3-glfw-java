@@ -417,6 +417,9 @@ public final class GL {
                     supportedExtensions.add(String.format("OpenGL%d%d", M, m));
                 }
             }
+			
+
+			apiLog("TEMPDBG: OpenGL version " + majorVersion + "." + minorVersion);
 
             if (majorVersion < 3) {
                 // Parse EXTENSIONS string
@@ -464,7 +467,9 @@ public final class GL {
                     }
                 }
             }
-
+			
+			apiLog("TEMPDBG: creating capabilities");
+			
             return caps = new GLCapabilities(functionProvider, supportedExtensions, forwardCompatible);
         } finally {
             setCapabilities(caps);
