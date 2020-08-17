@@ -1898,6 +1898,7 @@ public final class MemoryUtil {
     }
 
     public static void memPutAddress(long ptr, long value) {
+		apiLog("memPutAddress ptr=" + ptr + ", value=" + value);
         if (BITS64) {
             UNSAFE.putLong(null, ptr, value);
         } else {
