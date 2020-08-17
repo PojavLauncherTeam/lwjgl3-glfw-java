@@ -206,7 +206,8 @@ public final class GL {
         }
 
         GL.functionProvider = functionProvider;
-        ThreadLocalUtil.setFunctionMissingAddresses(GLCapabilities.class, 3);
+		// FIXME code below crashes
+        // ThreadLocalUtil.setFunctionMissingAddresses(GLCapabilities.class, 3);
     }
 
     /** Unloads the OpenGL native library. */
