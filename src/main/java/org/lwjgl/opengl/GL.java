@@ -390,9 +390,7 @@ public final class GL {
             if (majorVersion < 1 || (majorVersion == 1 && minorVersion < 1)) {
                 throw new IllegalStateException("OpenGL 1.1 is required.");
             } else if (majorVersion > 4) {
-				apiLog("FIXME: OpenGL version out of range (" + majorVersion + "." + minorVersion + "). Defaulting to 2.1");
-				majorVersion = 2;
-				minorVersion = 1;
+				throw new IllegalStateException("Memory error?: OpenGL version out of range (" + majorVersion + "." + minorVersion + ")");
 			}
 
             int[] GL_VERSIONS = {
