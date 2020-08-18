@@ -10,17 +10,20 @@ import org.lwjgl.system.MemoryManage.*;
 import org.lwjgl.system.MemoryUtil.MemoryAllocationReport.*;
 import org.lwjgl.system.jni.*;
 
+import javax.annotation.*;
 import java.nio.*;
+import java.nio.charset.*;
 import java.util.*;
 
-import javax.annotation.*;
-
+import static java.lang.Character.*;
 import static java.lang.Math.*;
 import static org.lwjgl.system.APIUtil.*;
 import static org.lwjgl.system.Checks.*;
+import static org.lwjgl.system.MathUtil.*;
 import static org.lwjgl.system.MemoryUtil.LazyInit.*;
 import static org.lwjgl.system.Pointer.*;
 import static org.lwjgl.system.jni.JNINativeInterface.*;
+import static org.lwjgl.system.libc.LibCString.*;
 
 /**
  * This class provides functionality for managing native memory.
@@ -1315,6 +1318,64 @@ public final class MemoryUtil {
         ACCESSOR.memSet(ptr, value, bytes);
     }
 
+    /**
+     * Sets all bytes in a specified block of memory to a fixed value (usually zero).
+     *
+     * @param ptr   the starting memory address
+     * @param value the value to set (memSet will convert it to unsigned byte)
+     * @param bytes the number of bytes to set
+     */
+    public static void memSet(long ptr, int value, long bytes) {
+        if (DEBUG && (ptr == NULL || bytes < 0)) {
+            throw new IllegalArgumentException();
+        }
+
+        /*
+		 - Unsafe.setMemory is very slow.
+		 - A custom Java loop is fastest at small sizes, approximately up to 256 bytes.
+		 - The native memset becomes fastest at bigger sizes, when the JNI overhead becomes negligible.
+         */
+
+        //UNSAFE.setMemory(dst, bytes, (byte)(value & 0xFF));
+        if (256L <= bytes) {
+            nmemset(ptr, value, bytes);
+            return;
+        }
+
+        long fill = (value & 0xFF) * FILL_PATTERN;
+
+        int i = 0,
+            length = (int)bytes & 0xFF;
+
+        if (length != 0) {
+            int misalignment = (int)ptr & 7;
+            if (misalignment != 0) {
+                long aligned = ptr - misalignment;
+                ACCESSOR.memPutLong(null, aligned, merge(
+								   UNSAFE.getLong(null, aligned),
+								   fill,
+								   SHIFT.right(SHIFT.left(-1L, max(0, 8 - length)), misalignment) // 0x0000FFFFFFFF0000
+							   ));
+                i += 8 - misalignment;
+            }
+        }
+
+        // Aligned longs for performance
+        for (; i <= length - 8; i += 8) {
+            ACCESSOR.memPutLong(null, ptr + i, fill);
+        }
+
+        int tail = length - i;
+        if (0 < tail) {
+            // Aligned tail
+            ACCESSOR.memPutLong(null, ptr + i, merge(
+							   fill,
+							   UNSAFE.getLong(null, ptr + i),
+							   SHIFT.right(-1L, tail) // 0x00000000FFFFFFFF
+						   ));
+        }
+    }
+	
     /**
      * Sets all bytes in a specified block of memory to a copy of another block.
      *
