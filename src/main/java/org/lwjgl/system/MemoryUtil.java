@@ -1244,6 +1244,17 @@ public final class MemoryUtil {
         return TEXT_UTIL.encodeASCII(text, nullTerminated, target, offset);
     }
 
+    static int encodeASCII(CharSequence text, boolean nullTerminated, long target) {
+        int len = text.length();
+        for (int p = 0; p < len; p++) {
+            memPutByte(target + p, (byte)text.charAt(p));
+        }
+        if (nullTerminated) {
+            memPutByte(target + len++, (byte)0);
+        }
+        return len;
+    }
+
     /**
      * Returns the number of bytes required to encode the specified text in the ASCII encoding.
      *
