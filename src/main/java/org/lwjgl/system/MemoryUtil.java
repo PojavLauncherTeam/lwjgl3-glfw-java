@@ -1087,6 +1087,213 @@ public final class MemoryUtil {
         }
     }
 
+    /**
+     * Returns a slice of the specified buffer between {@code (buffer.position() + offset)} and {@code (buffer.position() + offset + capacity)}.
+     *
+     * <p>The position and limit of the original buffer are preserved after a call to this method.</p>
+     *
+     * @param buffer   the buffer to slice
+     * @param offset   the slice offset, it must be &le; {@code buffer.remaining()}
+     * @param capacity the slice length, it must be &le; {@code buffer.capacity() - (buffer.position() + offset)}
+     *
+     * @return the sliced buffer
+     */
+    public static <T extends CustomBuffer<T>> T memSlice(T buffer, int offset, int capacity) { return buffer.slice(offset, capacity); }
+
+    // --- [ memset ] ---
+
+    /**
+     * Sets all bytes in a specified block of memory to a fixed value (usually zero).
+     *
+     * @param ptr   the starting memory address
+     * @param value the value to set (memSet will convert it to unsigned byte)
+     */
+    public static void memSet(ByteBuffer ptr, int value) { memSet(memAddress(ptr), value, ptr.remaining()); }
+
+    /**
+     * Sets all bytes in a specified block of memory to a fixed value (usually zero).
+     *
+     * @param ptr   the starting memory address
+     * @param value the value to set (memSet will convert it to unsigned byte)
+     */
+    public static void memSet(ShortBuffer ptr, int value) { memSet(memAddress(ptr), value, apiGetBytes(ptr.remaining(), 1)); }
+
+    /**
+     * Sets all bytes in a specified block of memory to a fixed value (usually zero).
+     *
+     * @param ptr   the starting memory address
+     * @param value the value to set (memSet will convert it to unsigned byte)
+     */
+    public static void memSet(CharBuffer ptr, int value) { memSet(memAddress(ptr), value, apiGetBytes(ptr.remaining(), 1)); }
+
+    /**
+     * Sets all bytes in a specified block of memory to a fixed value (usually zero).
+     *
+     * @param ptr   the starting memory address
+     * @param value the value to set (memSet will convert it to unsigned byte)
+     */
+    public static void memSet(IntBuffer ptr, int value) { memSet(memAddress(ptr), value, apiGetBytes(ptr.remaining(), 2)); }
+
+    /**
+     * Sets all bytes in a specified block of memory to a fixed value (usually zero).
+     *
+     * @param ptr   the starting memory address
+     * @param value the value to set (memSet will convert it to unsigned byte)
+     */
+    public static void memSet(LongBuffer ptr, int value) { memSet(memAddress(ptr), value, apiGetBytes(ptr.remaining(), 3)); }
+
+    /**
+     * Sets all bytes in a specified block of memory to a fixed value (usually zero).
+     *
+     * @param ptr   the starting memory address
+     * @param value the value to set (memSet will convert it to unsigned byte)
+     */
+    public static void memSet(FloatBuffer ptr, int value) { memSet(memAddress(ptr), value, apiGetBytes(ptr.remaining(), 2)); }
+
+    /**
+     * Sets all bytes in a specified block of memory to a fixed value (usually zero).
+     *
+     * @param ptr   the starting memory address
+     * @param value the value to set (memSet will convert it to unsigned byte)
+     */
+    public static void memSet(DoubleBuffer ptr, int value) { memSet(memAddress(ptr), value, apiGetBytes(ptr.remaining(), 3)); }
+
+    /**
+     * Sets all bytes in a specified block of memory to a fixed value (usually zero).
+     *
+     * @param ptr   the starting memory address
+     * @param value the value to set (memSet will convert it to unsigned byte)
+     * @param <T>   the buffer type
+     */
+    public static <T extends CustomBuffer<T>> void memSet(T ptr, int value) { memSet(memAddress(ptr), value, Integer.toUnsignedLong(ptr.remaining()) * ptr.sizeof()); }
+
+    /**
+     * Sets all bytes in a specified block of memory to a fixed value (usually zero).
+     *
+     * @param ptr   the starting memory address
+     * @param value the value to set (memSet will convert it to unsigned byte)
+     * @param <T>   the struct type
+     */
+    public static <T extends Struct> void memSet(T ptr, int value) { memSet(ptr.address, value, ptr.sizeof()); }
+
+    // --- [ memcpy ] ---
+
+    /**
+     * Sets all bytes in a specified block of memory to a copy of another block.
+     *
+     * @param src the source memory address
+     * @param dst the destination memory address
+     */
+    public static void memCopy(ByteBuffer src, ByteBuffer dst) {
+        if (CHECKS) {
+            check(dst, src.remaining());
+        }
+        memCopy(memAddress(src), memAddress(dst), src.remaining());
+    }
+
+    /**
+     * Sets all bytes in a specified block of memory to a copy of another block.
+     *
+     * @param src the source memory address
+     * @param dst the destination memory address
+     */
+    public static void memCopy(ShortBuffer src, ShortBuffer dst) {
+        if (CHECKS) {
+            check(dst, src.remaining());
+        }
+        memCopy(memAddress(src), memAddress(dst), apiGetBytes(src.remaining(), 1));
+    }
+
+    /**
+     * Sets all bytes in a specified block of memory to a copy of another block.
+     *
+     * @param src the source memory address
+     * @param dst the destination memory address
+     */
+    public static void memCopy(CharBuffer src, CharBuffer dst) {
+        if (CHECKS) {
+            check((Buffer)dst, src.remaining());
+        }
+        memCopy(memAddress(src), memAddress(dst), apiGetBytes(src.remaining(), 1));
+    }
+
+    /**
+     * Sets all bytes in a specified block of memory to a copy of another block.
+     *
+     * @param src the source memory address
+     * @param dst the destination memory address
+     */
+    public static void memCopy(IntBuffer src, IntBuffer dst) {
+        if (CHECKS) {
+            check(dst, src.remaining());
+        }
+        memCopy(memAddress(src), memAddress(dst), apiGetBytes(src.remaining(), 2));
+    }
+
+    /**
+     * Sets all bytes in a specified block of memory to a copy of another block.
+     *
+     * @param src the source memory address
+     * @param dst the destination memory address
+     */
+    public static void memCopy(LongBuffer src, LongBuffer dst) {
+        if (CHECKS) {
+            check(dst, src.remaining());
+        }
+        memCopy(memAddress(src), memAddress(dst), apiGetBytes(src.remaining(), 3));
+    }
+
+    /**
+     * Sets all bytes in a specified block of memory to a copy of another block.
+     *
+     * @param src the source memory address
+     * @param dst the destination memory address
+     */
+    public static void memCopy(FloatBuffer src, FloatBuffer dst) {
+        if (CHECKS) {
+            check(dst, src.remaining());
+        }
+        memCopy(memAddress(src), memAddress(dst), apiGetBytes(src.remaining(), 2));
+    }
+
+    /**
+     * Sets all bytes in a specified block of memory to a copy of another block.
+     *
+     * @param src the source memory address
+     * @param dst the destination memory address
+     */
+    public static void memCopy(DoubleBuffer src, DoubleBuffer dst) {
+        if (CHECKS) {
+            check(dst, src.remaining());
+        }
+        memCopy(memAddress(src), memAddress(dst), apiGetBytes(src.remaining(), 3));
+    }
+
+    /**
+     * Sets all bytes in a specified block of memory to a copy of another block.
+     *
+     * @param src the source memory address
+     * @param dst the destination memory address
+     * @param <T> the buffer type
+     */
+    public static <T extends CustomBuffer<T>> void memCopy(T src, T dst) {
+        if (CHECKS) {
+            check(dst, src.remaining());
+        }
+        memCopy(memAddress(src), memAddress(dst), Integer.toUnsignedLong(src.remaining()) * src.sizeof());
+    }
+
+    /**
+     * Sets all bytes of a struct to a copy of another struct.
+     *
+     * @param src the source struct
+     * @param dst the destination struct
+     * @param <T> the struct type
+     */
+    public static <T extends Struct> void memCopy(T src, T dst) {
+        memCopy(src.address, dst.address, src.sizeof());
+    }
+
     /*  -------------------------------------
         -------------------------------------
                UNSAFE MEMORY ACCESS API
@@ -1122,7 +1329,6 @@ public final class MemoryUtil {
 
         ACCESSOR.memCopy(src, dst, bytes);
     }
-
     public static boolean memGetBoolean(long ptr)           { return ACCESSOR.memGetByte(ptr) != 0; }
     public static byte memGetByte(long ptr)                 { return ACCESSOR.memGetByte(ptr); }
     public static short memGetShort(long ptr)               { return ACCESSOR.memGetShort(ptr); }
