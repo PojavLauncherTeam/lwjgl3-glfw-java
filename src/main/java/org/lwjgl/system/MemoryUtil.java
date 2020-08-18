@@ -58,6 +58,9 @@ public final class MemoryUtil {
     /** The cache-line size, in bytes. This value is always a power-of-two. */
     public static final int CACHE_LINE_SIZE;
 
+	// hm
+	public static final sun.misc.Unsafe UNSAFE;
+	
     static {
         Library.initialize();
 
@@ -68,7 +71,9 @@ public final class MemoryUtil {
         CACHE_LINE_SIZE = ACCESSOR.getCacheLineSize();
 
         apiLog("MemoryUtil accessor: " + ACCESSOR.getClass().getSimpleName());
-    }
+
+		UNSAFE = MemoryAccess.getUnsafeInstance();
+	}
 
     static final class LazyInit {
 
