@@ -160,20 +160,33 @@ public final class GL {
                     break;
                 case LINUX:
                     functionProvider = new SharedLibraryGL(OPENGL) {
-                        private final long glXGetProcAddress;
+                        private final long glXGetProcAddress, gl4esGetProcAddress;
 
                         {
                             long GetProcAddress = library.getFunctionAddress("glXGetProcAddress");
                             if (GetProcAddress == NULL) {
                                 GetProcAddress = library.getFunctionAddress("glXGetProcAddressARB");
                             }
+							gl4esGetProcAddress = library.getFunctionAddress("gl4es_GetProcAddress");
 
+							// Debug
+							apiLog("GetProcAddress:");
+							apiLog(" - glx(ARB): " + Long.toString(GetProcAddress));
+							apiLog(" - GL4ES   : " + Long.toString(gl4esGetProcAddress));
+							
                             glXGetProcAddress = GetProcAddress;
                         }
 
                         @Override
                         long getExtensionAddress(long name) {
-                            return glXGetProcAddress == NULL ? NULL : callPP(name, glXGetProcAddress);
+                            long addr = NULL;
+							if (glXGetProcAddress != NULL) {
+								addr = callPP(name, glXGetProcAddress);
+							} if (addr == NULL && gl4esGetProcAddress != NULL) {
+								addr = callPP(name, gl4esGetProcAddress);
+							}
+							
+							return addr;
                         }
                     };
                     break;
@@ -351,6 +364,9 @@ public final class GL {
             long GetError    = functionProvider.getFunctionAddress("glGetError");
             long GetString   = functionProvider.getFunctionAddress("glGetString");
             long GetIntegerv = functionProvider.getFunctionAddress("glGetIntegerv");
+			
+			// Debug
+			apiLog("glGetError=" + GetError + ",glGetString=" + GetString + ",glGetIntegerv=" + GetIntegerv);
 
             if (GetError == NULL || GetString == NULL || GetIntegerv == NULL) {
                 throw new IllegalStateException("Core OpenGL functions could not be found. Make sure that the OpenGL library has been loaded correctly.");
