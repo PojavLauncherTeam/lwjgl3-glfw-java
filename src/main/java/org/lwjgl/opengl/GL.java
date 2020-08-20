@@ -354,7 +354,9 @@ public final class GL {
             if (GetError == NULL || GetString == NULL || GetIntegerv == NULL) {
                 throw new IllegalStateException("Core OpenGL functions could not be found. Make sure that the OpenGL library has been loaded correctly.");
             }
-
+		
+			// Debug
+			apiLog("Calling glgeterr");
             int errorCode = callI(GetError);
             if (errorCode != GL_NO_ERROR) {
                 apiLog(String.format("An OpenGL context was in an error state before the creation of its capabilities instance. Error: 0x%X", errorCode));
@@ -363,16 +365,23 @@ public final class GL {
             int majorVersion;
             int minorVersion;
 
+			// Debug
+			apiLog("Calling gl get ver");
             try (MemoryStack stack = stackPush()) {
                 IntBuffer version = stack.ints(0);
 
                 // Try the 3.0+ version query first
                 callPV(GL_MAJOR_VERSION, memAddress(version), GetIntegerv);
                 if (callI(GetError) == GL_NO_ERROR && 3 <= (majorVersion = version.get(0))) {
+					// Debug
+					apiLog("Calling 3.0 mino");
                     // We're on an 3.0+ context.
                     callPV(GL_MINOR_VERSION, memAddress(version), GetIntegerv);
                     minorVersion = version.get(0);
                 } else {
+
+					// Debug
+					apiLog("Calling fallback");
                     // Fallback to the string query.
                     String versionString = memUTF8Safe(callP(GL_VERSION, GetString));
                     if (versionString == null || callI(GetError) != GL_NO_ERROR) {
