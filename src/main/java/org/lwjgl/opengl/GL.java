@@ -172,7 +172,7 @@ public final class GL {
 
                         @Override
                         long getExtensionAddress(long name) {
-                            return glXgetProcAddress == NULL ? NULL : callPP(name, glXGetProcAddress);
+                            return glXGetProcAddress == NULL ? NULL : callPP(name, glXGetProcAddress);
                         }
                     };
                     break;
