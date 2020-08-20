@@ -160,33 +160,19 @@ public final class GL {
                     break;
                 case LINUX:
                     functionProvider = new SharedLibraryGL(OPENGL) {
-                        private final long glXGetProcAddress, gl4esGetProcAddress;
+                        private final long glXGetProcAddress;
 
                         {
                             long GetProcAddress = library.getFunctionAddress("glXGetProcAddress");
                             if (GetProcAddress == NULL) {
                                 GetProcAddress = library.getFunctionAddress("glXGetProcAddressARB");
-                            }
-							gl4esGetProcAddress = library.getFunctionAddress("gl4es_GetProcAddress");
-
-							// Debug
-							apiLog("GetProcAddress:");
-							apiLog(" - glx(ARB): " + Long.toString(GetProcAddress));
-							apiLog(" - GL4ES   : " + Long.toString(gl4esGetProcAddress));
-							
+                            }				
                             glXGetProcAddress = GetProcAddress;
                         }
 
                         @Override
                         long getExtensionAddress(long name) {
-                            long addr = NULL;
-							if (glXGetProcAddress != NULL) {
-								addr = callPP(name, glXGetProcAddress);
-							} if (addr == NULL && gl4esGetProcAddress != NULL) {
-								addr = callPP(name, gl4esGetProcAddress);
-							}
-							
-							return addr;
+                            return glXgetProcAddress == NULL ? NULL : callPP(name, glXGetProcAddress);
                         }
                     };
                     break;
