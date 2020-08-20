@@ -368,8 +368,8 @@ public final class GL {
 
                 // Try the 3.0+ version query first
                 callPV(GL_MAJOR_VERSION, memAddress(version), GetIntegerv);
-				apiLog("OpenGL was " + majorVersion);
-                if (4 < (majorVersion = version.get(0))) {
+				apiLog("OpenGL was " + (majorVersion = version.get(0)));
+                if (callI(GetError) == GL_NO_ERROR && 4 < majorVersion) {
 					// throw new IllegalStateException("Memory error?: OpenGL major version out of range (" + majorVersion + ")");
 					majorVersion = 2;
 					minorVersion = 1;
