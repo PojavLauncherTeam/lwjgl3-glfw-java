@@ -351,9 +351,6 @@ public final class GL {
             long GetString   = functionProvider.getFunctionAddress("glGetString");
             long GetIntegerv = functionProvider.getFunctionAddress("glGetIntegerv");
 			
-			// Debug
-			apiLog("glGetError=" + GetError + ",glGetString=" + GetString + ",glGetIntegerv=" + GetIntegerv);
-
             if (GetError == NULL || GetString == NULL || GetIntegerv == NULL) {
                 throw new IllegalStateException("Core OpenGL functions could not be found. Make sure that the OpenGL library has been loaded correctly.");
             }
@@ -395,6 +392,9 @@ public final class GL {
 				throw new IllegalStateException("Memory error?: OpenGL version out of range (" + majorVersion + "." + minorVersion + ")");
 			}
 
+			// Debug
+			apiLog("OpenGL was " + majorVersion + "." + minorVersion);
+			
             int[] GL_VERSIONS = {
                 5, // OpenGL 1.1 to 1.5
                 1, // OpenGL 2.0 to 2.1
