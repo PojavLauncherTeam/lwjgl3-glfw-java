@@ -486,7 +486,29 @@ public class GLFW
 	private static boolean mGLFW_inited = false;
 	private static boolean mGLFW_shouldClose = false;
 	
+	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
+	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
+	
 	static {
+		String propWidth = System.getProperty(PROP_WINDOW_WIDTH);
+		String propHeight = System.getProperty(PROP_WINDOW_HEIGHT);
+		String errHeader = "Properties " + PROP_WINDOW_WIDTH + " or " + PROP_WINDOW_HEIGHT;
+		if (propWidth == null || propHeight == null) {
+			throw new IllegalArgumentException(errHeader + " are required");
+		} else {
+			int intWidth, intHeight;
+			try {
+				intWidth = Integer.parseInt(propWidth);
+				intHeight = Integer.parseInt(propHeight);
+				
+				if (intWidth <= 0 || intHeight <= 0) {
+					throw new IllegalArgumentException(errHeader + " is too small");
+				}
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException(errHeader + " must be integer");
+			}
+		}
+		
 		mGLFWErrorCallback = new GLFWErrorCallback() {
             private java.util.Map<Integer, String> ERROR_CODES = APIUtil.apiClassTokens((field, value) -> 0x10000 < value && value < 0x20000, null, GLFW.class);
 
@@ -632,8 +654,8 @@ public class GLFW
         
         xpos.put(0);
         ypos.put(0);
-        width.put(AndroidDisplay.windowWidth);
-        height.put(AndroidDisplay.windowHeight);
+        width.put(Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
+        height.put(Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
 		
 		priGlfwNoError();
     }
@@ -663,8 +685,8 @@ public class GLFW
         
         xpos[0] = 0;
         ypos[0] = 0;
-        width[0] = AndroidDisplay.windowWidth;
-        height[0] = AndroidDisplay.windowHeight;
+        width[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH));
+        height[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT));
 		
 		priGlfwNoError();
     }
@@ -722,8 +744,8 @@ public class GLFW
     public static GLFWVidMode glfwGetVideoMode(long monitor) {
 		ByteBuffer buffer = ByteBuffer.allocateDirect(30).order(ByteOrder.nativeOrder());
 		// MemoryStack.stackPush().malloc(6);
-		buffer.put((byte) AndroidDisplay.windowWidth);
-		buffer.put((byte) AndroidDisplay.windowHeight);
+		buffer.put((byte) Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
+		buffer.put((byte) Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
 		
 		// FIXME RGB bit below is correct?
 		buffer.put((byte) 255);
@@ -1009,8 +1031,8 @@ public class GLFW
 	}
 	
 	public static void glfwGetWindowSize(long window, IntBuffer width, IntBuffer height) {
-		width.put(AndroidDisplay.windowWidth);
-		height.put(AndroidDisplay.windowHeight);
+		width.put(Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
+		height.put(Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
 		
 		priGlfwNoError();
 	}
