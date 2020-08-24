@@ -49,6 +49,13 @@
 							<classpathPrefix>lib/</classpathPrefix>
 						</manifest>
 					</archive>
+					<archive>
+						<manifest>
+							<mainClass>
+								
+							</mainClass>
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -59,13 +66,6 @@
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>android</groupId>
-			<artifactId>egl-gles</artifactId>
-			<scope>system</scope>
-			<version>1.0</version>
-			<systemPath>${basedir}/lib/android-egl-gles.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
