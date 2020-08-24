@@ -753,7 +753,12 @@ public class GLFW
     }
 	
 	public static void glfwMakeContextCurrent(long window) {
-		// Stub
+		EGL14.eglMakeCurrent(
+			EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY),
+			EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),
+			EGL14.eglGetCurrentSurface(EGL14.EGL_READ),
+			EGL14.eglGetCurrentContext()
+		);
 		
 		priGlfwNoError();
 	}
