@@ -509,27 +509,8 @@ public class GLFW
 			}
 		}
 		
-		mGLFWErrorCallback = new GLFWErrorCallback() {
-            private java.util.Map<Integer, String> ERROR_CODES = APIUtil.apiClassTokens((field, value) -> 0x10000 < value && value < 0x20000, null, GLFW.class);
-
-			// Fake one!!!
-			@Override
-			public void free() {}
-			
-            @Override
-            public void invoke(int error, long description) {
-                String msg = getDescription(description);
-
-                System.out.printf("[LWJGL] %s error\n", ERROR_CODES.get(error));
-                System.out.println("\tDescription : " + msg);
-                System.out.println("\tStacktrace  :");
-                StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-                for ( int i = 4; i < stack.length; i++ ) {
-                    System.out.print("\t\t");
-                    System.out.println(stack[i].toString());
-                }
-            }
-        };
+		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
+		
 /*
 		mGLFWMonitorCallback = new GLFWMonitorCallback(){
 
@@ -823,8 +804,7 @@ public class GLFW
 	public static GLFWErrorCallback glfwSetErrorCallback(@Nullable @NativeType("GLFWerrorfun") GLFWErrorCallbackI cbfun) {
 		GLFWErrorCallback lastCallback = mGLFWErrorCallback;
 		if (cbfun == null) mGLFWErrorCallback = null;
-		// FIXME can't invoke address()
-		// else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
+		else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
 
 		priGlfwNoError();
 		return lastCallback;
@@ -860,7 +840,7 @@ public class GLFW
 	public static GLFWMonitorCallback glfwSetMonitorCallback(@Nullable @NativeType("GLFWmonitorfun") GLFWMonitorCallbackI cbfun) {
 		GLFWMonitorCallback lastCallback = mGLFWMonitorCallback;
 		if (cbfun == null) mGLFWMonitorCallback = null;
-		// else mGLFWMonitorCallback = GLFWMonitorCallback.create(cbfun);
+		else mGLFWMonitorCallback = GLFWMonitorCallback.create(cbfun);
 
 		priGlfwNoError();
 		return lastCallback;
