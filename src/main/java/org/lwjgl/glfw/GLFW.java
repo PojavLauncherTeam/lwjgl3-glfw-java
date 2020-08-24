@@ -599,6 +599,15 @@ public class GLFW
 		return 2L;
 	}
 	
+	public static void glfwGetFramebufferSize(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") IntBuffer width, @Nullable @NativeType("int *") IntBuffer height) {
+        if (CHECKS) {
+            checkSafe(width, 1);
+            checkSafe(height, 1);
+        }
+        width.put(Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
+        height.put(Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
+	}
+	
 	@Nullable
     @NativeType("GLFWmonitor **")
     public static PointerBuffer glfwGetMonitors() {
