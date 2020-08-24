@@ -8,9 +8,7 @@
 	<!-- 3.2.3? -->
 	<version>1.0</version>
 
-	<!-- FIXME change it to the project's name -->
 	<name>LWJGL-GLFW</name>
-	<!-- FIXME change it to the project's website -->
 	<url>https://github.com/PojavLauncherTeam/lwjgl3-glfw-java</url>
 
 	<properties>
@@ -66,13 +64,6 @@
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
 			<version>3.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.lwjgl</groupId>
-			<artifactId>boardwalk-lwjgl</artifactId>
-			<scope>system</scope>
-			<version>2.9.1</version>
-			<systemPath>${basedir}/lib/boardwalk-lwjgl.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>lwjgl</groupId>

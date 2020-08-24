@@ -4,16 +4,12 @@
  */
 package org.lwjgl.glfw;
 
-import android.opengl.*;
-
 import java.lang.reflect.*;
 import java.nio.*;
 
 import javax.annotation.*;
-import javax.microedition.khronos.egl.EGLDisplay;
 
 import org.lwjgl.*;
-import org.lwjgl.opengl.AndroidDisplay;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.APIUtil.*;
@@ -509,6 +505,14 @@ public class GLFW
 			}
 		}
 		
+		System.loadLibrary("binexecutor");
+		setupEGL(
+			Long.parseLong(System.getProperty("glfwstub.eglContext")),
+			Long.parseLong(System.getProperty("glfwstub.eglDisplay")),
+			Long.parseLong(System.getProperty("glfwstub.eglSurfaceRead")),
+			Long.parseLong(System.getProperty("glfwstub.eglSurfaceDraw"))
+		);
+		
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
 		
 /*
@@ -525,6 +529,11 @@ public class GLFW
 		};
 */
 	}
+	
+	private static native boolean nativeEglSwapBuffers();
+	private static native boolean nativeEglSwapInterval(int inverval);
+	
+	private static native void setupEGL(long eglContext, long eglDisplay, long eglReadSurface, long eglDrawSurface);
 	
 	private static void priGlfwSetError(int error) {
 		mGLFW_currentError = error;
@@ -584,7 +593,11 @@ public class GLFW
 	public static void glfwTerminate() {
 		if (!mGLFW_inited) {
 			priGlfwSetError(GLFW_NOT_INITIALIZED);
-		} else priGlfwNoError();
+		} else {
+			// EGL14.eglTerminate(EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY));
+			
+			priGlfwNoError();
+		}
 	}
 	
 	public static void glfwInitHint(int hint, int value) {
@@ -690,6 +703,8 @@ public class GLFW
 
     @NativeType("GLFWmonitor *")
     public static long glfwGetWindowMonitor(@NativeType("GLFWwindow *") long window) {
+		priGlfwNoError();
+		
         // Prevent NULL check
         return 3L;
     }
@@ -753,12 +768,7 @@ public class GLFW
     }
 	
 	public static void glfwMakeContextCurrent(long window) {
-		EGL14.eglMakeCurrent(
-			EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY),
-			EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW),
-			EGL14.eglGetCurrentSurface(EGL14.EGL_READ),
-			EGL14.eglGetCurrentContext()
-		);
+		// Stub
 		
 		priGlfwNoError();
 	}
@@ -951,15 +961,11 @@ public class GLFW
 	}
 
 	public static void glfwSwapBuffers(long window) {
-		EGL14.eglSwapBuffers(EGL14.eglGetCurrentDisplay(), EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW));
-		
-		priGlfwNoError();
+		priGlfwSetError(nativeEglSwapBuffers() ? GLFW_NO_ERROR : GLFW_NO_WINDOW_CONTEXT);
 	}
 	
 	public static void glfwSwapInterval(int interval) {
-		EGL14.eglSwapInterval(EGL14.eglGetCurrentDisplay(), interval);
-	
-        priGlfwSetError(EGL14.eglGetError() == EGL14.EGL_BAD_DISPLAY ? GLFW_NO_WINDOW_CONTEXT : GLFW_NO_ERROR);
+        priGlfwSetError(nativeEglSwapInterval(interval) ? GLFW_NO_ERROR : GLFW_NO_WINDOW_CONTEXT);
     }
 	
 	// GLFW Window functions
