@@ -74,7 +74,11 @@ public abstract class GLFWErrorCallback extends Callback implements GLFWErrorCal
      * @return the description as a String
      */
     public static String getDescription(long description) {
-        return memUTF8(description);
+        try {
+			return memUTF8(description);
+		} catch (NullPointerException e) {
+			return "null (unknown " + Long.toHexString(description) + ")";
+		}
     }
 
     /**
