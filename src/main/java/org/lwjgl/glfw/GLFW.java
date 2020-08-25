@@ -627,7 +627,20 @@ public class GLFW
         width.put(Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
         height.put(Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
 	}
-	
+
+	public static void glfwGetFramebufferSize(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") int[] width, @Nullable @NativeType("int *") int[] height) {
+        if (CHECKS) {
+            // check(window);
+            checkSafe(width, 1);
+            checkSafe(height, 1);
+        }
+        
+		width[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH));
+        height[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT));
+
+		priGlfwNoError();
+    }
+
 	@Nullable
     @NativeType("GLFWmonitor **")
     public static PointerBuffer glfwGetMonitors() {
