@@ -586,8 +586,13 @@ public class GLFW
 	public static boolean glfwInit() {
 		if (mGLFW_inited) {
 			priGlfwSetError(GLFW_NOT_INITIALIZED);
-		} else priGlfwNoError();
-        return !mGLFW_inited;
+			
+			return false;
+		} else {
+			mGLFW_inited = true;
+			priGlfwNoError();
+			return true;
+		}
     }
 	
 	public static void glfwTerminate() {
@@ -595,6 +600,8 @@ public class GLFW
 			priGlfwSetError(GLFW_NOT_INITIALIZED);
 		} else {
 			// EGL14.eglTerminate(EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY));
+			
+			mGLFW_inited = false;
 			
 			priGlfwNoError();
 		}
