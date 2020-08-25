@@ -902,11 +902,11 @@ public class GLFW
 	}
 
 	public static void glfwSwapBuffers(long window) {
-		priGlfwSetError(nativeEglSwapBuffers() ? GLFW_NO_ERROR : GLFW_NO_WINDOW_CONTEXT);
+		nativeEglSwapBuffers();
 	}
 
 	public static void glfwSwapInterval(int interval) {
-        priGlfwSetError(nativeEglSwapInterval(interval) ? GLFW_NO_ERROR : GLFW_NO_WINDOW_CONTEXT);
+        nativeEglSwapInterval(interval);
     }
 
 	// GLFW Window functions
