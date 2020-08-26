@@ -501,10 +501,7 @@ public class GLFW
 			Long.parseLong(System.getProperty("glfwstub.eglContext")),
 			Long.parseLong(System.getProperty("glfwstub.eglDisplay")),
 			Long.parseLong(System.getProperty("glfwstub.eglSurfaceRead")),
-			Long.parseLong(System.getProperty("glfwstub.eglSurfaceDraw")),
-			
-			// Is using Regal?
-			System.getProperty("org.lwjgl.opengl.libname").contains("libRegal.so")
+			Long.parseLong(System.getProperty("glfwstub.eglSurfaceDraw"))
 		);
 
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
@@ -530,7 +527,7 @@ public class GLFW
 	private static native boolean nativeEglSwapBuffers();
 	private static native boolean nativeEglSwapInterval(int inverval);
 
-	private static native void setupEGL(long eglContext, long eglDisplay, long eglReadSurface, long eglDrawSurface, boolean isUsingRegal);
+	private static native void setupEGL(long eglContext, long eglDisplay, long eglReadSurface, long eglDrawSurface);
 	/*
 	 private static void priGlfwSetError(int error) {
 	 mGLFW_currentError = error;
