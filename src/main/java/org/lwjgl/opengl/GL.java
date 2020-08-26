@@ -617,63 +617,70 @@ public final class GL {
             throw new IllegalStateException("OpenGL library has not been loaded.");
         }
 
-		// If using Regal, init it first
-		if (System.getProperty("org.lwjgl.opengl.libname").contains("libRegal.so")) {
-			long RegalMakeCurrent = functionProvider.getFunctionAddress("RegalMakeCurrent");
-			callP(Long.parseLong(System.getProperty("glfwstub.eglContext")), RegalMakeCurrent);
-		}
+		final boolean isUsingRegal = System.getProperty("org.lwjgl.opengl.libname").contains("libRegal.so");
 		
         int majorVersion;
         int minorVersion;
 
-        try (MemoryStack stack = stackPush()) {
-            IntBuffer piMajor = stack.ints(0);
-            IntBuffer piMinor = stack.ints(0);
+		Set<String> supportedExtensions = new HashSet<>(32);
+		
+		int[][] GLX_VERSIONS = {
+			{1, 2, 3, 4}
+		};
+		
+		// If using Regal, init it first
+		if (isUsingRegal) {
+			long RegalMakeCurrent = functionProvider.getFunctionAddress("RegalMakeCurrent");
+			callPV(Long.parseLong(System.getProperty("glfwstub.eglContext", "0")), RegalMakeCurrent);
+			
+			majorVersion = 1;
+			minorVersion = 4;
+		} else {
+			try (MemoryStack stack = stackPush()) {
+				IntBuffer piMajor = stack.ints(0);
+				IntBuffer piMinor = stack.ints(0);
 
-            if (!glXQueryVersion(display, piMajor, piMinor)) {
-                throw new IllegalStateException("Failed to query GLX version");
-            }
+				if (!glXQueryVersion(display, piMajor, piMinor)) {
+					throw new IllegalStateException("Failed to query GLX version");
+				}
 
-            majorVersion = piMajor.get(0);
-            minorVersion = piMinor.get(0);
-            if (majorVersion != 1) {
-                throw new IllegalStateException("Invalid GLX major version: " + majorVersion);
-            }
-        }
+				majorVersion = piMajor.get(0);
+				minorVersion = piMinor.get(0);
+				if (majorVersion != 1) {
+					throw new IllegalStateException("Invalid GLX major version: " + majorVersion);
+				}
+			}
+		}
+		
+		for (int major = 1; major <= GLX_VERSIONS.length; major++) {
+			int[] minors = GLX_VERSIONS[major - 1];
+			for (int minor : minors) {
+				if (major < majorVersion || (major == majorVersion && minor <= minorVersion)) {
+					supportedExtensions.add("GLX" + major + minor);
+				}
+			}
+		}
 
-        Set<String> supportedExtensions = new HashSet<>(32);
+		if (!isUsingRegal) {
+			if (1 <= minorVersion) {
+				String extensionsString;
 
-        int[][] GLX_VERSIONS = {
-            {1, 2, 3, 4}
-        };
+				if (screen == -1) {
+					long glXGetClientString = functionProvider.getFunctionAddress("glXGetClientString");
+					extensionsString = memASCIISafe(callPP(display, GLX_EXTENSIONS, glXGetClientString));
+				} else {
+					long glXQueryExtensionsString = functionProvider.getFunctionAddress("glXQueryExtensionsString");
+					extensionsString = memASCIISafe(callPP(display, screen, glXQueryExtensionsString));
+				}
 
-        for (int major = 1; major <= GLX_VERSIONS.length; major++) {
-            int[] minors = GLX_VERSIONS[major - 1];
-            for (int minor : minors) {
-                if (major < majorVersion || (major == majorVersion && minor <= minorVersion)) {
-                    supportedExtensions.add("GLX" + major + minor);
-                }
-            }
-        }
-
-        if (1 <= minorVersion) {
-            String extensionsString;
-
-            if (screen == -1) {
-                long glXGetClientString = functionProvider.getFunctionAddress("glXGetClientString");
-                extensionsString = memASCIISafe(callPP(display, GLX_EXTENSIONS, glXGetClientString));
-            } else {
-                long glXQueryExtensionsString = functionProvider.getFunctionAddress("glXQueryExtensionsString");
-                extensionsString = memASCIISafe(callPP(display, screen, glXQueryExtensionsString));
-            }
-
-            if (extensionsString != null) {
-                StringTokenizer tokenizer = new StringTokenizer(extensionsString);
-                while (tokenizer.hasMoreTokens()) {
-                    supportedExtensions.add(tokenizer.nextToken());
-                }
-            }
-        }
+				if (extensionsString != null) {
+					StringTokenizer tokenizer = new StringTokenizer(extensionsString);
+					while (tokenizer.hasMoreTokens()) {
+						supportedExtensions.add(tokenizer.nextToken());
+					}
+				}
+			}
+		}
 
         return new GLXCapabilities(functionProvider, supportedExtensions);
     }
