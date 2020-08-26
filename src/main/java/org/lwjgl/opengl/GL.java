@@ -74,7 +74,11 @@ public final class GL {
     @Nullable
     private static GLXCapabilities capabilitiesGLX;
 
+	private static final boolean isUsingRegal;
+	
     static {
+		isUsingRegal = System.getProperty("org.lwjgl.opengl.libname").contains("libRegal.so");
+		
         Library.loadSystem(System::load, System::loadLibrary, GL.class, "org.lwjgl.opengl", Platform.mapLibraryNameBundled("lwjgl_opengl"));
 
         MAX_VERSION = apiParseVersion(Configuration.OPENGL_MAXVERSION);
@@ -163,13 +167,11 @@ public final class GL {
                         private final long glXGetProcAddress;
 
                         {
-                            long GetProcAddress = library.getFunctionAddress("glXGetProcAddress");
-                            if (GetProcAddress == NULL) {
-                                GetProcAddress = library.getFunctionAddress("glXGetProcAddressARB");
+                            glXGetProcAddress = library.getFunctionAddress(isUsingRegal ? "glGetProcAddressREGAL" : "glXGetProcAddress");
+                            if (glXGetProcAddress == NULL) {
+                                glXGetProcAddress = library.getFunctionAddress("glXGetProcAddressARB");
                             }
-
-                            glXGetProcAddress = GetProcAddress;
-                        }
+						}
 
                         @Override
                         long getExtensionAddress(long name) {
@@ -617,8 +619,6 @@ public final class GL {
             throw new IllegalStateException("OpenGL library has not been loaded.");
         }
 
-		final boolean isUsingRegal = System.getProperty("org.lwjgl.opengl.libname").contains("libRegal.so");
-		
         int majorVersion;
         int minorVersion;
 
