@@ -909,6 +909,18 @@ public class GLFW
         nativeEglSwapInterval(interval);
     }
 
+	private static long mInitialTime = System.nanoTime();
+	// private static double mTime = 0d;
+    public static double glfwGetTime() {
+		// Boardwalk: just use system timer
+        System.out.println("glfwGetTime");
+        return (System.nanoTime() - mInitialTime) / 1.e9;
+	}
+	
+	public static void glfwSetTime(double time) {
+		// mTime = time;
+	}
+	
 	// GLFW Window functions
     public static long glfwCreateWindow(int width, int height, CharSequence title, long monitor, long share) {
         EventLoop.OffScreen.check();
