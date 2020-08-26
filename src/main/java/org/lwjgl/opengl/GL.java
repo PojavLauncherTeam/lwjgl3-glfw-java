@@ -617,6 +617,12 @@ public final class GL {
             throw new IllegalStateException("OpenGL library has not been loaded.");
         }
 
+		// If using Regal, init it first
+		if (System.getProperty("org.lwjgl.opengl.libname").contains("libRegal.so")) {
+			long RegalMakeCurrent = functionProvider.getFunctionAddress("RegalMakeCurrent");
+			callP(Long.parseLong(System.getProperty("glfwstub.eglContext")), RegalMakeCurrent);
+		}
+		
         int majorVersion;
         int minorVersion;
 
