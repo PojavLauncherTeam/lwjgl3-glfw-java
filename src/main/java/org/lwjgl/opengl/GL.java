@@ -167,10 +167,12 @@ public final class GL {
                         private final long glXGetProcAddress;
 
                         {
-                            glXGetProcAddress = library.getFunctionAddress(isUsingRegal ? "glGetProcAddressREGAL" : "glXGetProcAddress");
-                            if (glXGetProcAddress == NULL) {
-                                glXGetProcAddress = library.getFunctionAddress("glXGetProcAddressARB");
+                            long GetProcAddress = library.getFunctionAddress(isUsingRegal ? "glGetProcAddressREGAL" : "glXGetProcAddress");
+                            if (GetProcAddress == NULL) {
+                                GetProcAddress = library.getFunctionAddress("glXGetProcAddressARB");
                             }
+							
+							glXGetProcAddress = GetProcAddress;
 						}
 
                         @Override
