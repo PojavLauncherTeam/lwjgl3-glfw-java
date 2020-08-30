@@ -505,7 +505,7 @@ public class GLFW
 				Long.parseLong(System.getProperty("glfwstub.eglSurfaceDraw"))
 			);
 		}
-
+		
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
 
 		mGLFWInputModes = new HashMap<Integer, Integer>();
@@ -526,6 +526,7 @@ public class GLFW
 		 */
 	}
 
+	private static native boolean nativeEglMakeCurrent();
 	private static native boolean nativeEglSwapBuffers();
 	private static native boolean nativeEglSwapInterval(int inverval);
 
@@ -740,8 +741,7 @@ public class GLFW
 	}
 
 	public static void glfwMakeContextCurrent(long window) {
-		// Stub
-
+		nativeEglMakeCurrent();
 	}
 
 // Generated stub callback methods
