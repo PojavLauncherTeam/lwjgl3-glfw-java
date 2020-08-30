@@ -581,6 +581,7 @@ public class GLFW
     }
 
 	public static boolean glfwInit() {
+		nativeEglMakeCurrent();
 		return true;
     }
 
@@ -741,7 +742,7 @@ public class GLFW
 	}
 
 	public static void glfwMakeContextCurrent(long window) {
-		nativeEglMakeCurrent();
+		
 	}
 
 // Generated stub callback methods
