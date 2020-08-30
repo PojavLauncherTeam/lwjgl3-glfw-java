@@ -497,12 +497,14 @@ public class GLFW
 		}
 
 		System.loadLibrary("binexecutor");
-		setupEGL(
-			Long.parseLong(System.getProperty("glfwstub.eglContext")),
-			Long.parseLong(System.getProperty("glfwstub.eglDisplay")),
-			Long.parseLong(System.getProperty("glfwstub.eglSurfaceRead")),
-			Long.parseLong(System.getProperty("glfwstub.eglSurfaceDraw"))
-		);
+		if (Boolean.getBoolean(System.getProperty("glfwstub.initEgl", "true"))) {
+			setupEGL(
+				Long.parseLong(System.getProperty("glfwstub.eglContext")),
+				Long.parseLong(System.getProperty("glfwstub.eglDisplay")),
+				Long.parseLong(System.getProperty("glfwstub.eglSurfaceRead")),
+				Long.parseLong(System.getProperty("glfwstub.eglSurfaceDraw"))
+			);
+		}
 
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
 
