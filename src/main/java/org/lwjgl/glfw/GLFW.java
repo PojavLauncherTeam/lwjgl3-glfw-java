@@ -505,6 +505,7 @@ public class GLFW
 				Long.parseLong(System.getProperty("glfwstub.eglSurfaceDraw"))
 			);
 		}
+		nativeEglMakeCurrent();
 		
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
 
@@ -581,7 +582,6 @@ public class GLFW
     }
 
 	public static boolean glfwInit() {
-		nativeEglMakeCurrent();
 		return true;
     }
 
