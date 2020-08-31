@@ -505,7 +505,7 @@ public class GLFW
 				Long.parseLong(System.getProperty("glfwstub.eglSurfaceDraw"))
 			);
 		}
-		nativeEglMakeCurrent();
+		// nativeEglMakeCurrent();
 		
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
 
@@ -527,7 +527,7 @@ public class GLFW
 		 */
 	}
 
-	private static native boolean nativeEglMakeCurrent();
+	// private static native boolean nativeEglMakeCurrent();
 	private static native boolean nativeEglSwapBuffers();
 	private static native boolean nativeEglSwapInterval(int inverval);
 
