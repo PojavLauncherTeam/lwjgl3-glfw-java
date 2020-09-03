@@ -482,6 +482,7 @@ public class GLFW
 	private static GLFWGammaRamp mGLFWGammaRamp;
 	private static Map<Integer, Integer> mGLFWInputModes;
 	private static double[] mGLFWCursorPos;
+	private static long mGLFWWindowMonitor;
 
 	private static boolean mGLFW_shouldClose = false;
 
@@ -682,8 +683,12 @@ public class GLFW
 
     @NativeType("GLFWmonitor *")
     public static long glfwGetWindowMonitor(@NativeType("GLFWwindow *") long window) {
-        // Prevent NULL check
-        return 3L;
+        return mGLFWWindowMonitor;
+    }
+	
+	public static void glfwSetWindowMonitor(@NativeType("GLFWwindow *") long window, @NativeType("GLFWmonitor *") long monitor, int xpos, int ypos, int width, int height, int refreshRate) {
+		// weird calculation to fake pointer
+        mGLFWWindowMonitor = window * monitor;
     }
 
     public static void glfwGetVersion(IntBuffer major, IntBuffer minor, IntBuffer rev) {
