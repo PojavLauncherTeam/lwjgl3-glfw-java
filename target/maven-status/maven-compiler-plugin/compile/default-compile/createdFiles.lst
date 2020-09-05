@@ -10,6 +10,7 @@ org/lwjgl/glfw/GLFWDropCallback.class
 org/lwjgl/glfw/GLFWKeyCallbackI.class
 org/lwjgl/glfw/GLFWWindowIconifyCallback.class
 org/lwjgl/glfw/EventLoop.class
+org/lwjgl/opengl/GL$2.class
 org/lwjgl/glfw/GLFWFramebufferSizeCallbackI.class
 org/lwjgl/glfw/package-info.class
 org/lwjgl/glfw/GLFWGammaRamp.class
@@ -18,6 +19,7 @@ org/lwjgl/glfw/GLFWErrorCallbackI.class
 org/lwjgl/glfw/GLFWJoystickCallback$Container.class
 org/lwjgl/glfw/GLFWWindowFocusCallbackI.class
 org/lwjgl/glfw/GLFWGamepadState$Buffer.class
+HelloWorld.class
 org/lwjgl/glfw/GLFWCharCallback.class
 org/lwjgl/glfw/GLFWCursorPosCallbackI.class
 org/lwjgl/glfw/GLFWDropCallback$Container.class
@@ -36,8 +38,11 @@ org/lwjgl/glfw/GLFWScrollCallback$Container.class
 org/lwjgl/glfw/GLFWErrorCallback$2.class
 org/lwjgl/glfw/GLFWMouseButtonCallbackI.class
 org/lwjgl/glfw/GLFWCursorEnterCallbackI.class
+org/lwjgl/opengl/GL.class
 org/lwjgl/glfw/GLFWCursorEnterCallback$Container.class
 org/lwjgl/glfw/GLFWKeyCallback$Container.class
+org/lwjgl/opengl/GL$3.class
+org/lwjgl/opengl/GL$ICDStatic.class
 org/lwjgl/glfw/GLFWWindowSizeCallback$Container.class
 org/lwjgl/glfw/GLFWGamepadState.class
 org/lwjgl/glfw/GLFWErrorCallback.class
@@ -47,7 +52,9 @@ org/lwjgl/glfw/EventLoop$OnScreen.class
 org/lwjgl/glfw/GLFWWindowCloseCallback$Container.class
 org/lwjgl/glfw/GLFWVidMode$Buffer.class
 org/lwjgl/glfw/Callbacks.class
+org/lwjgl/opengl/GL$ICD.class
 org/lwjgl/glfw/GLFWWindowPosCallback$Container.class
+org/lwjgl/opengl/GL$SharedLibraryGL.class
 org/lwjgl/glfw/GLFWWindowMaximizeCallback.class
 org/lwjgl/glfw/GLFWWindowCloseCallbackI.class
 org/lwjgl/glfw/GLFWWindowIconifyCallback$Container.class
@@ -56,8 +63,11 @@ org/lwjgl/glfw/GLFWWindowContentScaleCallback.class
 org/lwjgl/glfw/GLFWWindowMaximizeCallback$Container.class
 org/lwjgl/glfw/GLFWWindowSizeCallbackI.class
 org/lwjgl/glfw/GLFWFramebufferSizeCallback$Container.class
+org/lwjgl/opengl/GL$4.class
 org/lwjgl/glfw/GLFWWindowCloseCallback.class
+org/lwjgl/opengl/GL$1.class
 org/lwjgl/glfw/GLFWCharModsCallback$Container.class
+org/lwjgl/opengl/GL$ICDStatic$WriteOnce.class
 org/lwjgl/glfw/GLFWWindowMaximizeCallbackI.class
 org/lwjgl/glfw/GLFWCursorEnterCallback.class
 org/lwjgl/glfw/GLFWCharCallback$Container.class

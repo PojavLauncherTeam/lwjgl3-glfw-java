@@ -497,7 +497,7 @@ public class GLFW
 			System.setProperty(PROP_WINDOW_HEIGHT, "720");
 		}
 
-		System.loadLibrary("binexecutor");
+		System.loadLibrary("pojavexec");
 		if (Boolean.getBoolean(System.getProperty("glfwstub.initEgl", "true"))) {
 			setupEGL(
 				Long.parseLong(System.getProperty("glfwstub.eglContext")),
