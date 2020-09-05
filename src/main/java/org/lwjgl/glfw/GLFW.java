@@ -528,7 +528,7 @@ public class GLFW
 		 */
 	}
 
-	// private static native boolean nativeEglMakeCurrent();
+	private static native boolean nativeEglMakeCurrent();
 	private static native boolean nativeEglSwapBuffers();
 	private static native boolean nativeEglSwapInterval(int inverval);
 
@@ -747,7 +747,9 @@ public class GLFW
 	}
 
 	public static void glfwMakeContextCurrent(long window) {
-		
+		if (!nativeEglMakeCurrent()) {
+			throw new RuntimeException("eglMakeCurrent() failed, check log file for more details");
+		}
 	}
 
 // Generated stub callback methods
