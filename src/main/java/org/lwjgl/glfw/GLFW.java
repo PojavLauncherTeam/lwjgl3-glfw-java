@@ -4,16 +4,15 @@
  */
 package org.lwjgl.glfw;
 
-import android.opengl.*;
-
 import java.lang.reflect.*;
 import java.nio.*;
 
 import javax.annotation.*;
-import javax.microedition.khronos.egl.EGLDisplay;
+
+import javax.microedition.khronos.egl.*;
 
 import org.lwjgl.*;
-import org.lwjgl.opengl.AndroidDisplay;
+import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.APIUtil.*;
@@ -21,6 +20,7 @@ import static org.lwjgl.system.Checks.*;
 import static org.lwjgl.system.JNI.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
+import java.util.*;
 
 public class GLFW
 {
@@ -206,7 +206,7 @@ public class GLFW
 
     /** If this bit is set the Num Lock key is enabled and the {@link #GLFW_LOCK_KEY_MODS LOCK_KEY_MODS} input mode is set. */
     public static final int GLFW_MOD_NUM_LOCK = 0x20;
-	
+
 
     /** Mouse buttons. See <a target="_blank" href="http://www.glfw.org/docs/latest/input.html#input_mouse_button">mouse button input</a> for how these are used. */
     public static final int
@@ -275,7 +275,7 @@ public class GLFW
 	GLFW_GAMEPAD_AXIS_LEFT_TRIGGER  = 4,
 	GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER = 5,
 	GLFW_GAMEPAD_AXIS_LAST          = GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER;
-	
+
 	public static final int
 	GLFW_NO_ERROR              = 0,
 	GLFW_NOT_INITIALIZED       = 0x10001,
@@ -291,7 +291,7 @@ public class GLFW
 	GLFW_CURSOR_UNAVAILABLE    = 0x1000B,
 	GLFW_FEATURE_UNAVAILABLE   = 0x1000C,
 	GLFW_FEATURE_UNIMPLEMENTED = 0x1000D;
-	
+
 	public static final int
 	GLFW_FOCUSED                 = 0x20001,
 	GLFW_ICONIFIED               = 0x20002,
@@ -387,7 +387,7 @@ public class GLFW
 	GLFW_SRGB_CAPABLE     = 0x2100E,
 	GLFW_REFRESH_RATE     = 0x2100F,
 	GLFW_DOUBLEBUFFER     = 0x21010;
-	
+
 	public static final int
 	GLFW_CLIENT_API               = 0x22001,
 	GLFW_CONTEXT_VERSION_MAJOR    = 0x22002,
@@ -481,39 +481,41 @@ public class GLFW
 	public static GLFWWindowPosCallback mGLFWWindowPosCallback;
 	public static GLFWWindowRefreshCallback mGLFWWindowRefreshCallback;
 	public static GLFWWindowSizeCallback mGLFWWindowSizeCallback;
-	
-	private static int mGLFW_currentError = GLFW_NO_ERROR;
-	private static boolean mGLFW_inited = false;
-	private static boolean mGLFW_shouldClose = false;
-	
-	static {
-		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
-/*
-		mGLFWMonitorCallback = new GLFWMonitorCallback(){
 
-			// Fake one!!!
-			@Override
-			public void free() {}
-			
-			@Override
-			public void callback(long args) {
-				// TODO: Implement this method
-			}
-		};
-*/
+	private static GLFWGammaRamp mGLFWGammaRamp;
+	private static Map<Integer, Integer> mGLFWInputModes;
+	private static double[] mGLFWCursorPos;
+	private static long mGLFWWindowMonitor;
+
+	private static boolean mGLFW_shouldClose = false;
+
+	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
+	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
+
+	static {
+		System.setProperty(PROP_WINDOW_WIDTH, AndroidDisplay.windowWidth);
+		System.setProperty(PROP_WINDOW_HEIGHT, AndroidDisplay.windowHeight);
+
+		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
+
+		mGLFWInputModes = new HashMap<Integer, Integer>();
+		mGLFWCursorPos = new double[]{0d, 0d};
+
+		/*
+		 mGLFWMonitorCallback = new GLFWMonitorCallback(){
+
+		 // Fake one!!!
+		 @Override
+		 public void free() {}
+
+		 @Override
+		 public void callback(long args) {
+		 // TODO: Implement this method
+		 }
+		 };
+		 */
 	}
-	
-	private static void priGlfwSetError(int error) {
-		mGLFW_currentError = error;
-		if (error != GLFW_NO_ERROR && mGLFWErrorCallback != null) {
-			mGLFWErrorCallback.invoke(error, 0);
-		}
-	}
-	
-	private static void priGlfwNoError() {
-		priGlfwSetError(GLFW_NO_ERROR);
-	}
-	
+
     protected GLFW() {
         throw new UnsupportedOperationException();
     }
@@ -545,61 +547,70 @@ public class GLFW
 			return 1;
 		}
 	};
-			// Library.loadNative(GLFW.class, "org.lwjgl.glfw", Configuration.GLFW_LIBRARY_NAME.get(Platform.mapLibraryNameBundled("glfw")), true);
-	
+	// Library.loadNative(GLFW.class, "org.lwjgl.glfw", Configuration.GLFW_LIBRARY_NAME.get(Platform.mapLibraryNameBundled("glfw")), true);
+
 	public static SharedLibrary getLibrary() {
         return GLFW;
     }
-	
+
 	public static boolean glfwInit() {
-		if (mGLFW_inited) {
-			priGlfwSetError(GLFW_NOT_INITIALIZED);
-		} else priGlfwNoError();
-        return !mGLFW_inited;
+		return true;
     }
-	
+
 	public static void glfwTerminate() {
-		if (!mGLFW_inited) {
-			priGlfwSetError(GLFW_NOT_INITIALIZED);
-		} else priGlfwNoError();
+		
 	}
-	
-	public static void glfwInitHint(int hint, int value) {
-        priGlfwNoError();
-    }
+
+	public static void glfwInitHint(int hint, int value) { }
 
 	@NativeType("GLFWwindow *")
 	public static long glfwGetCurrentContext() {
-		priGlfwNoError();
-		
 		// Stub prevent NULL check
 		return 2L;
 	}
-	
+
+	public static void glfwGetFramebufferSize(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") IntBuffer width, @Nullable @NativeType("int *") IntBuffer height) {
+        if (CHECKS) {
+            checkSafe(width, 1);
+            checkSafe(height, 1);
+        }
+        width.put(Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
+        height.put(Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
+	}
+
+	public static void glfwGetFramebufferSize(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") int[] width, @Nullable @NativeType("int *") int[] height) {
+        if (CHECKS) {
+            // check(window);
+            checkSafe(width, 1);
+            checkSafe(height, 1);
+        }
+
+		width[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH));
+        height[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT));
+
+    }
+
 	@Nullable
     @NativeType("GLFWmonitor **")
     public static PointerBuffer glfwGetMonitors() {
-        try {
-            // long __result = memAddress(buffer);
-            PointerBuffer pBuffer = PointerBuffer.allocateDirect(1);
-            // memPointerBufferSafe(__result, 1);
-            pBuffer.put(glfwGetPrimaryMonitor());
-            return pBuffer;
-        } finally {
-            priGlfwNoError();
-        }
+        PointerBuffer pBuffer = PointerBuffer.allocateDirect(1);
+		pBuffer.put(glfwGetPrimaryMonitor());
+		return pBuffer;
     }
-    
+
+    public static long glfwGetPrimaryMonitor() {
+	    // Prevent NULL check
+        return 1L;
+    }
+
     public static void glfwGetMonitorPos(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") IntBuffer xpos, @Nullable @NativeType("int *") IntBuffer ypos) {
         if (CHECKS) {
             checkSafe(xpos, 1);
             checkSafe(ypos, 1);
         }
-        
+
         xpos.put(0);
         ypos.put(0);
-		
-		priGlfwNoError();
     }
 
     public static void glfwGetMonitorWorkarea(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") IntBuffer xpos, @Nullable @NativeType("int *") IntBuffer ypos, @Nullable @NativeType("int *") IntBuffer width, @Nullable @NativeType("int *") IntBuffer height) {
@@ -609,26 +620,22 @@ public class GLFW
             checkSafe(width, 1);
             checkSafe(height, 1);
         }
-        
+
         xpos.put(0);
         ypos.put(0);
-        width.put(AndroidDisplay.windowWidth);
-        height.put(AndroidDisplay.windowHeight);
-		
-		priGlfwNoError();
+        width.put(Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
+        height.put(Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
     }
-    
+
     public static void glfwGetMonitorPos(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") int[] xpos, @Nullable @NativeType("int *") int[] ypos) {
         if (CHECKS) {
             // check(monitor);
             checkSafe(xpos, 1);
             checkSafe(ypos, 1);
         }
-        
+
         xpos[0] = 0;
         ypos[0] = 0;
-		
-		priGlfwNoError();
     }
 
     /** Array version of: {@link #glfwGetMonitorWorkarea GetMonitorWorkarea} */
@@ -640,48 +647,37 @@ public class GLFW
             checkSafe(width, 1);
             checkSafe(height, 1);
         }
-        
+
         xpos[0] = 0;
         ypos[0] = 0;
-        width[0] = AndroidDisplay.windowWidth;
-        height[0] = AndroidDisplay.windowHeight;
-		
-		priGlfwNoError();
-    }
-	
-    public static long glfwGetPrimaryMonitor() {
-	    priGlfwNoError();
-
-	    // Prevent NULL check
-        return 1L;
+        width[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH));
+        height[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT));
     }
 
     @NativeType("GLFWmonitor *")
     public static long glfwGetWindowMonitor(@NativeType("GLFWwindow *") long window) {
-        // Prevent NULL check
-        return 3L;
+        return mGLFWWindowMonitor;
+    }
+
+	public static void glfwSetWindowMonitor(@NativeType("GLFWwindow *") long window, @NativeType("GLFWmonitor *") long monitor, int xpos, int ypos, int width, int height, int refreshRate) {
+		// weird calculation to fake pointer
+        mGLFWWindowMonitor = window * monitor;
     }
 
     public static void glfwGetVersion(IntBuffer major, IntBuffer minor, IntBuffer rev) {
-		priGlfwNoError();
-		
         if (major != null) major.put(GLFW_VERSION_MAJOR);
 		if (minor != null) minor.put(GLFW_VERSION_MINOR);
 		if (rev != null) rev.put(GLFW_VERSION_REVISION);
     }
-	
+
 	public static String glfwGetVersionString() {
-		priGlfwNoError();
         return GLFW_VERSION_MAJOR + "." + GLFW_VERSION_MINOR + "." + GLFW_VERSION_REVISION;
     }
-	
+
 	public static int glfwGetError(@Nullable PointerBuffer description) {
-		int lastError = mGLFW_currentError;
-		priGlfwNoError();
-		
-        return lastError;
+		return GLFW_NO_ERROR;
     }
-    
+
 	@Nullable
     @NativeType("GLFWvidmode const *")
     public static GLFWVidMode.Buffer glfwGetVideoModes(@NativeType("GLFWmonitor *") long monitor) {
@@ -693,52 +689,48 @@ public class GLFW
             return GLFWVidMode.createSafe(__result, 1);
         } finally {
             stack.setPointer(stackPointer);
-			
-			priGlfwNoError();
         }
     }
-    
+
 	@Nullable
     public static GLFWVidMode glfwGetVideoMode(long monitor) {
-		ByteBuffer buffer = ByteBuffer.allocateDirect(30).order(ByteOrder.nativeOrder());
-		// MemoryStack.stackPush().malloc(6);
-		buffer.put((byte) AndroidDisplay.windowWidth);
-		buffer.put((byte) AndroidDisplay.windowHeight);
-		
-		// FIXME RGB bit below is correct?
-		buffer.put((byte) 255);
-		buffer.put((byte) 255);
-		buffer.put((byte) 255);
-		
+		ByteBuffer buffer = ByteBuffer.allocateDirect(GLFWVidMode.SIZEOF);
+        IntBuffer iBuffer = buffer.asIntBuffer();
+
+		iBuffer.put((byte) Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
+		iBuffer.put((byte) Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
+
+		// RGB bit
+		iBuffer.put((byte) 8);
+		iBuffer.put((byte) 8);
+		iBuffer.put((byte) 8);
+
 		// Refresh rate
-		buffer.put((byte) 60);
-		
+		iBuffer.put((byte) 60);
+
 		GLFWVidMode videoMode = new GLFWVidMode(buffer);
-		
-		priGlfwNoError();
-		
         return videoMode;
     }
-	
+
+	public static GLFWGammaRamp glfwGetGammaRamp(@NativeType("GLFWmonitor *") long monitor) {
+        return mGLFWGammaRamp;
+    }
+    public static void glfwSetGammaRamp(@NativeType("GLFWmonitor *") long monitor, @NativeType("const GLFWgammaramp *") GLFWGammaRamp ramp) {
+		mGLFWGammaRamp = ramp;
+	}
+
 	public static void glfwMakeContextCurrent(long window) {
-		// Stub
-		
-		priGlfwNoError();
+		if (!AndroidContextImplementation.theEgl.eglMakeCurrent(AndroidContextImplementation.display, AndroidContextImplementation.draw, AndroidContextImplementation.read, AndroidContextImplementation.context)) {
+			throw new RuntimeException("eglMakeCurrent() failed, check log file for more details");
+		}
 	}
-	
-	public static void glfwPollEvents() {
-		// Stub (@artdeell said safe)
-		
-		priGlfwNoError();
-	}
-	
+
 // Generated stub callback methods
 	public static GLFWCharCallback glfwSetCharCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWcharfun") GLFWCharCallbackI cbfun) {
 		GLFWCharCallback lastCallback = mGLFWCharCallback;
 		if (cbfun == null) mGLFWCharCallback = null;
 		else mGLFWCharCallback = GLFWCharCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -747,7 +739,6 @@ public class GLFW
 		if (cbfun == null) mGLFWCharModsCallback = null;
 		else mGLFWCharModsCallback = GLFWCharModsCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -756,7 +747,6 @@ public class GLFW
 		if (cbfun == null) mGLFWCursorEnterCallback = null;
 		else mGLFWCursorEnterCallback = GLFWCursorEnterCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -765,7 +755,6 @@ public class GLFW
 		if (cbfun == null) mGLFWCursorPosCallback = null;
 		else mGLFWCursorPosCallback = GLFWCursorPosCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -774,7 +763,6 @@ public class GLFW
 		if (cbfun == null) mGLFWDropCallback = null;
 		else mGLFWDropCallback = GLFWDropCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -783,7 +771,6 @@ public class GLFW
 		if (cbfun == null) mGLFWErrorCallback = null;
 		else mGLFWErrorCallback = GLFWErrorCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -792,7 +779,6 @@ public class GLFW
 		if (cbfun == null) mGLFWFramebufferSizeCallback = null;
 		else mGLFWFramebufferSizeCallback = GLFWFramebufferSizeCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -801,7 +787,6 @@ public class GLFW
 		if (cbfun == null) mGLFWJoystickCallback = null;
 		else mGLFWJoystickCallback = GLFWJoystickCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -809,8 +794,6 @@ public class GLFW
 		GLFWKeyCallback lastCallback = mGLFWKeyCallback;
 		if (cbfun == null) mGLFWKeyCallback = null;
 		else mGLFWKeyCallback = GLFWKeyCallback.create(cbfun);
-
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -819,7 +802,6 @@ public class GLFW
 		if (cbfun == null) mGLFWMonitorCallback = null;
 		else mGLFWMonitorCallback = GLFWMonitorCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -828,7 +810,6 @@ public class GLFW
 		if (cbfun == null) mGLFWMouseButtonCallback = null;
 		else mGLFWMouseButtonCallback = GLFWMouseButtonCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -837,7 +818,6 @@ public class GLFW
 		if (cbfun == null) mGLFWScrollCallback = null;
 		else mGLFWScrollCallback = GLFWScrollCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -846,7 +826,6 @@ public class GLFW
 		if (cbfun == null) mGLFWWindowCloseCallback = null;
 		else mGLFWWindowCloseCallback = GLFWWindowCloseCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -855,7 +834,6 @@ public class GLFW
 		if (cbfun == null) mGLFWWindowContentScaleCallback = null;
 		else mGLFWWindowContentScaleCallback = GLFWWindowContentScaleCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -863,8 +841,6 @@ public class GLFW
 		GLFWWindowFocusCallback lastCallback = mGLFWWindowFocusCallback;
 		if (cbfun == null) mGLFWWindowFocusCallback = null;
 		else mGLFWWindowFocusCallback = GLFWWindowFocusCallback.create(cbfun);
-
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -873,7 +849,6 @@ public class GLFW
 		if (cbfun == null) mGLFWWindowIconifyCallback = null;
 		else mGLFWWindowIconifyCallback = GLFWWindowIconifyCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -882,7 +857,6 @@ public class GLFW
 		if (cbfun == null) mGLFWWindowMaximizeCallback = null;
 		else mGLFWWindowMaximizeCallback = GLFWWindowMaximizeCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -891,7 +865,6 @@ public class GLFW
 		if (cbfun == null) mGLFWWindowPosCallback = null;
 		else mGLFWWindowPosCallback = GLFWWindowPosCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -900,7 +873,6 @@ public class GLFW
 		if (cbfun == null) mGLFWWindowRefreshCallback = null;
 		else mGLFWWindowRefreshCallback = GLFWWindowRefreshCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
@@ -909,140 +881,121 @@ public class GLFW
 		if (cbfun == null) mGLFWWindowSizeCallback = null;
 		else mGLFWWindowSizeCallback = GLFWWindowSizeCallback.create(cbfun);
 
-		priGlfwNoError();
 		return lastCallback;
 	}
 
 	public static void glfwSwapBuffers(long window) {
-		EGL14.eglSwapBuffers(EGL14.eglGetCurrentDisplay(), EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW));
-		
-		priGlfwNoError();
+		EGL10.eglSwapBuffers();
 	}
-	
+
 	public static void glfwSwapInterval(int interval) {
-		EGL14.eglSwapInterval(EGL14.eglGetCurrentDisplay(), interval);
-	
-        priGlfwSetError(EGL14.eglGetError() == EGL14.EGL_BAD_DISPLAY ? GLFW_NO_WINDOW_CONTEXT : GLFW_NO_ERROR);
+        EGL10.eglSwapInterval(AndroidContextImplementation.display, interval);
     }
-	
+
+	private static long mInitialTime = System.nanoTime();
+	// private static double mTime = 0d;
+    public static double glfwGetTime() {
+		// Boardwalk: just use system timer
+        System.out.println("glfwGetTime");
+        return (System.nanoTime() - mInitialTime) / 1.e9;
+	}
+
+	public static void glfwSetTime(double time) {
+		// mTime = time;
+	}
+
 	// GLFW Window functions
     public static long glfwCreateWindow(int width, int height, CharSequence title, long monitor, long share) {
         EventLoop.OffScreen.check();
-		
-		priGlfwNoError();
+
 
 		// Prevent NULL check
 		return 1L;
-		
-/*
-		try {
-			Display.setTitle(title.toString());
-			Display.setDisplayMode(new DisplayMode(width, height));
-			Display.create();
-			
-			// FIXME should it be placed here?
-			Keyboard.create();
-			Mouse.create();
-			
-			priGlfwNoError();
-			
-			// Prevent NULL check
-			return 1L;
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-			
-			priGlfwSetError(GLFW_PLATFORM_ERROR);
-			
-			// Failure
-			return MemoryUtil.NULL;
-		}
-*/
-		
-// Original
-/*
-        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
-        try {
-            stack.nUTF8(title, true);
-            long titleEncoded = stack.getPointerAddress();
-            return nglfwCreateWindow(width, height, titleEncoded, monitor, share);
-        } finally {
-            stack.setPointer(stackPointer);
-        }
-*/
 	}
-	
-	public static void glfwDestroyWindow(long window) {
-/*
-		Mouse.destroy();
-		Keyboard.destroy();
-		Display.destroy();
-*/
-		
-		priGlfwNoError();
-	}
-	
-	public static void glfwDefaultWindowHints() {
-		// Stub
-		
-		priGlfwNoError();
-	}
-	
+
+	public static void glfwDestroyWindow(long window) {}
+
+	public static void glfwDefaultWindowHints() {}
+
 	public static void glfwGetWindowSize(long window, IntBuffer width, IntBuffer height) {
-		width.put(AndroidDisplay.windowWidth);
-		height.put(AndroidDisplay.windowHeight);
-		
-		priGlfwNoError();
-	}
-	
-	public static void glfwSetWindowPos(long window, int x, int y) {
-		// Stub
-		
-		priGlfwNoError();
-	}
-	
-	public static void glfwShowWindow(long window) {
-		// Stub
-		
-		priGlfwNoError();
-	}
-	
-	public static void glfwWindowHint(int hint, int value) {
-        switch(hint) {
-			case GLFW_RESIZABLE:
-			case GLFW_VISIBLE:
-				// Ignore on Android
-				priGlfwNoError();
-				break;
-			
-			default:
-				// Unimplemented
-				// priGlfwSetError(GLFW_FEATURE_UNIMPLEMENTED);
-				
-				priGlfwNoError();
-				break;
-		}
-    }
+		width.put(Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
+		height.put(Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
 
-	public static void glfwWindowHintString(int hint, ByteBuffer value) {
-/*
-		if (CHECKS) {
-			checkNT1(value);
-		}
-		nglfwWindowHintString(hint, memAddress(value));
-*/
-
-		priGlfwNoError();
 	}
-	
+
+	public static void glfwSetWindowPos(long window, int x, int y) {}
+	public static void glfwShowWindow(long window) {}
+	public static void glfwWindowHint(int hint, int value) {}
+	public static void glfwWindowHintString(int hint, @NativeType("const char *") ByteBuffer value) {}
+    public static void glfwWindowHintString(int hint, @NativeType("const char *") CharSequence value) {}
+
 	public static boolean glfwWindowShouldClose(long window) {
-		priGlfwNoError();
-		
 		return mGLFW_shouldClose;
 	}
-	
+
 	public static void glfwSetWindowShouldClose(long window, boolean close) {
-		priGlfwNoError();
-		
 		mGLFW_shouldClose = close;
 	}
+
+	public static void glfwPollEvents() {
+		// Stub (@artdeell said safe)
+	}
+
+    public static void glfwWaitEvents() {}
+
+    public static void glfwWaitEventsTimeout(double timeout) {
+        // Boardwalk: this isn't how you do a frame limiter, but oh well
+        System.out.println("Frame limiter");
+        try {
+            Thread.sleep((long)(timeout * 1000));
+        } catch (InterruptedException ie) {
+        }
+        System.out.println("Out of the frame limiter");
+
+    }
+
+    public static void glfwPostEmptyEvent() {}
+
+	public static int glfwGetInputMode(@NativeType("GLFWwindow *") long window, int mode) {
+        return mGLFWInputModes.get(mode);
+    }
+
+    public static void glfwSetInputMode(@NativeType("GLFWwindow *") long window, int mode, int value) {
+		mGLFWInputModes.put(mode, value);
+	}
+    public static String glfwGetKeyName(int key, int scancode) {
+        return "Keyname todo";
+    }
+
+    public static int glfwGetKeyScancode(int key) {
+        return 0;
+    }
+
+    public static int glfwGetKey(@NativeType("GLFWwindow *") long window, int key) {
+        return 0;
+    }
+
+    public static int glfwGetMouseButton(@NativeType("GLFWwindow *") long window, int button) {
+        return 0;
+    }
+
+    public static void glfwGetCursorPos(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("double *") DoubleBuffer xpos, @Nullable @NativeType("double *") DoubleBuffer ypos) {
+		xpos.put(mGLFWCursorPos[0]);
+		ypos.put(mGLFWCursorPos[1]);
+	}
+
+    public static void glfwSetCursorPos(@NativeType("GLFWwindow *") long window, double xpos, double ypos) {
+		mGLFWCursorPos[0] = xpos;
+		mGLFWCursorPos[1] = ypos;
+	}
+
+    public static long glfwCreateCursor(@NativeType("const GLFWimage *") GLFWImage image, int xhot, int yhot) {
+        return 4L;
+    }
+    public static long glfwCreateStandardCursor(int shape) {
+        return 4L;
+    }
+    public static void glfwDestroyCursor(@NativeType("GLFWcursor *") long cursor) {}
+    public static void glfwSetCursor(@NativeType("GLFWwindow *") long window, @NativeType("GLFWcursor *") long cursor) {}
+
 }
