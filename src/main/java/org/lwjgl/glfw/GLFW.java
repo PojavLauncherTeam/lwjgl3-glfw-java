@@ -528,7 +528,9 @@ public class GLFW
 		 */
 	}
 
+	private static native boolean nativeEglInit();
 	private static native boolean nativeEglMakeCurrent();
+	private static native boolean nativeEglTerminate();
 	private static native boolean nativeEglSwapBuffers();
 	private static native boolean nativeEglSwapInterval(int inverval);
 
@@ -583,10 +585,12 @@ public class GLFW
     }
 
 	public static boolean glfwInit() {
-		return true;
+		return nativeEglInit();
     }
 
-	public static void glfwTerminate() {}
+	public static void glfwTerminate() {
+		nativeEglTerminate();
+	}
 
 	public static void glfwInitHint(int hint, int value) { }
 
