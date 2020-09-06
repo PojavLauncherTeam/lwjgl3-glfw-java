@@ -493,8 +493,8 @@ public class GLFW
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
 
 	static {
-		System.setProperty(PROP_WINDOW_WIDTH, AndroidDisplay.windowWidth);
-		System.setProperty(PROP_WINDOW_HEIGHT, AndroidDisplay.windowHeight);
+		System.setProperty(PROP_WINDOW_WIDTH, Integer.toString(AndroidDisplay.windowWidth));
+		System.setProperty(PROP_WINDOW_HEIGHT, Integer.toString(AndroidDisplay.windowHeight));
 
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
 
@@ -885,11 +885,11 @@ public class GLFW
 	}
 
 	public static void glfwSwapBuffers(long window) {
-		EGL10.eglSwapBuffers();
+		EGL10.eglSwapBuffers(AndroidContextImplementation.display, AndroidContextImplementation.draw);
 	}
 
 	public static void glfwSwapInterval(int interval) {
-        EGL10.eglSwapInterval(AndroidContextImplementation.display, interval);
+        android.opengl.EGL14.eglSwapInterval(android.opengl.EGL14.eglGetCurrentDisplay(), interval);
     }
 
 	private static long mInitialTime = System.nanoTime();
