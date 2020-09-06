@@ -885,19 +885,19 @@ public class GLFW
 	}
 
 	public static void glfwSwapBuffers(long window) {
-		EGL10.eglSwapBuffers(AndroidContextImplementation.display, AndroidContextImplementation.draw);
+		AndroidContextImplementation.theEgl.eglSwapBuffers(AndroidContextImplementation.display, AndroidContextImplementation.draw);
 	}
 
 	public static void glfwSwapInterval(int interval) {
-        android.opengl.EGL14.eglSwapInterval(android.opengl.EGL14.eglGetCurrentDisplay(), interval);
-    }
+            android.opengl.EGL14.eglSwapInterval(android.opengl.EGL14.eglGetCurrentDisplay(), interval);
+        }
 
 	private static long mInitialTime = System.nanoTime();
 	// private static double mTime = 0d;
-    public static double glfwGetTime() {
-		// Boardwalk: just use system timer
-        System.out.println("glfwGetTime");
-        return (System.nanoTime() - mInitialTime) / 1.e9;
+        public static double glfwGetTime() {
+            // Boardwalk: just use system timer
+            System.out.println("glfwGetTime");
+            return (System.nanoTime() - mInitialTime) / 1.e9;
 	}
 
 	public static void glfwSetTime(double time) {
