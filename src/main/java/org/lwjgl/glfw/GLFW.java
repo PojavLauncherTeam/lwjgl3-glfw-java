@@ -967,6 +967,12 @@ public class GLFW
 	public static void glfwSetWindowShouldClose(long window, boolean close) {
 		mGLFW_shouldClose = close;
 	}
+	
+
+    public static void glfwSetWindowTitle(@NativeType("GLFWwindow *") long window, @NativeType("char const *") ByteBuffer title) {}
+    public static void glfwSetWindowTitle(@NativeType("GLFWwindow *") long window, @NativeType("char const *") CharSequence title) {}
+	
+	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
 	public static void glfwPollEvents() {
 		// Stub (@artdeell said safe)
