@@ -8,6 +8,7 @@ public class CallbackReceiver {
     public static final int TYPE_MOUSE_KEYCODE_CONTROL = 4;
     public static final int TYPE_WINDOW_SIZE = 5;
     
+    public static boolean isCursorEntered = false;
     
 	// Called from Android side
 	public static void receiveCallback(int type, String data) {
@@ -16,6 +17,10 @@ public class CallbackReceiver {
         String[] dataArr = data.split(":");
 		switch (type) {
             case TYPE_CURSOR_POS:
+                if (GLFW.mGLFWCursorEnterCallback != null && !isCursorEntered) {
+                    isCursorEntered = true;
+                    GLFW.mGLFWCursorEnterCallback.invoke(1l, true);
+                }
                 if (GLFW.mGLFWCursorPosCallback != null)
                     GLFW.mGLFWCursorPosCallback.invoke(1l, Double.parseDouble(dataArr[0]), Double.parseDouble(dataArr[1]));
                 break;
