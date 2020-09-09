@@ -11,6 +11,8 @@ public class CallbackReceiver {
     
 	// Called from Android side
 	public static void receiveCallback(int type, String data) {
+        System.out.println("LWJFL GLFW Callback received type=" + Integer.toString(type) + ", data=" + data);
+        
         String[] dataArr = data.split(":");
 		switch (type) {
             case TYPE_CURSOR_POS:
