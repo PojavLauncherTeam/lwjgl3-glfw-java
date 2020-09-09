@@ -1,4 +1,5 @@
 package org.lwjgl.glfw;
+import java.io.*;
 
 public class CallbackReceiver {
     public static final int TYPE_CURSOR_POS = 0;
@@ -10,9 +11,22 @@ public class CallbackReceiver {
     
     public static boolean isCursorEntered = false;
     
+    public static PrintStream debugEventStream;
+    
+    static {
+        if (Boolean.parseBoolean(System.getProperty("glfwstub.debugInput", "false"))) {
+            try {
+                debugEventStream = new PrintStream(new File(System.getProperty("user.dir"), "glfwstub_inputeventlog.txt"));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
 	// Called from Android side
 	public static void receiveCallback(int type, String data) {
-        System.out.println("LWJFL GLFW Callback received type=" + Integer.toString(type) + ", data=" + data);
+        if (debugEventStream != null)
+            debugEventStream.println("LWJFL GLFW Callback received type=" + Integer.toString(type) + ", data=" + data);
         
         String[] dataArr = data.split(":");
 		switch (type) {
