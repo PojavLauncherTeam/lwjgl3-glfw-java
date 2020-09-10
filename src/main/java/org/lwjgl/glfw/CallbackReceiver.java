@@ -14,13 +14,18 @@ public class CallbackReceiver {
     public static PrintStream debugEventStream;
     
     static {
+	    
         if (Boolean.parseBoolean(System.getProperty("glfwstub.debugInput", "false"))) {
             try {
-                debugEventStream = new PrintStream(new File(System.getProperty("user.dir"), "glfwstub_inputeventlog.txt"));
+                //debugEventStream = new PrintStream(new File(System.getProperty("user.dir"), "glfwstub_inputeventlog.txt"));
+		    debugEventStream = System.out;
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
+	
+	    //Quick and dirty: debul all key inputs to System.out
+	    
     }
     
 	// Called from Android side
