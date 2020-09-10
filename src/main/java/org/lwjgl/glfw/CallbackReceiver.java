@@ -16,12 +16,12 @@ public class CallbackReceiver {
     static {
 	    
         if (Boolean.parseBoolean(System.getProperty("glfwstub.debugInput", "false"))) {
-            try {
+            //try {
                 //debugEventStream = new PrintStream(new File(System.getProperty("user.dir"), "glfwstub_inputeventlog.txt"));
 		    debugEventStream = System.out;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            //} catch (FileNotFoundException e) {
+            //    e.printStackTrace();
+            //}
         }
 	
 	    //Quick and dirty: debul all key inputs to System.out
