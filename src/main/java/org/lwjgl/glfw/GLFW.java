@@ -458,26 +458,26 @@ public class GLFW
 	GLFW_OSMESA_CONTEXT_API = 0x36003;
 
 	// GLFW Callbacks
-	public static GLFWCharCallback mGLFWCharCallback;
-	public static GLFWCharModsCallback mGLFWCharModsCallback;
-	public static GLFWCursorEnterCallback mGLFWCursorEnterCallback;
-	public static GLFWCursorPosCallback mGLFWCursorPosCallback;
-	public static GLFWDropCallback mGLFWDropCallback;
-	public static GLFWErrorCallback mGLFWErrorCallback;
-	public static GLFWFramebufferSizeCallback mGLFWFramebufferSizeCallback;
-	public static GLFWJoystickCallback mGLFWJoystickCallback;
-	public static GLFWKeyCallback mGLFWKeyCallback;
-	public static GLFWMonitorCallback mGLFWMonitorCallback;
-	public static GLFWMouseButtonCallback mGLFWMouseButtonCallback;
-	public static GLFWScrollCallback mGLFWScrollCallback;
-	public static GLFWWindowCloseCallback mGLFWWindowCloseCallback;
-	public static GLFWWindowContentScaleCallback mGLFWWindowContentScaleCallback;
-	public static GLFWWindowFocusCallback mGLFWWindowFocusCallback;
-	public static GLFWWindowIconifyCallback mGLFWWindowIconifyCallback;
-	public static GLFWWindowMaximizeCallback mGLFWWindowMaximizeCallback;
-	public static GLFWWindowPosCallback mGLFWWindowPosCallback;
-	public static GLFWWindowRefreshCallback mGLFWWindowRefreshCallback;
-	public static GLFWWindowSizeCallback mGLFWWindowSizeCallback;
+	volatile public static GLFWCharCallback mGLFWCharCallback;
+	volatile public static GLFWCharModsCallback mGLFWCharModsCallback;
+	volatile public static GLFWCursorEnterCallback mGLFWCursorEnterCallback;
+	volatile public static GLFWCursorPosCallback mGLFWCursorPosCallback;
+	volatile public static GLFWDropCallback mGLFWDropCallback;
+	volatile public static GLFWErrorCallback mGLFWErrorCallback;
+	volatile public static GLFWFramebufferSizeCallback mGLFWFramebufferSizeCallback;
+	volatile public static GLFWJoystickCallback mGLFWJoystickCallback;
+	volatile public static GLFWKeyCallback mGLFWKeyCallback;
+	volatile public static GLFWMonitorCallback mGLFWMonitorCallback;
+	volatile public static GLFWMouseButtonCallback mGLFWMouseButtonCallback;
+	volatile public static GLFWScrollCallback mGLFWScrollCallback;
+	volatile public static GLFWWindowCloseCallback mGLFWWindowCloseCallback;
+	volatile public static GLFWWindowContentScaleCallback mGLFWWindowContentScaleCallback;
+	volatile public static GLFWWindowFocusCallback mGLFWWindowFocusCallback;
+	volatile public static GLFWWindowIconifyCallback mGLFWWindowIconifyCallback;
+	volatile public static GLFWWindowMaximizeCallback mGLFWWindowMaximizeCallback;
+	volatile public static GLFWWindowPosCallback mGLFWWindowPosCallback;
+	volatile public static GLFWWindowRefreshCallback mGLFWWindowRefreshCallback;
+	volatile public static GLFWWindowSizeCallback mGLFWWindowSizeCallback;
 
 	private static GLFWGammaRamp mGLFWGammaRamp;
 	private static Map<Integer, Integer> mGLFWInputModes;
