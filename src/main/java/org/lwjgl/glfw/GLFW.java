@@ -484,7 +484,7 @@ public class GLFW
 	private static double[] mGLFWCursorPos;
 	private static long mGLFWWindowMonitor;
 
-	private static boolean mGLFW_shouldClose = false;
+	private static boolean mGLFW_shouldClose, mGLFWIsCursorEntered = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -975,7 +975,34 @@ public class GLFW
 	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
 	public static void glfwPollEvents() {
-		// Stub (@artdeell said safe)
+		if (!CallbackReceiver.PENDING_EVENT_READY) CallbackReceiver.PENDING_EVENT_READY = true;
+        if (CallbackReceiver.PENDING_EVENT_LIST.size() == 0) return;
+        
+        String[] dataArr = CallbackReceiver.PENDING_EVENT_LIST.remove(0).split(":");
+        switch (Integer.parseInt(dataArr[0])) {
+            case CallbackReceiver.TYPE_CURSOR_POS:
+                if (mGLFWCursorEnterCallback != null && !mGLFWIsCursorEntered) {
+                    mGLFWIsCursorEntered = true;
+                    mGLFWCursorEnterCallback.invoke(1l, true);
+                }
+                if (mGLFWCursorPosCallback != null)
+                    mGLFWCursorPosCallback.invoke(1l, Double.parseDouble(dataArr[1]), Double.parseDouble(dataArr[2]));
+                break;
+            case CallbackReceiver.TYPE_KEYCODE_CONTROL:
+                // TODO add scancode, mods impl
+                if (mGLFWKeyCallback != null)
+                    mGLFWKeyCallback.invoke(1l, Integer.parseInt(dataArr[1]), 0, Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
+                break;
+            case CallbackReceiver.TYPE_MOUSE_KEYCODE_CONTROL:
+                // TODO add mods impl
+                if (mGLFWMouseButtonCallback != null)
+                    mGLFWMouseButtonCallback.invoke(1l, Integer.parseInt(dataArr[1]), Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
+                break;
+            case CallbackReceiver.TYPE_WINDOW_SIZE:
+                if (mGLFWWindowSizeCallback != null)
+                    mGLFWWindowSizeCallback.invoke(1l, Integer.parseInt(dataArr[1]), Integer.parseInt(dataArr[2]));
+                break;
+        }
 	}
 
     public static void glfwWaitEvents() {}
