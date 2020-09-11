@@ -55,6 +55,11 @@ public class HelloWorld {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
 		});
+        
+        System.out.println("ThreadOutsideCallback=" + Thread.currentThread().getName());
+        glfwSetCursorPosCallback(0, (window, x, y) -> {
+            System.out.println("ThreadInsideCallback=" + Thread.currentThread().getName() + ", x=" + x + ", y=" + y);
+        });
 
 		// Get the thread stack and push a new frame
 		try {
