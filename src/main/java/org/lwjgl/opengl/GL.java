@@ -87,6 +87,8 @@ public final class GL {
             create();
         }
     }
+    
+    private static native void nativeRegalMakeCurrent();
 
     private GL() {}
 
@@ -632,9 +634,8 @@ public final class GL {
 		
 		// If using Regal, init it first
 		if (isUsingRegal) {
-			long RegalMakeCurrent = functionProvider.getFunctionAddress("RegalMakeCurrent");
-			callPV(Long.parseLong(System.getProperty("glfwstub.eglContext", "0")), RegalMakeCurrent);
-			
+            nativeRegalMakeCurrent();
+            
 			majorVersion = 1;
 			minorVersion = 4;
 		} else {
