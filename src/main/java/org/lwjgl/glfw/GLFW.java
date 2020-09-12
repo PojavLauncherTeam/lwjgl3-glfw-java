@@ -1042,5 +1042,9 @@ public class GLFW
     }
     public static void glfwDestroyCursor(@NativeType("GLFWcursor *") long cursor) {}
     public static void glfwSetCursor(@NativeType("GLFWwindow *") long window, @NativeType("GLFWcursor *") long cursor) {}
-
+    
+    public static boolean glfwRawMouseMotionSupported() {
+        // Should be not supported?
+        return false;
+    }
 }
