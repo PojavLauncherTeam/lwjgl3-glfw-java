@@ -485,7 +485,7 @@ public class GLFW
 	private static Map<Integer, Integer> mGLFWInputModes;
 	private static long mGLFWWindowMonitor;
 
-	private static boolean mGLFW_shouldClose = false;
+	private static boolean mGLFW_shouldClose, mGLFWIsCursorEntered = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -512,7 +512,10 @@ public class GLFW
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
 
 		mGLFWInputModes = new HashMap<Integer, Integer>();
-		mGLFWCursorPos = new double[]{0d, 0d};
+		mGLFWCursorPos = new double[]{
+            0d, 0d, // Current pos
+            0d, 0d  // Last glfwPollEvents() pos
+        };
 
 		/*
 		 mGLFWMonitorCallback = new GLFWMonitorCallback(){
@@ -979,11 +982,42 @@ public class GLFW
 		if (!CallbackReceiver.PENDING_EVENT_READY) CallbackReceiver.PENDING_EVENT_READY = true;
         // if (CallbackReceiver.PENDING_EVENT_LIST.size() == 0) return;
         
+        if (mGLFWCursorEnterCallback != null && !mGLFWIsCursorEntered) {
+            mGLFWIsCursorEntered = true;
+            mGLFWCursorEnterCallback.invoke(1l, true);
+        }
+        
+        if (mGLFWCursorPos[0] != mGLFWCursorPos[2] || mGLFWCursorPos[1] != mGLFWCursorPos[3]) {
+            mGLFWCursorPos[2] = mGLFWCursorPos[0];
+            mGLFWCursorPos[3] = mGLFWCursorPos[1];
+            
+            if (mGLFWCursorPosCallback != null) {
+                mGLFWCursorPosCallback.invoke(1l, mGLFWCursorPos[0], mGLFWCursorPos[1]);
+            }
+        }
+        
         // Indirect event
-        /*
         String[] dataArr = CallbackReceiver.PENDING_EVENT_LIST.remove(0).split(":");
-        CallbackReceiver.executeEvent(...);
-        */
+        int type = Integer.parseInt(dataArr[0]);
+        switch (type) {
+            case CallbackReceiver.TYPE_KEYCODE_CONTROL:
+                // TODO add scancode, mods impl
+                if (mGLFWKeyCallback != null)
+                    mGLFWKeyCallback.invoke(1l, Integer.parseInt(dataArr[1]), 0, Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
+                break;
+            case CallbackReceiver.TYPE_MOUSE_KEYCODE_CONTROL:
+                // TODO add mods impl
+                if (mGLFWMouseButtonCallback != null)
+                    mGLFWMouseButtonCallback.invoke(1l, Integer.parseInt(dataArr[1]), Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
+                break;
+            case CallbackReceiver.TYPE_WINDOW_SIZE:
+                if (mGLFWWindowSizeCallback != null)
+                    mGLFWWindowSizeCallback.invoke(1l, Integer.parseInt(dataArr[1]), Integer.parseInt(dataArr[2]));
+                break;
+            default:
+                System.err.println("GLFWEvent: unknown callback type " + type);
+                break;
+        }
 	}
 
     public static void glfwWaitEvents() {}
@@ -1032,6 +1066,9 @@ public class GLFW
     public static void glfwSetCursorPos(@NativeType("GLFWwindow *") long window, double xpos, double ypos) {
 		mGLFWCursorPos[0] = xpos;
 		mGLFWCursorPos[1] = ypos;
+        mGLFWCursorPos[2] = mGLFWCursorPos[0];
+        mGLFWCursorPos[3] = mGLFWCursorPos[1];
+        
 	}
 	
     public static long glfwCreateCursor(@NativeType("const GLFWimage *") GLFWImage image, int xhot, int yhot) {
