@@ -997,6 +997,7 @@ public class GLFW
         }
         
         // Indirect event
+        if (CallbackReceiver.PENDING_EVENT_LIST.size() == 0) return;
         String[] dataArr = CallbackReceiver.PENDING_EVENT_LIST.remove(0).split(":");
         int type = Integer.parseInt(dataArr[0]);
         switch (type) {

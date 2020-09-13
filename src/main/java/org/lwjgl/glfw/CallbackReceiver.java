@@ -16,8 +16,6 @@ public class CallbackReceiver {
     
     public static final boolean INPUT_DEBUG_ENABLED;
     
-    private static boolean isCursorEntered;
-    
     // TODO send grab state event to Androud
     
     static {
