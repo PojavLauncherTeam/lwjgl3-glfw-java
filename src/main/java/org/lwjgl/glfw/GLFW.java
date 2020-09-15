@@ -976,13 +976,8 @@ public class GLFW
 	public static void glfwDefaultWindowHints() {}
 
 	public static void glfwGetWindowSize(long window, IntBuffer width, IntBuffer height) {
-        if (CHECKS) {
-            checkSafe(width, 1);
-            checkSafe(height, 1);
-        }
-        
-		width.put(mGLFWWindowSize[0]);
-		height.put(mGLFWWindowSize[1]);
+        if (width != null) width.put(mGLFWWindowSize[0]);
+		if (height != null) height.put(mGLFWWindowSize[1]);
 	}
 
 	public static void glfwSetWindowPos(long window, int x, int y) {}
