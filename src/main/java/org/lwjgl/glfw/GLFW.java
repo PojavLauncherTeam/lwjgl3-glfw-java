@@ -717,9 +717,15 @@ public class GLFW
     }
 
     public static void glfwGetVersion(IntBuffer major, IntBuffer minor, IntBuffer rev) {
-        if (major != null) major.put(GLFW_VERSION_MAJOR);
-		if (minor != null) minor.put(GLFW_VERSION_MINOR);
-		if (rev != null) rev.put(GLFW_VERSION_REVISION);
+        if (CHECKS) {
+            checkSafe(major, 1);
+            checkSafe(minor, 1);
+            checkSafe(rev, 1);
+        }
+        
+        major.put(GLFW_VERSION_MAJOR);
+		minor.put(GLFW_VERSION_MINOR);
+		rev.put(GLFW_VERSION_REVISION);
     }
 
 	public static String glfwGetVersionString() {
@@ -970,9 +976,13 @@ public class GLFW
 	public static void glfwDefaultWindowHints() {}
 
 	public static void glfwGetWindowSize(long window, IntBuffer width, IntBuffer height) {
+        if (CHECKS) {
+            checkSafe(width, 1);
+            checkSafe(height, 1);
+        }
+        
 		width.put(mGLFWWindowSize[0]);
 		height.put(mGLFWWindowSize[1]);
-
 	}
 
 	public static void glfwSetWindowPos(long window, int x, int y) {}
@@ -1078,6 +1088,11 @@ public class GLFW
     }
 
     public static void glfwGetCursorPos(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("double *") DoubleBuffer xpos, @Nullable @NativeType("double *") DoubleBuffer ypos) {
+        if (CHECKS) {
+            checkSafe(xpos, 1);
+            checkSafe(ypos, 1);
+        }
+        
 		xpos.put(mGLFWCursorPos[0]);
 		ypos.put(mGLFWCursorPos[1]);
 	}
@@ -1085,7 +1100,6 @@ public class GLFW
     public static void glfwSetCursorPos(@NativeType("GLFWwindow *") long window, double xpos, double ypos) {
 		mGLFWCursorPos[0] = mGLFWCursorPos[2] = xpos;
 		mGLFWCursorPos[1] = mGLFWCursorPos[3] = ypos;
-        
 	}
 	
     public static long glfwCreateCursor(@NativeType("const GLFWimage *") GLFWImage image, int xhot, int yhot) {
