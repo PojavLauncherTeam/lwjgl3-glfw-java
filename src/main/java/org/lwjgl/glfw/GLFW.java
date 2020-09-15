@@ -483,6 +483,7 @@ public class GLFW
 	
 	private static GLFWGammaRamp mGLFWGammaRamp;
 	private static Map<Integer, Integer> mGLFWInputModes;
+    private static Map<Integer, String> mGLFWKeyCodes;
 	private static long mGLFWWindowMonitor;
 
 	private static boolean mGLFW_shouldClose, mGLFWIsCursorEntered = false;
@@ -512,6 +513,23 @@ public class GLFW
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
 
 		mGLFWInputModes = new HashMap<Integer, Integer>();
+		mGLFWKeyCodes = new HashMap<Integer, String>();
+        
+        Field[] thisFieldArr = GLFW.class.getFields();
+        try {
+            for (Field thisField : thisFieldArr) {
+                if (thisField.getName().startsWith("GLFW_KEY_")) {
+                    mGLFWKeyCodes.put(
+                        (int) thisField.get(null),
+                        thisField.getName().substring(9, 10).toUpperCase() +
+                        thisField.getName().substring(10).replace("_", " ").toLowerCase()
+                    );
+                }
+            }
+        } catch (IllegalAccessException e) {
+            // This will never happend since this is accessing self
+        }
+        
 		mGLFWCursorPos = new double[]{
             0d, 0d, // Current pos
             0d, 0d  // Last glfwPollEvents() pos
@@ -987,13 +1005,9 @@ public class GLFW
             mGLFWCursorEnterCallback.invoke(1l, true);
         }
         
-        if (mGLFWCursorPos[0] != mGLFWCursorPos[2] || mGLFWCursorPos[1] != mGLFWCursorPos[3]) {
-            mGLFWCursorPos[2] = mGLFWCursorPos[0];
-            mGLFWCursorPos[3] = mGLFWCursorPos[1];
-            
-            if (mGLFWCursorPosCallback != null) {
-                mGLFWCursorPosCallback.invoke(1l, mGLFWCursorPos[0], mGLFWCursorPos[1]);
-            }
+        // Always update mouse X and Y
+        if (mGLFWCursorPosCallback != null) {
+            mGLFWCursorPosCallback.invoke(1l, mGLFWCursorPos[0], mGLFWCursorPos[1]);
         }
         
         // Indirect event
@@ -1044,7 +1058,8 @@ public class GLFW
 		mGLFWInputModes.put(mode, value);
 	}
     public static String glfwGetKeyName(int key, int scancode) {
-        return "Keyname todo";
+        // TODO keyname list from GLFW
+        return mGLFWKeyCodes.get(key);
     }
 
     public static int glfwGetKeyScancode(int key) {
@@ -1067,8 +1082,6 @@ public class GLFW
     public static void glfwSetCursorPos(@NativeType("GLFWwindow *") long window, double xpos, double ypos) {
 		mGLFWCursorPos[0] = xpos;
 		mGLFWCursorPos[1] = ypos;
-        mGLFWCursorPos[2] = mGLFWCursorPos[0];
-        mGLFWCursorPos[3] = mGLFWCursorPos[1];
         
 	}
 	
