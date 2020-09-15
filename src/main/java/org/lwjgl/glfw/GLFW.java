@@ -480,6 +480,7 @@ public class GLFW
 	volatile public static GLFWWindowSizeCallback mGLFWWindowSizeCallback;
 
     volatile public static double[] mGLFWCursorPos;
+    private static int[] mGLFWWindowSize;
 	
 	private static GLFWGammaRamp mGLFWGammaRamp;
 	private static Map<Integer, Integer> mGLFWInputModes;
@@ -495,8 +496,7 @@ public class GLFW
 		if (System.getProperty(PROP_WINDOW_WIDTH) == null || System.getProperty(PROP_WINDOW_HEIGHT) == null) {
 			System.err.println("Warning: Property " + PROP_WINDOW_WIDTH + " or " + PROP_WINDOW_HEIGHT + " not set, defaulting to 1280 and 720");
 
-			System.setProperty(PROP_WINDOW_WIDTH, "1280");
-			System.setProperty(PROP_WINDOW_HEIGHT, "720");
+			mGLFWWindowSize = new int[]{1280, 720};
 		}
 
 		System.loadLibrary("pojavexec");
@@ -627,8 +627,8 @@ public class GLFW
             checkSafe(width, 1);
             checkSafe(height, 1);
         }
-        width.put(Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
-        height.put(Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
+        width.put(mGLFWWindowSize[0]);
+        height.put(mGLFWWindowSize[1]);
 	}
 
 	public static void glfwGetFramebufferSize(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") int[] width, @Nullable @NativeType("int *") int[] height) {
@@ -638,9 +638,8 @@ public class GLFW
             checkSafe(height, 1);
         }
 
-		width[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH));
-        height[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT));
-
+		width[0] = mGLFWWindowSize[0];
+        height[0] = mGLFWWindowSize[1];
     }
 
 	@Nullable
@@ -676,8 +675,8 @@ public class GLFW
 
         xpos.put(0);
         ypos.put(0);
-        width.put(Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
-        height.put(Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
+        width.put(mGLFWWindowSize[0]);
+        height.put(mGLFWWindowSize[1]);
     }
 
     public static void glfwGetMonitorPos(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") int[] xpos, @Nullable @NativeType("int *") int[] ypos) {
@@ -703,8 +702,8 @@ public class GLFW
 
         xpos[0] = 0;
         ypos[0] = 0;
-        width[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH));
-        height[0] = Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT));
+        width[0] = mGLFWWindowSize[0];
+        height[0] = mGLFWWindowSize[1];
     }
 
     @NativeType("GLFWmonitor *")
@@ -750,8 +749,8 @@ public class GLFW
 		ByteBuffer buffer = ByteBuffer.allocateDirect(GLFWVidMode.SIZEOF);
         IntBuffer iBuffer = buffer.asIntBuffer();
 
-		iBuffer.put((byte) Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
-		iBuffer.put((byte) Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
+		iBuffer.put((byte) mGLFWWindowSize[0]);
+		iBuffer.put((byte) mGLFWWindowSize[1]);
 
 		// RGB bit
 		iBuffer.put((byte) 8);
@@ -971,8 +970,8 @@ public class GLFW
 	public static void glfwDefaultWindowHints() {}
 
 	public static void glfwGetWindowSize(long window, IntBuffer width, IntBuffer height) {
-		width.put(Integer.parseInt(System.getProperty(PROP_WINDOW_WIDTH)));
-		height.put(Integer.parseInt(System.getProperty(PROP_WINDOW_HEIGHT)));
+		width.put(mGLFWWindowSize[0]);
+		height.put(mGLFWWindowSize[1]);
 
 	}
 
@@ -1006,8 +1005,10 @@ public class GLFW
         }
         
         // Always update mouse X and Y
-        if (mGLFWCursorPosCallback != null) {
-            mGLFWCursorPosCallback.invoke(1l, mGLFWCursorPos[0], mGLFWCursorPos[1]);
+        if ((mGLFWCursorPos[0] != mGLFWCursorPos[2] || mGLFWCursorPos[1] != mGLFWCursorPos[3])&& mGLFWCursorPosCallback != null) {
+            mGLFWCursorPos[2] = mGLFWCursorPos[0];
+            mGLFWCursorPos[3] = mGLFWCursorPos[1];
+            mGLFWCursorPosCallback.invoke(1l, mGLFWWindowSize[0] -  mGLFWCursorPos[0], mGLFWWindowSize[1] - mGLFWCursorPos[1]);
         }
         
         // Indirect event
@@ -1026,8 +1027,10 @@ public class GLFW
                     mGLFWMouseButtonCallback.invoke(1l, Integer.parseInt(dataArr[1]), Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
                 break;
             case CallbackReceiver.TYPE_WINDOW_SIZE:
+                mGLFWWindowSize[0] = Integer.parseInt(dataArr[1]);
+                mGLFWWindowSize[1] = Integer.parseInt(dataArr[2]);
                 if (mGLFWWindowSizeCallback != null)
-                    mGLFWWindowSizeCallback.invoke(1l, Integer.parseInt(dataArr[1]), Integer.parseInt(dataArr[2]));
+                    mGLFWWindowSizeCallback.invoke(1l, mGLFWWindowSize[0], mGLFWWindowSize[2]);
                 break;
             default:
                 System.err.println("GLFWEvent: unknown callback type " + type);
@@ -1080,8 +1083,8 @@ public class GLFW
 	}
 	
     public static void glfwSetCursorPos(@NativeType("GLFWwindow *") long window, double xpos, double ypos) {
-		mGLFWCursorPos[0] = xpos;
-		mGLFWCursorPos[1] = ypos;
+		mGLFWCursorPos[0] = mGLFWCursorPos[2] = xpos;
+		mGLFWCursorPos[1] = mGLFWCursorPos[3] = ypos;
         
 	}
 	
