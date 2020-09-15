@@ -480,7 +480,7 @@ public class GLFW
 	volatile public static GLFWWindowSizeCallback mGLFWWindowSizeCallback;
 
     volatile public static double[] mGLFWCursorPos;
-    private static int[] mGLFWWindowSize;
+    volatile private static int[] mGLFWWindowSize;
 	
 	private static GLFWGammaRamp mGLFWGammaRamp;
 	private static Map<Integer, Integer> mGLFWInputModes;
