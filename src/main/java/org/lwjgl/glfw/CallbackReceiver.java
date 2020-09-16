@@ -47,8 +47,8 @@ public class CallbackReceiver {
         if (PENDING_EVENT_READY) {
             if (type == TYPE_CURSOR_POS) {
                 String[] dataArr = data.split(":");
-                GLFW.mGLFWCursorPos[0] = Double.parseDouble(dataArr[0]);
-                GLFW.mGLFWCursorPos[1] = Double.parseDouble(dataArr[1]);
+                GLFW.mGLFWCursorX = Double.parseDouble(dataArr[0]);
+                GLFW.mGLFWCursorY = Double.parseDouble(dataArr[1]);
             } else {
                 PENDING_EVENT_LIST.add(type + ":" + data);
             }

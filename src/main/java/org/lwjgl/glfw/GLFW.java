@@ -479,8 +479,8 @@ public class GLFW
 	volatile public static GLFWWindowRefreshCallback mGLFWWindowRefreshCallback;
 	volatile public static GLFWWindowSizeCallback mGLFWWindowSizeCallback;
 
-    volatile public static double[] mGLFWCursorPos;
-    volatile private static int[] mGLFWWindowSize;
+    volatile public static double mGLFWCursorX, mGLFWCursorY, mGLFWCursorLastX, mGLFWCursorLastY;
+    volatile private static int mGLFWWindowWidth, mGLFWWindowHeight;
 	
 	private static GLFWGammaRamp mGLFWGammaRamp;
 	private static Map<Integer, Integer> mGLFWInputModes;
@@ -627,8 +627,8 @@ public class GLFW
             checkSafe(width, 1);
             checkSafe(height, 1);
         }
-        width.put(mGLFWWindowSize[0]);
-        height.put(mGLFWWindowSize[1]);
+        width.put(mGLFWWindowWidth);
+        height.put(mGLFWWindowHeight);
 	}
 
 	public static void glfwGetFramebufferSize(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") int[] width, @Nullable @NativeType("int *") int[] height) {
@@ -638,8 +638,8 @@ public class GLFW
             checkSafe(height, 1);
         }
 
-		width[0] = mGLFWWindowSize[0];
-        height[0] = mGLFWWindowSize[1];
+		width[0] = mGLFWWindowWidth;
+        height[0] = mGLFWWindowHeight;
     }
 
 	@Nullable
@@ -675,8 +675,8 @@ public class GLFW
 
         xpos.put(0);
         ypos.put(0);
-        width.put(mGLFWWindowSize[0]);
-        height.put(mGLFWWindowSize[1]);
+        width.put(mGLFWWindowWidth);
+        height.put(mGLFWWindowHeight);
     }
 
     public static void glfwGetMonitorPos(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") int[] xpos, @Nullable @NativeType("int *") int[] ypos) {
@@ -702,8 +702,8 @@ public class GLFW
 
         xpos[0] = 0;
         ypos[0] = 0;
-        width[0] = mGLFWWindowSize[0];
-        height[0] = mGLFWWindowSize[1];
+        width[0] = mGLFWWindowWidth;
+        height[0] = mGLFWWindowHeight;
     }
 
     @NativeType("GLFWmonitor *")
@@ -755,8 +755,8 @@ public class GLFW
 		ByteBuffer buffer = ByteBuffer.allocateDirect(GLFWVidMode.SIZEOF);
         IntBuffer iBuffer = buffer.asIntBuffer();
 
-		iBuffer.put((byte) mGLFWWindowSize[0]);
-		iBuffer.put((byte) mGLFWWindowSize[1]);
+		iBuffer.put((byte) mGLFWWindowWidth);
+		iBuffer.put((byte) mGLFWWindowHeight);
 
 		// RGB bit
 		iBuffer.put((byte) 8);
@@ -976,8 +976,8 @@ public class GLFW
 	public static void glfwDefaultWindowHints() {}
 
 	public static void glfwGetWindowSize(long window, IntBuffer width, IntBuffer height) {
-        if (width != null) width.put(mGLFWWindowSize[0]);
-		if (height != null) height.put(mGLFWWindowSize[1]);
+        if (width != null) width.put(mGLFWWindowWidth);
+		if (height != null) height.put(mGLFWWindowHeight);
 	}
 
 	public static void glfwSetWindowPos(long window, int x, int y) {}
@@ -1010,10 +1010,10 @@ public class GLFW
         }
         
         // Always update mouse X and Y
-        if ((mGLFWCursorPos[0] != mGLFWCursorPos[2] || mGLFWCursorPos[1] != mGLFWCursorPos[3])&& mGLFWCursorPosCallback != null) {
-            mGLFWCursorPos[2] = mGLFWCursorPos[0];
-            mGLFWCursorPos[3] = mGLFWCursorPos[1];
-            mGLFWCursorPosCallback.invoke(1l, mGLFWWindowSize[0] -  mGLFWCursorPos[0], mGLFWWindowSize[1] - mGLFWCursorPos[1]);
+        if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY)&& mGLFWCursorPosCallback != null) {
+            mGLFWCursorLastX = mGLFWCursorX;
+            mGLFWCursorLastY = mGLFWCursorY;
+            mGLFWCursorPosCallback.invoke(1l, mGLFWWindowWidth -  mGLFWCursorX, mGLFWWindowHeight - mGLFWCursorY);
         }
         
         // Indirect event
@@ -1032,10 +1032,10 @@ public class GLFW
                     mGLFWMouseButtonCallback.invoke(1l, Integer.parseInt(dataArr[1]), Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
                 break;
             case CallbackReceiver.TYPE_WINDOW_SIZE:
-                mGLFWWindowSize[0] = Integer.parseInt(dataArr[1]);
-                mGLFWWindowSize[1] = Integer.parseInt(dataArr[2]);
+                mGLFWWindowWidth = Integer.parseInt(dataArr[1]);
+                mGLFWWindowHeight = Integer.parseInt(dataArr[2]);
                 if (mGLFWWindowSizeCallback != null)
-                    mGLFWWindowSizeCallback.invoke(1l, mGLFWWindowSize[0], mGLFWWindowSize[2]);
+                    mGLFWWindowSizeCallback.invoke(1l, mGLFWWindowWidth, mGLFWWindowSize[2]);
                 break;
             default:
                 System.err.println("GLFWEvent: unknown callback type " + type);
@@ -1088,13 +1088,13 @@ public class GLFW
             checkSafe(ypos, 1);
         }
         
-		xpos.put(mGLFWCursorPos[0]);
-		ypos.put(mGLFWCursorPos[1]);
+		xpos.put(mGLFWCursorX);
+		ypos.put(mGLFWCursorY);
 	}
 	
     public static void glfwSetCursorPos(@NativeType("GLFWwindow *") long window, double xpos, double ypos) {
-		mGLFWCursorPos[0] = mGLFWCursorPos[2] = xpos;
-		mGLFWCursorPos[1] = mGLFWCursorPos[3] = ypos;
+		mGLFWCursorX = mGLFWCursorLastX = xpos;
+		mGLFWCursorY = mGLFWCursorLastY = ypos;
 	}
 	
     public static long glfwCreateCursor(@NativeType("const GLFWimage *") GLFWImage image, int xhot, int yhot) {
