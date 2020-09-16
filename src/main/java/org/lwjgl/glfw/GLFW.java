@@ -480,7 +480,7 @@ public class GLFW
 	volatile public static GLFWWindowSizeCallback mGLFWWindowSizeCallback;
 
     volatile public static double mGLFWCursorX, mGLFWCursorY, mGLFWCursorLastX, mGLFWCursorLastY;
-    volatile private static int mGLFWWindowWidth, mGLFWWindowHeight;
+    private static int mGLFWWindowWidth, mGLFWWindowHeight;
 	
 	private static GLFWGammaRamp mGLFWGammaRamp;
 	private static Map<Integer, Integer> mGLFWInputModes;
@@ -493,12 +493,17 @@ public class GLFW
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
 
 	static {
-		if (System.getProperty(PROP_WINDOW_WIDTH) == null || System.getProperty(PROP_WINDOW_HEIGHT) == null) {
+        String windowWidth = System.getProperty(PROP_WINDOW_WIDTH);
+        String windowHeight = System.getProperty(PROP_WINDOW_HEIGHT);
+		if (windowWidth == null || windowHeight == null) {
 			System.err.println("Warning: Property " + PROP_WINDOW_WIDTH + " or " + PROP_WINDOW_HEIGHT + " not set, defaulting to 1280 and 720");
 
 			mGLFWWindowWidth = 1280;
             mGLFWWindowHeight = 720;
-		}
+		} else {
+            mGLFWWindowWidth = Integer.parseInt(windowWidth);
+            mGLFWWindowHeight = Integer.parseInt(windowHeight);
+        }
 
 		System.loadLibrary("pojavexec");
 		if (Boolean.getBoolean(System.getProperty("glfwstub.initEgl", "true"))) {
