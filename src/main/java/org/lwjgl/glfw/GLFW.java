@@ -496,7 +496,8 @@ public class GLFW
 		if (System.getProperty(PROP_WINDOW_WIDTH) == null || System.getProperty(PROP_WINDOW_HEIGHT) == null) {
 			System.err.println("Warning: Property " + PROP_WINDOW_WIDTH + " or " + PROP_WINDOW_HEIGHT + " not set, defaulting to 1280 and 720");
 
-			mGLFWWindowSize = new int[]{1280, 720};
+			mGLFWWindowWidth = 1280;
+            mGLFWWindowHeight = 720;
 		}
 
 		System.loadLibrary("pojavexec");
@@ -529,11 +530,6 @@ public class GLFW
         } catch (IllegalAccessException e) {
             // This will never happend since this is accessing self
         }
-        
-		mGLFWCursorPos = new double[]{
-            0d, 0d, // Current pos
-            0d, 0d  // Last glfwPollEvents() pos
-        };
 
 		/*
 		 mGLFWMonitorCallback = new GLFWMonitorCallback(){
@@ -1035,7 +1031,7 @@ public class GLFW
                 mGLFWWindowWidth = Integer.parseInt(dataArr[1]);
                 mGLFWWindowHeight = Integer.parseInt(dataArr[2]);
                 if (mGLFWWindowSizeCallback != null)
-                    mGLFWWindowSizeCallback.invoke(1l, mGLFWWindowWidth, mGLFWWindowSize[2]);
+                    mGLFWWindowSizeCallback.invoke(1l, mGLFWWindowWidth, mGLFWWindowHeight);
                 break;
             default:
                 System.err.println("GLFWEvent: unknown callback type " + type);
