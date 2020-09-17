@@ -1002,7 +1002,7 @@ public class GLFW
 	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
     public static void glfwPollEvents() {
-		if (!CallbackReceiver.PENDING_EVENT_READY) CallbackReceiver.PENDING_EVENT_READY = true;
+		if (!CallbackBridge.PENDING_EVENT_READY) CallbackBridge.PENDING_EVENT_READY = true;
         // if (CallbackReceiver.PENDING_EVENT_LIST.size() == 0) return;
         
         if (mGLFWCursorEnterCallback != null && !mGLFWIsCursorEntered) {
@@ -1011,28 +1011,28 @@ public class GLFW
         }
         
         // Always update mouse X and Y
-        if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY)&& mGLFWCursorPosCallback != null) {
+        if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null && mGLFWIsCursorEntered) {
             mGLFWCursorLastX = mGLFWCursorX;
             mGLFWCursorLastY = mGLFWCursorY;
-            mGLFWCursorPosCallback.invoke(1l, mGLFWWindowWidth -  mGLFWCursorX, mGLFWWindowHeight - mGLFWCursorY);
+            mGLFWCursorPosCallback.invoke(1l, mGLFWCursorX, mGLFWWindowHeight - mGLFWCursorY);
         }
         
         // Indirect event
-        if (CallbackReceiver.PENDING_EVENT_LIST.size() == 0) return;
-        String[] dataArr = CallbackReceiver.PENDING_EVENT_LIST.remove(0).split(":");
+        if (CallbackBridge.PENDING_EVENT_LIST.size() == 0) return;
+        String[] dataArr = CallbackBridge.PENDING_EVENT_LIST.remove(0).split(":");
         int type = Integer.parseInt(dataArr[0]);
         switch (type) {
-            case CallbackReceiver.TYPE_KEYCODE_CONTROL:
+            case CallbackBridge.TYPE_KEYCODE_CONTROL:
                 // TODO add scancode, mods impl
                 if (mGLFWKeyCallback != null)
                     mGLFWKeyCallback.invoke(1l, Integer.parseInt(dataArr[1]), 0, Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
                 break;
-            case CallbackReceiver.TYPE_MOUSE_KEYCODE_CONTROL:
+            case CallbackBridge.TYPE_MOUSE_KEYCODE_CONTROL:
                 // TODO add mods impl
                 if (mGLFWMouseButtonCallback != null)
                     mGLFWMouseButtonCallback.invoke(1l, Integer.parseInt(dataArr[1]), Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
                 break;
-            case CallbackReceiver.TYPE_WINDOW_SIZE:
+            case CallbackBridge.TYPE_WINDOW_SIZE:
                 mGLFWWindowWidth = Integer.parseInt(dataArr[1]);
                 mGLFWWindowHeight = Integer.parseInt(dataArr[2]);
                 if (mGLFWWindowSizeCallback != null)
@@ -1064,6 +1064,15 @@ public class GLFW
     }
 
     public static void glfwSetInputMode(@NativeType("GLFWwindow *") long window, int mode, int value) {
+        if (mode == GLFW_CURSOR) {
+            switch (value) {
+                case GLFW_CURSOR_DISABLED:
+                    CallbackBridge.sendGrabbing(true);
+                    break;
+                default: CallbackBridge.sendGrabbing(false);
+            }
+        }
+        
 		mGLFWInputModes.put(mode, value);
 	}
     public static String glfwGetKeyName(int key, int scancode) {
