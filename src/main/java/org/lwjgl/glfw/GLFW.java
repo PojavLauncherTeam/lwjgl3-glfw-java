@@ -1001,6 +1001,7 @@ public class GLFW
 	
 	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
+    private static int debugCount = 0;
     public static void glfwPollEvents() {
 		if (!CallbackBridge.PENDING_EVENT_READY) CallbackBridge.PENDING_EVENT_READY = true;
         // if (CallbackReceiver.PENDING_EVENT_LIST.size() == 0) return;
@@ -1011,6 +1012,17 @@ public class GLFW
         }
         
         // Always update mouse X and Y
+        if (debugCount < 100) {
+            System.out.println(
+                "CurrX=" + mGLFWCursorX + "," +
+                "CurrY=" + mGLFWCursorY + "," +
+                "LastX=" + mGLFWCursorLastX + "," +
+                "LastY=" + mGLFWCursorLastY
+            );
+            
+            debugCount++;
+        }
+        
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null && mGLFWIsCursorEntered) {
             mGLFWCursorLastX = mGLFWCursorX;
             mGLFWCursorLastY = mGLFWCursorY;
