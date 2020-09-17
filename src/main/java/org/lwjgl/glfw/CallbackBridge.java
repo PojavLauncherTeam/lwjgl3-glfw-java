@@ -60,8 +60,8 @@ public class CallbackBridge {
             } else {
                 PENDING_EVENT_LIST.add(type + ":" + data);
             }
-        }
-	} else System.out.println("Event input is not ready yet!");
+        } else System.out.println("Event input is not ready yet!");
+	}
     
     public static void sendData(int type, String data) {
         nativeSendData(false, type, data);
