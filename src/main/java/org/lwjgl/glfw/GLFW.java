@@ -458,26 +458,26 @@ public class GLFW
 	GLFW_OSMESA_CONTEXT_API = 0x36003;
 
 	// GLFW Callbacks
-	volatile public static GLFWCharCallback mGLFWCharCallback;
-	volatile public static GLFWCharModsCallback mGLFWCharModsCallback;
-	volatile public static GLFWCursorEnterCallback mGLFWCursorEnterCallback;
-	volatile public static GLFWCursorPosCallback mGLFWCursorPosCallback;
-	volatile public static GLFWDropCallback mGLFWDropCallback;
-	volatile public static GLFWErrorCallback mGLFWErrorCallback;
-	volatile public static GLFWFramebufferSizeCallback mGLFWFramebufferSizeCallback;
-	volatile public static GLFWJoystickCallback mGLFWJoystickCallback;
-	volatile public static GLFWKeyCallback mGLFWKeyCallback;
-	volatile public static GLFWMonitorCallback mGLFWMonitorCallback;
-	volatile public static GLFWMouseButtonCallback mGLFWMouseButtonCallback;
-	volatile public static GLFWScrollCallback mGLFWScrollCallback;
-	volatile public static GLFWWindowCloseCallback mGLFWWindowCloseCallback;
-	volatile public static GLFWWindowContentScaleCallback mGLFWWindowContentScaleCallback;
-	volatile public static GLFWWindowFocusCallback mGLFWWindowFocusCallback;
-	volatile public static GLFWWindowIconifyCallback mGLFWWindowIconifyCallback;
-	volatile public static GLFWWindowMaximizeCallback mGLFWWindowMaximizeCallback;
-	volatile public static GLFWWindowPosCallback mGLFWWindowPosCallback;
-	volatile public static GLFWWindowRefreshCallback mGLFWWindowRefreshCallback;
-	volatile public static GLFWWindowSizeCallback mGLFWWindowSizeCallback;
+	/* volatile */ public static GLFWCharCallback mGLFWCharCallback;
+	/* volatile */ public static GLFWCharModsCallback mGLFWCharModsCallback;
+	/* volatile */ public static GLFWCursorEnterCallback mGLFWCursorEnterCallback;
+	/* volatile */ public static GLFWCursorPosCallback mGLFWCursorPosCallback;
+	/* volatile */ public static GLFWDropCallback mGLFWDropCallback;
+	/* volatile */ public static GLFWErrorCallback mGLFWErrorCallback;
+	/* volatile */ public static GLFWFramebufferSizeCallback mGLFWFramebufferSizeCallback;
+	/* volatile */ public static GLFWJoystickCallback mGLFWJoystickCallback;
+	/* volatile */ public static GLFWKeyCallback mGLFWKeyCallback;
+	/* volatile */ public static GLFWMonitorCallback mGLFWMonitorCallback;
+	/* volatile */ public static GLFWMouseButtonCallback mGLFWMouseButtonCallback;
+	/* volatile */ public static GLFWScrollCallback mGLFWScrollCallback;
+	/* volatile */ public static GLFWWindowCloseCallback mGLFWWindowCloseCallback;
+	/* volatile */ public static GLFWWindowContentScaleCallback mGLFWWindowContentScaleCallback;
+	/* volatile */ public static GLFWWindowFocusCallback mGLFWWindowFocusCallback;
+	/* volatile */ public static GLFWWindowIconifyCallback mGLFWWindowIconifyCallback;
+	/* volatile */ public static GLFWWindowMaximizeCallback mGLFWWindowMaximizeCallback;
+	/* volatile */ public static GLFWWindowPosCallback mGLFWWindowPosCallback;
+	/* volatile */ public static GLFWWindowRefreshCallback mGLFWWindowRefreshCallback;
+	/* volatile */ public static GLFWWindowSizeCallback mGLFWWindowSizeCallback;
 
     volatile public static double mGLFWCursorX, mGLFWCursorY, mGLFWCursorLastX, mGLFWCursorLastY;
     private static int mGLFWWindowWidth, mGLFWWindowHeight;
@@ -1010,7 +1010,7 @@ public class GLFW
             mGLFWCursorEnterCallback.invoke(1l, true);
         }
         
-        // Always update mouse X and Y
+/*
         if (debugCount < 100) {
             System.out.println(
                 "CurrX=" + mGLFWCursorX + "," +
@@ -1021,11 +1021,13 @@ public class GLFW
             
             debugCount++;
         }
+*/
         
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null && mGLFWIsCursorEntered) {
             mGLFWCursorLastX = mGLFWCursorX;
             mGLFWCursorLastY = mGLFWCursorY;
             mGLFWCursorPosCallback.invoke(1l, mGLFWCursorX, mGLFWCursorY);
+            System.out.println("CursorPos updated to x=" + mGLFWCursorX + ",y=" + mGLFWCursorY);
         }
         
         // Indirect event
