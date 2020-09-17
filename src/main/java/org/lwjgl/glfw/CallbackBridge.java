@@ -56,11 +56,11 @@ public class CallbackBridge {
                 GLFW.mGLFWCursorX = Double.parseDouble(dataArr[0]);
                 GLFW.mGLFWCursorY = Double.parseDouble(dataArr[1]);
                 
-                // System.out.println("Receive CALLBACK! x=" + GLFW.mGLFWCursorX + ", y=" + GLFW.mGLFWCursorY);
+                System.out.println("Receive CALLBACK! x=" + GLFW.mGLFWCursorX + ", y=" + GLFW.mGLFWCursorY);
             } else {
                 PENDING_EVENT_LIST.add(type + ":" + data);
             }
-        }
+        } else System.out.println("Event input is not ready yet!");
 	}
     
     public static void sendData(int type, String data) {
