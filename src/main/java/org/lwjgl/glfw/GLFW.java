@@ -1012,6 +1012,7 @@ public class GLFW
         }
         
         // Always update mouse X and Y
+/*
         if (debugCount < 100) {
             System.out.println(
                 "CurrX=" + mGLFWCursorX + "," +
@@ -1022,6 +1023,7 @@ public class GLFW
             
             debugCount++;
         }
+*/
         
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null && mGLFWIsCursorEntered) {
             mGLFWCursorLastX = mGLFWCursorX;

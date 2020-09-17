@@ -18,8 +18,6 @@ public class CallbackBridge {
     
     public static final boolean INPUT_DEBUG_ENABLED;
     
-    public static native void sendData(int type, String data);
-    
     // TODO send grab state event to Androud
     
     static {
@@ -58,11 +56,17 @@ public class CallbackBridge {
                 GLFW.mGLFWCursorX = Double.parseDouble(dataArr[0]);
                 GLFW.mGLFWCursorY = Double.parseDouble(dataArr[1]);
                 
-                System.out.println("Receive CALLBACK! x=" + GLFW.mGLFWCursorX + ", y=" + GLFW.mGLFWCursorY);
+                // System.out.println("Receive CALLBACK! x=" + GLFW.mGLFWCursorX + ", y=" + GLFW.mGLFWCursorY);
             } else {
                 PENDING_EVENT_LIST.add(type + ":" + data);
             }
         }
 	}
+    
+    public static void sendData(int type, String data) {
+        nativeSendData(false, type, data);
+    }
+    
+    public static void nativeSendData(boolean isAndroid, int type, String data);
 }
 
