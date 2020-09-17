@@ -804,10 +804,7 @@ public class GLFW
 	public static GLFWCursorEnterCallback glfwSetCursorEnterCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWcursorenterfun") GLFWCursorEnterCallbackI cbfun) {
 		GLFWCursorEnterCallback lastCallback = mGLFWCursorEnterCallback;
 		if (cbfun == null) mGLFWCursorEnterCallback = null;
-		else {
-            mGLFWCursorEnterCallback = GLFWCursorEnterCallback.create(cbfun);
-            mGLFWCursorEnterCallback.invoke(1l, true);
-        }
+		else mGLFWCursorEnterCallback = GLFWCursorEnterCallback.create(cbfun);
 
 		return lastCallback;
 	}
@@ -1021,6 +1018,11 @@ public class GLFW
             debugCount++;
         }
 */
+
+        // Should we always call it?
+        if (mGLFWCursorEnterCallback != null) {
+            mGLFWCursorEnterCallback.invoke(1l, true);
+        }
         
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null) {
             mGLFWCursorLastX = mGLFWCursorX;
