@@ -1003,7 +1003,7 @@ public class GLFW
 
     private static int debugCount = 0;
     public static void glfwPollEvents() {
-        if (!CallbackReceiver.PENDING_EVENT_READY) { 
+        if (!CallbackBridge.PENDING_EVENT_READY) { 
             CallbackBridge.PENDING_EVENT_READY = true;
         }
 
