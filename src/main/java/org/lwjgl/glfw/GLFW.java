@@ -1022,17 +1022,17 @@ public class GLFW
         String[] dataArr = CallbackBridge.PENDING_EVENT_LIST.remove(0).split(":");
         int type = Integer.parseInt(dataArr[0]);
         switch (type) {
-            case CallbackBridge.TYPE_KEYCODE_CONTROL:
+            case CallbackBridge.JRE_TYPE_KEYCODE_CONTROL:
                 // TODO add scancode, mods impl
                 if (mGLFWKeyCallback != null)
                     mGLFWKeyCallback.invoke(1l, Integer.parseInt(dataArr[1]), 0, Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
                 break;
-            case CallbackBridge.TYPE_MOUSE_KEYCODE_CONTROL:
+            case CallbackBridge.JRE_TYPE_MOUSE_KEYCODE_CONTROL:
                 // TODO add mods impl
                 if (mGLFWMouseButtonCallback != null)
                     mGLFWMouseButtonCallback.invoke(1l, Integer.parseInt(dataArr[1]), Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
                 break;
-            case CallbackBridge.TYPE_WINDOW_SIZE:
+            case CallbackBridge.JRE_TYPE_WINDOW_SIZE:
                 mGLFWWindowWidth = Integer.parseInt(dataArr[1]);
                 mGLFWWindowHeight = Integer.parseInt(dataArr[2]);
                 if (mGLFWWindowSizeCallback != null)
