@@ -57,6 +57,8 @@ public class CallbackBridge {
                 String[] dataArr = data.split(":");
                 GLFW.mGLFWCursorX = Double.parseDouble(dataArr[0]);
                 GLFW.mGLFWCursorY = Double.parseDouble(dataArr[1]);
+                
+                System.out.println("Receive CALLBACK! x=" + GLFW.mGLFWCursorX + ", y=" + GLFW.mGLFWCursorY);
             } else {
                 PENDING_EVENT_LIST.add(type + ":" + data);
             }
