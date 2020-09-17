@@ -487,7 +487,7 @@ public class GLFW
     private static Map<Integer, String> mGLFWKeyCodes;
 	private static long mGLFWWindowMonitor;
 
-	private static boolean mGLFW_shouldClose = false;
+	private static boolean mGLFW_shouldClose, mGLFWIsCursorEntered = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -1003,10 +1003,12 @@ public class GLFW
 
     private static int debugCount = 0;
     public static void glfwPollEvents() {
-        // if (CallbackReceiver.PENDING_EVENT_LIST.size() == 0) return;
-        
-        if (mGLFWCursorEnterCallback != null && !CallbackBridge.PENDING_EVENT_READY) {
+        if (!CallbackBridge.PENDING_EVENT_READY) { 
             CallbackBridge.PENDING_EVENT_READY = true;
+        }
+
+        if (mGLFWCursorEnterCallback != null && !mGLFWIsCursorEntered) {
+            mGLFWIsCursorEntered = true;
             mGLFWCursorEnterCallback.invoke(1l, true);
         }
         
@@ -1023,7 +1025,7 @@ public class GLFW
         }
 */
         
-        if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null && mGLFWIsCursorEntered) {
+        if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null) {
             mGLFWCursorLastX = mGLFWCursorX;
             mGLFWCursorLastY = mGLFWCursorY;
             mGLFWCursorPosCallback.invoke(1l, mGLFWCursorX, mGLFWCursorY);
