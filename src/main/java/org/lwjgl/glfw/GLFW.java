@@ -1028,7 +1028,7 @@ public class GLFW
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null && mGLFWIsCursorEntered) {
             mGLFWCursorLastX = mGLFWCursorX;
             mGLFWCursorLastY = mGLFWCursorY;
-            mGLFWCursorPosCallback.invoke(1l, mGLFWCursorX, mGLFWWindowHeight - mGLFWCursorY);
+            mGLFWCursorPosCallback.invoke(1l, mGLFWCursorX, mGLFWCursorY);
         }
         
         // Indirect event
