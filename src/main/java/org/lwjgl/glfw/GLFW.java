@@ -487,7 +487,7 @@ public class GLFW
     private static Map<Integer, String> mGLFWKeyCodes;
 	private static long mGLFWWindowMonitor;
 
-	private static boolean mGLFW_shouldClose, mGLFWIsCursorEntered = false;
+	private static boolean mGLFW_shouldClose = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -804,7 +804,10 @@ public class GLFW
 	public static GLFWCursorEnterCallback glfwSetCursorEnterCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWcursorenterfun") GLFWCursorEnterCallbackI cbfun) {
 		GLFWCursorEnterCallback lastCallback = mGLFWCursorEnterCallback;
 		if (cbfun == null) mGLFWCursorEnterCallback = null;
-		else mGLFWCursorEnterCallback = GLFWCursorEnterCallback.create(cbfun);
+		else {
+            mGLFWCursorEnterCallback = GLFWCursorEnterCallback.create(cbfun);
+            mGLFWCursorEnterCallback.invoke(1l, true);
+        }
 
 		return lastCallback;
 	}
@@ -1001,15 +1004,9 @@ public class GLFW
 	
 	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
-    private static int debugCount = 0;
     public static void glfwPollEvents() {
         if (!CallbackBridge.PENDING_EVENT_READY) { 
             CallbackBridge.PENDING_EVENT_READY = true;
-        }
-
-        if (mGLFWCursorEnterCallback != null && !mGLFWIsCursorEntered) {
-            mGLFWIsCursorEntered = true;
-            mGLFWCursorEnterCallback.invoke(1l, true);
         }
         
 /*
@@ -1029,7 +1026,7 @@ public class GLFW
             mGLFWCursorLastX = mGLFWCursorX;
             mGLFWCursorLastY = mGLFWCursorY;
             mGLFWCursorPosCallback.invoke(1l, mGLFWCursorX, mGLFWCursorY);
-            System.out.println("CursorPos updated to x=" + mGLFWCursorX + ",y=" + mGLFWCursorY);
+            // System.out.println("CursorPos updated to x=" + mGLFWCursorX + ",y=" + mGLFWCursorY);
         }
         
         // Indirect event
