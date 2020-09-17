@@ -487,7 +487,7 @@ public class GLFW
     private static Map<Integer, String> mGLFWKeyCodes;
 	private static long mGLFWWindowMonitor;
 
-	private static boolean mGLFW_shouldClose, mGLFWIsCursorEntered = false;
+	private static boolean mGLFW_shouldClose = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -1003,16 +1003,14 @@ public class GLFW
 
     private static int debugCount = 0;
     public static void glfwPollEvents() {
-		if (!CallbackBridge.PENDING_EVENT_READY) CallbackBridge.PENDING_EVENT_READY = true;
         // if (CallbackReceiver.PENDING_EVENT_LIST.size() == 0) return;
         
-        if (mGLFWCursorEnterCallback != null && !mGLFWIsCursorEntered) {
-            mGLFWIsCursorEntered = true;
+        if (mGLFWCursorEnterCallback != null && !CallbackBridge.PENDING_EVENT_READY) {
+            CallbackBridge.PENDING_EVENT_READY = true;
             mGLFWCursorEnterCallback.invoke(1l, true);
         }
         
         // Always update mouse X and Y
-/*
         if (debugCount < 100) {
             System.out.println(
                 "CurrX=" + mGLFWCursorX + "," +
@@ -1023,7 +1021,6 @@ public class GLFW
             
             debugCount++;
         }
-*/
         
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null && mGLFWIsCursorEntered) {
             mGLFWCursorLastX = mGLFWCursorX;
