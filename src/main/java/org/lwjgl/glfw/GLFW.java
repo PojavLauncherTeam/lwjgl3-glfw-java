@@ -1003,11 +1003,11 @@ public class GLFW
 
     private static int debugCount = 0;
     public static void glfwPollEvents() {
-        // if (CallbackReceiver.PENDING_EVENT_LIST.size() == 0) return;
-        
-        if (mGLFWCursorEnterCallback != null && !CallbackBridge.PENDING_EVENT_READY) {
+        if (!CallbackReceiver.PENDING_EVENT_READY) { 
             CallbackBridge.PENDING_EVENT_READY = true;
-            mGLFWCursorEnterCallback.invoke(1l, true);
+            if (mGLFWCursorEnterCallback != null) {
+                mGLFWCursorEnterCallback.invoke(1l, true);
+            }
         }
         
         // Always update mouse X and Y
