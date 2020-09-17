@@ -487,7 +487,7 @@ public class GLFW
     private static Map<Integer, String> mGLFWKeyCodes;
 	private static long mGLFWWindowMonitor;
 
-	private static boolean mGLFW_shouldClose = false;
+	private static boolean mGLFW_shouldClose, mGLFWIsCursorEntered = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -1005,9 +1005,11 @@ public class GLFW
     public static void glfwPollEvents() {
         if (!CallbackReceiver.PENDING_EVENT_READY) { 
             CallbackBridge.PENDING_EVENT_READY = true;
-            if (mGLFWCursorEnterCallback != null) {
-                mGLFWCursorEnterCallback.invoke(1l, true);
-            }
+        }
+
+        if (mGLFWCursorEnterCallback != null && !mGLFWIsCursorEntered) {
+            mGLFWIsCursorEntered = true;
+            mGLFWCursorEnterCallback.invoke(1l, true);
         }
         
         // Always update mouse X and Y
