@@ -33,7 +33,6 @@ org/lwjgl/glfw/GLFWWindowRefreshCallbackI.class
 org/lwjgl/glfw/GLFWWindowMaximizeCallback$Container.class
 org/lwjgl/glfw/GLFWWindowSizeCallbackI.class
 org/lwjgl/glfw/GLFWFramebufferSizeCallback$Container.class
-org/lwjgl/glfw/CallbackReceiver.class
 org/lwjgl/opengl/GL$1.class
 org/lwjgl/glfw/GLFWCharModsCallback$Container.class
 org/lwjgl/glfw/GLFWCursorEnterCallback.class
@@ -81,6 +80,7 @@ org/lwjgl/opengl/GL$4.class
 org/lwjgl/glfw/GLFWWindowCloseCallback.class
 org/lwjgl/opengl/GL$ICDStatic$WriteOnce.class
 org/lwjgl/glfw/GLFWWindowMaximizeCallbackI.class
+org/lwjgl/glfw/CallbackBridge.class
 org/lwjgl/glfw/GLFWJoystickCallbackI.class
 org/lwjgl/glfw/GLFWErrorCallback$1.class
 org/lwjgl/glfw/GLFWMonitorCallbackI.class

@@ -39,7 +39,8 @@ public class CallbackBridge {
     }
     
     public static void sendGrabbing(boolean grab) {
-        sendData(ANDROID_TYPE_GRAB_STATE, Boolean.toString(grab));
+        // sendData(ANDROID_TYPE_GRAB_STATE, Boolean.toString(grab));
+        nativeSetGrabbing(grab);
     }
     
 	// Called from Android side
@@ -68,5 +69,6 @@ public class CallbackBridge {
     }
     
     public static native void nativeSendData(boolean isAndroid, int type, String data);
+    private static native void nativeSetGrabbing(boolean grab);
 }
 
