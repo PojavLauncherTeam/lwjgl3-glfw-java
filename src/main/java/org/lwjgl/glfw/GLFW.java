@@ -487,7 +487,7 @@ public class GLFW
     private static Map<Integer, String> mGLFWKeyCodes;
 	private static long mGLFWWindowMonitor;
 
-	private static boolean mGLFW_shouldClose = false;
+	private static boolean mGLFW_shouldClose, mGLFWIsCursorEntered = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -1019,8 +1019,14 @@ public class GLFW
         }
 */
 
-        // Should we always call it?
-        if (mGLFWCursorEnterCallback != null) {
+        if (!mGLFWIsCursorEntered && mGLFWCursorEnterCallback != null) {
+            System.out.println("Triggering glfwCursorEnterCallback()");
+            mGLFWIsCursorEntered = true;
+            
+            mGLFWCursorEnterCallback.invoke(1l, false);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {}
             mGLFWCursorEnterCallback.invoke(1l, true);
         }
         
