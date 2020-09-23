@@ -1057,14 +1057,22 @@ public class GLFW
             int type = Integer.parseInt(dataArr[0]);
             switch (type) {
                 case CallbackBridge.JRE_TYPE_KEYCODE_CONTROL:
-                    // TODO add scancode, mods impl
-                    if (mGLFWKeyCallback != null)
-                        mGLFWKeyCallback.invoke(1l, Integer.parseInt(dataArr[1]), 0, Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
+                    // TODO add scancode impl
+                    for (char perChar : dataArr[2].toCharArray()) {
+                        if (mGLFWCharCallback != null) {
+                            mGLFWCharCallback.invoke(1l, perChar);
+                        } else if (mGLFWCharModsCallback != null) {
+                            mGLFWCharModsCallback.invoke(1l, perChar, Integer.parseInt(dataArr[4]));
+                        } else break;
+                    }
+                    
+                    if (mGLFWKeyCallback != null && dataArr[2].equals("\u0000")) {
+                        mGLFWKeyCallback.invoke(1l, Integer.parseInt(dataArr[1]), /* scancode */ 0, Boolean.parseBoolean(dataArr[3]) ? 1 : 0, Integer.parseInt(dataArr[4]));
+                    }
                     break;
                 case CallbackBridge.JRE_TYPE_MOUSE_KEYCODE_CONTROL:
-                    // TODO add mods impl
                     if (mGLFWMouseButtonCallback != null)
-                        mGLFWMouseButtonCallback.invoke(1l, Integer.parseInt(dataArr[1]), Boolean.parseBoolean(dataArr[2]) ? 1 : 0, 0);
+                        mGLFWMouseButtonCallback.invoke(1l, Integer.parseInt(dataArr[1]), Boolean.parseBoolean(dataArr[2]) ? 1 : 0, Integer.parseInt(dataArr[3]));
                     break;
                 case CallbackBridge.JRE_TYPE_WINDOW_SIZE:
                     mGLFWWindowWidth = Integer.parseInt(dataArr[1]);
