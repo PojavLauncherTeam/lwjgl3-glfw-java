@@ -1019,14 +1019,14 @@ public class GLFW
         }
 */
 
-        if (!mGLFWIsFramebufferSizeCalled) {
+        if (!mGLFWIsFramebufferSizeCalled && mGLFWFramebufferSizeCallback != null) {
             System.out.println("Triggering glfwWindowSizeCallback()");
             mGLFWIsFramebufferSizeCalled = true;
 
             mGLFWFramebufferSizeCallback.invoke(1l, mGLFWWindowWidth, mGLFWWindowHeight);
         }
         
-        if (!mGLFWIsWindowSizeCalled) {
+        if (!mGLFWIsWindowSizeCalled && mGLFWWindowSizeCallback != null) {
             System.out.println("Triggering glfwWindowSizeCallback()");
             mGLFWIsWindowSizeCalled = true;
 
