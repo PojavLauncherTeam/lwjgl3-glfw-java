@@ -487,7 +487,7 @@ public class GLFW
     private static Map<Integer, String> mGLFWKeyCodes;
 	private static long mGLFWWindowMonitor;
 
-	private static boolean mGLFW_shouldClose, mGLFWIsCursorEntered = false;
+	private static boolean mGLFW_shouldClose, mGLFWIsCursorEntered, mGLFWIsWindowSizeCalled, mGLFWIsFramebufferSizeCalled = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -1018,6 +1018,20 @@ public class GLFW
             debugCount++;
         }
 */
+
+        if (!mGLFWIsFramebufferSizeCalled) {
+            System.out.println("Triggering glfwWindowSizeCallback()");
+            mGLFWIsFramebufferSizeCalled = true;
+
+            mGLFWFramebufferSizeCallback.invoke(1l, mGLFWWindowWidth, mGLFWWindowHeight);
+        }
+        
+        if (!mGLFWIsWindowSizeCalled) {
+            System.out.println("Triggering glfwWindowSizeCallback()");
+            mGLFWIsWindowSizeCalled = true;
+
+            mGLFWWindowSizeCallback.invoke(1l, mGLFWWindowWidth, mGLFWWindowHeight);
+        }
 
         if (!mGLFWIsCursorEntered && mGLFWCursorEnterCallback != null) {
             System.out.println("Triggering glfwCursorEnterCallback()");
