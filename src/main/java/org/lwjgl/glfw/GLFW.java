@@ -1020,7 +1020,7 @@ public class GLFW
 */
 
         if (!mGLFWIsFramebufferSizeCalled && mGLFWFramebufferSizeCallback != null) {
-            System.out.println("Triggering glfwWindowSizeCallback()");
+            System.out.println("Triggering glfwFramebufferSizeCallback()");
             mGLFWIsFramebufferSizeCalled = true;
 
             mGLFWFramebufferSizeCallback.invoke(1l, mGLFWWindowWidth, mGLFWWindowHeight);
