@@ -1056,7 +1056,7 @@ public class GLFW
 	
 	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
-    private static int mGLFWGrabX, mGLFWGrabY;
+    private static double mGLFWGrabX, mGLFWGrabY;
     public static void glfwPollEvents() {
         if (!CallbackBridge.PENDING_EVENT_READY) { 
             CallbackBridge.PENDING_EVENT_READY = true;
