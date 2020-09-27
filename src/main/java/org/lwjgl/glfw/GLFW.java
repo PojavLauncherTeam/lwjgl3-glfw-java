@@ -1023,7 +1023,7 @@ public class GLFW
         internalGetWindow(window).y = y;
     }
     
-    public static void glfwSetWindowSize(long window, imt width, int height) {
+    public static void glfwSetWindowSize(long window, int width, int height) {
         internalGetWindow(window).width = width;
         internalGetWindow(window).height = height;
     }
