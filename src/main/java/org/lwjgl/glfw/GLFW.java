@@ -488,7 +488,7 @@ public class GLFW
     
     private static Map<Long, GLFWWindowProperties> mGLFWWindowMap;
 
-	private static boolean mGLFWIsCursorEntered, mGLFWIsSizeSet = false;
+	public static boolean mGLFWGrabPosSet, mGLFWIsGrabbing = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -1056,6 +1056,7 @@ public class GLFW
 	
 	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
+    private static int mGLFWGrabX, mGLFWGrabY;
     public static void glfwPollEvents() {
         if (!CallbackBridge.PENDING_EVENT_READY) { 
             CallbackBridge.PENDING_EVENT_READY = true;
@@ -1083,18 +1084,12 @@ public class GLFW
                 } if (mGLFWWindowSizeCallback != null) {
                     mGLFWWindowSizeCallback.invoke(ptr, width, height);
                 }
+            } else if (!win.isCursorEntered) {
+                win.isCursorEntered = true;
+                mGLFWCursorEnterCallback.invoke(ptr, true);
             }
         }
 
-        if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null) {
-            mGLFWCursorLastX = mGLFWCursorX;
-            mGLFWCursorLastY = mGLFWCursorY;
-            for (Long ptr : mGLFWWindowMap.keySet()) {
-                mGLFWCursorPosCallback.invoke(ptr, mGLFWCursorX, mGLFWCursorY);
-            }
-            // System.out.println("CursorPos updated to x=" + mGLFWCursorX + ",y=" + mGLFWCursorY);
-        }
-        
         // Indirect event
         while (CallbackBridge.PENDING_EVENT_LIST.size() > 0) {
             String[] dataArr = CallbackBridge.PENDING_EVENT_LIST.remove(0).split(":");
@@ -1124,11 +1119,35 @@ public class GLFW
                         mGLFWWindowHeight = Integer.parseInt(dataArr[2]);
                         internalResizeWindow(ptr, mGLFWWindowWidth, mGLFWWindowHeight);
                         break;
+                    case CallbackBridge.JRE_TYPE_GRAB_INITIAL_POS_UNSET:
+                        mGLFWGrabPosSet = false;
+                        break;
                     default:
                         System.err.println("GLFWEvent: unknown callback type " + type);
                         break;
                 }
             }
+        }
+        
+        if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null) {
+            if (mGLFWIsGrabbing) {
+                if (mGLFWGrabPosSet) {
+                    // fixme this may be wrong
+                    mGLFWGrabX += (mGLFWCursorX - mGLFWCursorLastX);
+                    mGLFWGrabY += (mGLFWCursorY - mGLFWCursorLastY);
+                } else {
+                    mGLFWCursorLastX = mGLFWCursorX;
+                    mGLFWCursorLastY = mGLFWCursorY;
+                    mGLFWGrabPosSet = true;
+                    return;
+                }
+            }
+            for (Long ptr : mGLFWWindowMap.keySet()) {
+                mGLFWCursorPosCallback.invoke(ptr, mGLFWCursorX, mGLFWCursorY);
+            }
+            mGLFWCursorLastX = mGLFWCursorX;
+            mGLFWCursorLastY = mGLFWCursorY;
+            // System.out.println("CursorPos updated to x=" + mGLFWCursorX + ",y=" + mGLFWCursorY);
         }
 	}
 
@@ -1193,6 +1212,11 @@ public class GLFW
     public static void glfwSetCursorPos(@NativeType("GLFWwindow *") long window, double xpos, double ypos) {
 		mGLFWCursorX = mGLFWCursorLastX = xpos;
 		mGLFWCursorY = mGLFWCursorLastY = ypos;
+        
+        if (mGLFWIsGrabbing) {
+            mGLFWGrabX = xpos;
+            mGLFWGrabY = ypos;
+        }
 	}
 	
     public static long glfwCreateCursor(@NativeType("const GLFWimage *") GLFWImage image, int xhot, int yhot) {

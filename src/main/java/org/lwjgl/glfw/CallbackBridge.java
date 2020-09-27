@@ -9,6 +9,7 @@ public class CallbackBridge {
     public static final int JRE_TYPE_KEYCODE_CHAR = 3;
     public static final int JRE_TYPE_MOUSE_KEYCODE_CONTROL = 4;
     public static final int JRE_TYPE_WINDOW_SIZE = 5;
+    public static final int JRE_TYPE_GRAB_INITIAL_POS_UNSET = 6;
     
     public static final int ANDROID_TYPE_GRAB_STATE = 0;
 
@@ -40,6 +41,8 @@ public class CallbackBridge {
     
     public static void sendGrabbing(boolean grab) {
         // sendData(ANDROID_TYPE_GRAB_STATE, Boolean.toString(grab));
+        
+        GLFW.mGLFWIsGrabbing = grab;
         nativeSetGrabbing(grab);
     }
     
