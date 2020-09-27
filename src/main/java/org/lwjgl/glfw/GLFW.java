@@ -1080,9 +1080,9 @@ public class GLFW
             if (!win.isInitialSizeCalled) {
                 win.isInitialSizeCalled = true;
                 if (mGLFWFramebufferSizeCallback != null) {
-                    mGLFWFramebufferSizeCallback.invoke(ptr, width, height);
+                    mGLFWFramebufferSizeCallback.invoke(ptr, win.width, win.height);
                 } if (mGLFWWindowSizeCallback != null) {
-                    mGLFWWindowSizeCallback.invoke(ptr, width, height);
+                    mGLFWWindowSizeCallback.invoke(ptr, win.width, win.height);
                 }
             } else if (!win.isCursorEntered) {
                 win.isCursorEntered = true;
