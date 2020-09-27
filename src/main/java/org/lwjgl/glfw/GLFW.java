@@ -488,7 +488,7 @@ public class GLFW
     
     private static Map<Long, GLFWWindowProperties> mGLFWWindowMap;
 
-	private static boolean mGLFWIsCursorEntered, mGLFWIsWindowSizeCalled, mGLFWIsFramebufferSizeCalled = false;
+	private static boolean mGLFWIsCursorEntered, mGLFWIsSizeSet = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -851,7 +851,10 @@ public class GLFW
 		if (cbfun == null) mGLFWFramebufferSizeCallback = null;
 		else {
             mGLFWFramebufferSizeCallback = GLFWFramebufferSizeCallback.create(cbfun);
-            mGLFWFramebufferSizeCallback.invoke(window, mGLFWWindowWidth, mGLFWWindowHeight);
+            if (!mGLFWIsSizeSet) {
+                mGLFWIsSizeSet = true;
+                CallbackBridge.receiveCallback(CallbackBridge.JRE_TYPE_WINDOW_SIZE, mGLFWWindowWidth + ":" + mGLFWWindowHeight);
+            }
         }
         
 		return lastCallback;
@@ -956,7 +959,10 @@ public class GLFW
 		if (cbfun == null) mGLFWWindowSizeCallback = null;
 		else {
             mGLFWWindowSizeCallback = GLFWWindowSizeCallback.create(cbfun);
-            mGLFWWindowSizeCallback.invoke(window, mGLFWWindowWidth, mGLFWWindowHeight);
+            if (!mGLFWIsSizeSet) {
+                mGLFWIsSizeSet = true;
+                CallbackBridge.receiveCallback(CallbackBridge.JRE_TYPE_WINDOW_SIZE, mGLFWWindowWidth + ":" + mGLFWWindowHeight);
+            }
         }
 		return lastCallback;
 	}
@@ -1016,6 +1022,12 @@ public class GLFW
         internalGetWindow(window).x = x;
         internalGetWindow(window).y = y;
     }
+    
+    public static void glfwSetWindowSize(long window, imt width, int height) {
+        internalGetWindow(window).width = width;
+        internalGetWindow(window).height = height;
+    }
+    
 	public static void glfwShowWindow(long window) {}
 	public static void glfwWindowHint(int hint, int value) {}
 	public static void glfwWindowHintString(int hint, @NativeType("const char *") ByteBuffer value) {}
@@ -1056,7 +1068,7 @@ public class GLFW
             mGLFWCursorEnterCallback.invoke(1l, true);
         }
 */
-        
+
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null) {
             mGLFWCursorLastX = mGLFWCursorX;
             mGLFWCursorLastY = mGLFWCursorY;
@@ -1095,6 +1107,8 @@ public class GLFW
                         mGLFWWindowHeight = Integer.parseInt(dataArr[2]);
                         if (mGLFWWindowSizeCallback != null) {
                             mGLFWWindowSizeCallback.invoke(ptr.longValue(), mGLFWWindowWidth, mGLFWWindowHeight);
+                        } if (mGLFWFramebufferSizeCallback != null) {
+                            mGLFWFramebufferSizeCallback.invoke(ptr.longValue(), mGLFWWindowWidth, mGLFWWindowHeight);
                         }
                         break;
                     default:
