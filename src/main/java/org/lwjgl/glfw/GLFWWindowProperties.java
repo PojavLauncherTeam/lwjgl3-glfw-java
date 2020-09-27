@@ -7,6 +7,6 @@ public class GLFWWindowProperties {
     public int height = GLFW.mGLFWWindowHeight;
     public int x, y;
     public CharSequence title;
-    public boolean shouldClose, isFramebufferSizeCalled, isWindowSizeCalled;
+    public boolean shouldClose, isInitialSizeCalled, isWindowSizeCalled;
     public Map<Integer, Integer> inputModes = new HashMap<>();
 }

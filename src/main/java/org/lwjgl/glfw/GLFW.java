@@ -617,8 +617,7 @@ public class GLFW
     }
     
     public static void internalResizeWindow(long window, int width, int height) {
-        internalGetWindow(window).width = width;
-        internalGetWindow(window).height = height;
+        glfwSetWindowSize(window, width, height);
         if (mGLFWFramebufferSizeCallback != null) {
             mGLFWFramebufferSizeCallback.invoke(window, width, height);
         } if (mGLFWWindowSizeCallback != null) {
@@ -861,10 +860,6 @@ public class GLFW
 		if (cbfun == null) mGLFWFramebufferSizeCallback = null;
 		else {
             mGLFWFramebufferSizeCallback = GLFWFramebufferSizeCallback.create(cbfun);
-            if (!mGLFWIsSizeSet) {
-                mGLFWIsSizeSet = true;
-                CallbackBridge.receiveCallback(CallbackBridge.JRE_TYPE_WINDOW_SIZE, mGLFWWindowWidth + ":" + mGLFWWindowHeight);
-            }
         }
         
 		return lastCallback;
@@ -969,10 +964,6 @@ public class GLFW
 		if (cbfun == null) mGLFWWindowSizeCallback = null;
 		else {
             mGLFWWindowSizeCallback = GLFWWindowSizeCallback.create(cbfun);
-            if (!mGLFWIsSizeSet) {
-                mGLFWIsSizeSet = true;
-                CallbackBridge.receiveCallback(CallbackBridge.JRE_TYPE_WINDOW_SIZE, mGLFWWindowWidth + ":" + mGLFWWindowHeight);
-            }
         }
 		return lastCallback;
 	}
@@ -1005,8 +996,12 @@ public class GLFW
         long ptr = System.currentTimeMillis();
         
         GLFWWindowProperties win = new GLFWWindowProperties();
-        win.width = width;
-        win.height = height;
+        // win.width = width;
+        // win.height = height;
+        
+        win.width = mGLFWWindowWidth;
+        win.height = mGLFWWindowHeight;
+        
         win.title = title;
         
         mGLFWWindowMap.put(ptr, win);
@@ -1078,6 +1073,18 @@ public class GLFW
             mGLFWCursorEnterCallback.invoke(1l, true);
         }
 */
+
+        for (Long ptr : mGLFWWindowMap.keySet()) {
+            GLFWWindowProperties win = internalGetWindow(ptr);
+            if (!win.isInitialSizeCalled) {
+                win.isInitialSizeCalled = true;
+                if (mGLFWFramebufferSizeCallback != null) {
+                    mGLFWFramebufferSizeCallback.invoke(ptr, width, height);
+                } if (mGLFWWindowSizeCallback != null) {
+                    mGLFWWindowSizeCallback.invoke(ptr, width, height);
+                }
+            }
+        }
 
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null) {
             mGLFWCursorLastX = mGLFWCursorX;
