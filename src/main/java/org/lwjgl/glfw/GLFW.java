@@ -615,6 +615,16 @@ public class GLFW
         }
         return win;
     }
+    
+    public static void internalResizeWindow(long window, int width, int height) {
+        internalGetWindow(window).width = width;
+        internalGetWindow(window).height = height;
+        if (mGLFWFramebufferSizeCallback != null) {
+            mGLFWFramebufferSizeCallback.invoke(window, width, height);
+        } if (mGLFWWindowSizeCallback != null) {
+            mGLFWWindowSizeCallback.invoke(window, width, height);
+        }
+    }
 
 	public static boolean glfwInit() {
 		return nativeEglInit();
@@ -1073,7 +1083,7 @@ public class GLFW
             mGLFWCursorLastX = mGLFWCursorX;
             mGLFWCursorLastY = mGLFWCursorY;
             for (Long ptr : mGLFWWindowMap.keySet()) {
-                mGLFWCursorPosCallback.invoke(ptr.longValue(), mGLFWCursorX, mGLFWCursorY);
+                mGLFWCursorPosCallback.invoke(ptr, mGLFWCursorX, mGLFWCursorY);
             }
             // System.out.println("CursorPos updated to x=" + mGLFWCursorX + ",y=" + mGLFWCursorY);
         }
@@ -1105,11 +1115,7 @@ public class GLFW
                     case CallbackBridge.JRE_TYPE_WINDOW_SIZE:
                         mGLFWWindowWidth = Integer.parseInt(dataArr[1]);
                         mGLFWWindowHeight = Integer.parseInt(dataArr[2]);
-                        if (mGLFWWindowSizeCallback != null) {
-                            mGLFWWindowSizeCallback.invoke(ptr.longValue(), mGLFWWindowWidth, mGLFWWindowHeight);
-                        } if (mGLFWFramebufferSizeCallback != null) {
-                            mGLFWFramebufferSizeCallback.invoke(ptr.longValue(), mGLFWWindowWidth, mGLFWWindowHeight);
-                        }
+                        internalResizeWindow(ptr, mGLFWWindowWidth, mGLFWWindowHeight);
                         break;
                     default:
                         System.err.println("GLFWEvent: unknown callback type " + type);
