@@ -1084,7 +1084,7 @@ public class GLFW
                 } if (mGLFWWindowSizeCallback != null) {
                     mGLFWWindowSizeCallback.invoke(ptr, win.width, win.height);
                 }
-            } else if (!win.isCursorEntered) {
+            } else if (!win.isCursorEntered && mGLFWCursorEnterCallback != null) {
                 win.isCursorEntered = true;
                 mGLFWCursorEnterCallback.invoke(ptr, true);
             }
@@ -1143,7 +1143,7 @@ public class GLFW
                 }
             }
             for (Long ptr : mGLFWWindowMap.keySet()) {
-                mGLFWCursorPosCallback.invoke(ptr, mGLFWCursorX, mGLFWCursorY);
+                mGLFWCursorPosCallback.invoke(ptr, mGLFWIsGrabbing ? mGLFWGrabX : mGLFWCursorX, mGLFWIsGrabbing ? mGLFWGrabY ? mGLFWCursorY);
             }
             mGLFWCursorLastX = mGLFWCursorX;
             mGLFWCursorLastY = mGLFWCursorY;
