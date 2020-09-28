@@ -1143,7 +1143,7 @@ public class GLFW
                 }
             }
             for (Long ptr : mGLFWWindowMap.keySet()) {
-                mGLFWCursorPosCallback.invoke(ptr, mGLFWIsGrabbing ? mGLFWGrabX : mGLFWCursorX, mGLFWIsGrabbing ? mGLFWGrabY ? mGLFWCursorY);
+                mGLFWCursorPosCallback.invoke(ptr, mGLFWIsGrabbing ? mGLFWGrabX : mGLFWCursorX, mGLFWIsGrabbing ? mGLFWGrabY : mGLFWCursorY);
             }
             mGLFWCursorLastX = mGLFWCursorX;
             mGLFWCursorLastY = mGLFWCursorY;
