@@ -486,7 +486,7 @@ public class GLFW
     private static Map<Integer, String> mGLFWKeyCodes;
 	private static long mGLFWWindowMonitor;
     
-    private static long mGLFWInitialTime;
+    private static double mGLFWInitialTime;
     
     private static Map<Long, GLFWWindowProperties> mGLFWWindowMap;
 
@@ -628,7 +628,7 @@ public class GLFW
     }
 
 	public static boolean glfwInit() {
-        mGLFWInitialTime = System.nanoTime();
+        mGLFWInitialTime = (double) System.nanoTime();
 		return nativeEglInit();
     }
 
@@ -987,7 +987,7 @@ public class GLFW
 	}
 	
 	public static void glfwSetTime(double time) {
-		mGLFWInitialTime = System.nanoTime() - time;
+		mGLFWInitialTime = System.nanoTime() - (long) time;
 	}
     
 	public static long glfwGetTimerValue() {
@@ -1242,5 +1242,10 @@ public class GLFW
     public static boolean glfwRawMouseMotionSupported() {
         // Should be not supported?
         return false;
+    }
+    
+    public static String glfwGetClipboardString(@NativeType("GLFWwindow *") long window) {
+        // TODO implement this method
+        return "";
     }
 }
