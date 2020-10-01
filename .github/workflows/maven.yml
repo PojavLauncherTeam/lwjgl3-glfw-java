@@ -17,7 +17,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: bash ci_build.sh
       
     - name: Convert with D8
       run: bash convert_and_out.bash
