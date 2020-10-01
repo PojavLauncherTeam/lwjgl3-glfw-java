@@ -2,7 +2,7 @@
 set -e
 
 cd ..
-git clone https://PojavLauncherTeam/lwjglx
+git clone https://github.com/PojavLauncherTeam/lwjglx
 cd lwjgl3-glfw-java
 
 cp -R ../lwjglx/src/main/java/org src/main/java/
