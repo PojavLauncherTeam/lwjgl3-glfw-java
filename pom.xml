@@ -72,6 +72,13 @@
 			<version>3.2.3</version>
 			<systemPath>${basedir}/lib/lwjgl-core-3.2.3.jar</systemPath>
 		</dependency>
+        <dependency>
+            <groupId>lwjgl</groupId>
+            <artifactId>lwjgl-openal</artifactId>
+            <scope>system</scope>
+            <version>3.2.3</version>
+            <systemPath>${basedir}/lib/lwjgl-openal-3.2.3.jar</systemPath>
+		</dependency>
 		<dependency>
 			<groupId>lwjgl</groupId>
 			<artifactId>lwjgl-opengl</artifactId>

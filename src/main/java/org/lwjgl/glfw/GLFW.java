@@ -486,6 +486,8 @@ public class GLFW
     private static Map<Integer, String> mGLFWKeyCodes;
 	private static long mGLFWWindowMonitor;
     
+    private static long mGLFWInitialTime;
+    
     private static Map<Long, GLFWWindowProperties> mGLFWWindowMap;
 
 	public static boolean mGLFWGrabPosSet, mGLFWIsGrabbing = false;
@@ -626,6 +628,7 @@ public class GLFW
     }
 
 	public static boolean glfwInit() {
+        mGLFWInitialTime = System.nanoTime();
 		return nativeEglInit();
     }
 
@@ -975,19 +978,27 @@ public class GLFW
 	public static void glfwSwapInterval(int interval) {
         nativeEglSwapInterval(interval);
     }
-
-	private static long mInitialTime = System.nanoTime();
+    
 	// private static double mTime = 0d;
     public static double glfwGetTime() {
 		// Boardwalk: just use system timer
         // System.out.println("glfwGetTime");
-        return (System.nanoTime() - mInitialTime) / 1.e9;
+        return (System.nanoTime() - mGLFWInitialTime) / 1.e9;
 	}
 	
 	public static void glfwSetTime(double time) {
-		// mTime = time;
+		mGLFWInitialTime = System.nanoTime() - time;
 	}
-	
+    
+	public static long glfwGetTimerValue() {
+        return 1 / glfwGetTimerFrequency();
+    }
+    
+    public static long glfwGetTimerFrequency() {
+        // FIXME set correct value!!
+        return 60;
+    }
+    
 	// GLFW Window functions
     public static long glfwCreateWindow(int width, int height, CharSequence title, long monitor, long share) {
         EventLoop.OffScreen.check();
