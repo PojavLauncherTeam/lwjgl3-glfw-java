@@ -526,12 +526,12 @@ public class GLFW
         mGLFWWindowMap = new HashMap<>();
         
         mGLFWVideoMode = new GLFWVidMode(ByteBuffer.allocateDirect(GLFWVidMode.SIZEOF));
-        MemoryUtil.UNSAFE.putInt(null, mGLFWVideoMode.address() + mGLFWVideoMode.WIDTH, mGLFWWindowWidth);
-        MemoryUtil.UNSAFE.putInt(null, mGLFWVideoMode.address() + mGLFWVideoMode.HEIGHT, mGLFWWindowHeight);
-        MemoryUtil.UNSAFE.putInt(null, mGLFWVideoMode.address() + mGLFWVideoMode.RED_BITS, 8);
-        MemoryUtil.UNSAFE.putInt(null, mGLFWVideoMode.address() + mGLFWVideoMode.GREEN_BITS, 8);
-        MemoryUtil.UNSAFE.putInt(null, mGLFWVideoMode.address() + mGLFWVideoMode.BLUE_BITS, 8);
-        MemoryUtil.UNSAFE.putInt(null, mGLFWVideoMode.address() + mGLFWVideoMode.REFRESH_RATE, 60);
+        memPutInt(mGLFWVideoMode.address() + mGLFWVideoMode.WIDTH, mGLFWWindowWidth);
+        memPutInt(mGLFWVideoMode.address() + mGLFWVideoMode.HEIGHT, mGLFWWindowHeight);
+        memPutInt(mGLFWVideoMode.address() + mGLFWVideoMode.REDBITS, 8);
+        memPutInt(mGLFWVideoMode.address() + mGLFWVideoMode.GREENBITS, 8);
+        memPutInt(mGLFWVideoMode.address() + mGLFWVideoMode.BLUEBITS, 8);
+        memPutInt(mGLFWVideoMode.address() + mGLFWVideoMode.REFRESHRATE, 60);
         
         Field[] thisFieldArr = GLFW.class.getFields();
         try {
