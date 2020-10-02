@@ -484,6 +484,7 @@ public class GLFW
     
 	private static GLFWGammaRamp mGLFWGammaRamp;
     private static Map<Integer, String> mGLFWKeyCodes;
+    private static GLFWVidMode mGLFWVideoMode;
 	private static long mGLFWWindowMonitor;
     
     private static double mGLFWInitialTime;
@@ -523,6 +524,14 @@ public class GLFW
 		mGLFWKeyCodes = new HashMap<Integer, String>();
         
         mGLFWWindowMap = new HashMap<>();
+        
+        mGLFWVideoMode = new GLFWVidMode(ByteBuffer.allocateDirect(GLFWVidMode.SIZEOF));
+        UNSAFE.putInt(null, mGLFWVideoMode.address() + videoMode.WIDTH, mGLFWWindowWidth);
+        UNSAFE.putInt(null, mGLFWVideoMode.address() + videoMode.HEIGHT, mGLFWWindowHeight);
+        UNSAFE.putInt(null, mGLFWVideoMode.address() + videoMode.RED_BITS, 8);
+        UNSAFE.putInt(null, mGLFWVideoMode.address() + videoMode.GREEN_BITS, 8);
+        UNSAFE.putInt(null, mGLFWVideoMode.address() + videoMode.BLUE_BITS, 8);
+        UNSAFE.putInt(null, mGLFWVideoMode.address() + videoMode.REFRESH_RATE, 60);
         
         Field[] thisFieldArr = GLFW.class.getFields();
         try {
@@ -774,22 +783,7 @@ public class GLFW
 
 	@Nullable
     public static GLFWVidMode glfwGetVideoMode(long monitor) {
-		ByteBuffer buffer = ByteBuffer.allocateDirect(GLFWVidMode.SIZEOF);
-        IntBuffer iBuffer = buffer.asIntBuffer();
-
-		iBuffer.put((byte) mGLFWWindowWidth);
-		iBuffer.put((byte) mGLFWWindowHeight);
-
-		// RGB bit
-		iBuffer.put((byte) 8);
-		iBuffer.put((byte) 8);
-		iBuffer.put((byte) 8);
-
-		// Refresh rate
-		iBuffer.put((byte) 60);
-
-		GLFWVidMode videoMode = new GLFWVidMode(buffer);
-        return videoMode;
+        return mGLFWVideoMode;
     }
 
 	public static GLFWGammaRamp glfwGetGammaRamp(@NativeType("GLFWmonitor *") long monitor) {
