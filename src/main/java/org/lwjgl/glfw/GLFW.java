@@ -820,10 +820,7 @@ public class GLFW
 	public static GLFWCursorEnterCallback glfwSetCursorEnterCallback(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWcursorenterfun") GLFWCursorEnterCallbackI cbfun) {
 		GLFWCursorEnterCallback lastCallback = mGLFWCursorEnterCallback;
 		if (cbfun == null) mGLFWCursorEnterCallback = null;
-		else {
-            mGLFWCursorEnterCallback = GLFWCursorEnterCallback.create(cbfun);
-            mGLFWCursorEnterCallback.invoke(window, true);
-        }
+		else mGLFWCursorEnterCallback = GLFWCursorEnterCallback.create(cbfun);
         
 		return lastCallback;
 	}
@@ -1082,6 +1079,12 @@ public class GLFW
 
         for (Long ptr : mGLFWWindowMap.keySet()) {
             GLFWWindowProperties win = internalGetWindow(ptr);
+            
+            /*
+             * Disable below as problem about incorrect GLFWVidMode is fixed.
+             * TODO uncomment if mouse pointer not working again or remove it.
+             */
+/*
             if (!win.isInitialSizeCalled) {
                 win.isInitialSizeCalled = true;
                 if (mGLFWFramebufferSizeCallback != null) {
@@ -1089,7 +1092,9 @@ public class GLFW
                 } if (mGLFWWindowSizeCallback != null) {
                     mGLFWWindowSizeCallback.invoke(ptr, win.width, win.height);
                 }
-            } else if (!win.isCursorEntered && mGLFWCursorEnterCallback != null) {
+            } else
+*/
+            if (!win.isCursorEntered && mGLFWCursorEnterCallback != null) {
                 win.isCursorEntered = true;
                 mGLFWCursorEnterCallback.invoke(ptr, true);
             }
