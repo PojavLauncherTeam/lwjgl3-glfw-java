@@ -342,6 +342,8 @@ public final class GL {
      */
     @SuppressWarnings("AssignmentToMethodParameter")
     public static GLCapabilities createCapabilities(boolean forwardCompatible) {
+        // FIXME: Try fix framebuffer issue by another making current
+        GLFW.glfwMakeContextCurrent(1l /* the stub will not take care of it */);
         FunctionProvider functionProvider = GL.functionProvider;
         if (functionProvider == null) {
             throw new IllegalStateException("OpenGL library has not been loaded.");
