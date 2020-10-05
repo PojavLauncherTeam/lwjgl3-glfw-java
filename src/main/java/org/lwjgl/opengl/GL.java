@@ -7,6 +7,7 @@ package org.lwjgl.opengl;
 import org.lwjgl.system.*;
 import org.lwjgl.system.macosx.*;
 import org.lwjgl.system.windows.*;
+import org.lwjgl.glfw.*;
 
 import javax.annotation.*;
 import java.nio.*;
