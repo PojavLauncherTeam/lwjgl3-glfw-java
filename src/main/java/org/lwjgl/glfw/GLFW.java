@@ -982,7 +982,7 @@ public class GLFW
 	}
     
 	public static long glfwGetTimerValue() {
-        return 1 / glfwGetTimerFrequency();
+        return System.currentTimeMillis();
     }
     
     public static long glfwGetTimerFrequency() {
