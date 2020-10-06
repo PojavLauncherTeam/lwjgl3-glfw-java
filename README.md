@@ -16,3 +16,4 @@ LWJGL3 GLFW stub java code for Android
 ## Optional properties
 - `glfwstub.debugInput`: enable or disable input logging.
 
+
