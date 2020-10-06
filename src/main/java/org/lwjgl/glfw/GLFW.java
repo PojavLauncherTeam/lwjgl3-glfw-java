@@ -1131,7 +1131,7 @@ public class GLFW
                         break;
                     case CallbackBridge.JRE_TYPE_GRAB_INITIAL_POS_UNSET:
                         mGLFWGrabPosSet = false;
-                        System.out.println("GrabCursor: Unset x=" + mGLFWGrabX + ",y=" + mGLFWGrabY);
+                        // System.out.println("GrabCursor: Unset x=" + mGLFWGrabX + ",y=" + mGLFWGrabY);
                         break;
                     default:
                         System.err.println("GLFWEvent: unknown callback type " + type);
@@ -1143,12 +1143,11 @@ public class GLFW
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null) {
             if (mGLFWIsGrabbing) {
                 if (mGLFWGrabPosSet) {
-                    // fixme this may be wrong
                     mGLFWGrabX += (mGLFWCursorX - mGLFWCursorLastX);
                     mGLFWGrabY += (mGLFWCursorY - mGLFWCursorLastY);
-                    System.out.println("GrabCursor: Moved x=" + mGLFWGrabX + ",y=" + mGLFWGrabY);
+                    // System.out.println("GrabCursor: Moved x=" + mGLFWGrabX + ",y=" + mGLFWGrabY);
                 } else {
-                    System.out.println("GrabCursor: Initial x=" + mGLFWGrabX + ",y=" + mGLFWGrabY);
+                    // System.out.println("GrabCursor: Initial x=" + mGLFWGrabX + ",y=" + mGLFWGrabY);
                     mGLFWCursorLastX = mGLFWCursorX;
                     mGLFWCursorLastY = mGLFWCursorY;
                     mGLFWGrabPosSet = true;
