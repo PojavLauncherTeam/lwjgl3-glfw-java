@@ -75,7 +75,8 @@ public final class GL {
     @Nullable
     private static GLXCapabilities capabilitiesGLX;
 
-	private static final boolean isUsingRegal, isRegalInited;
+	private static final boolean isUsingRegal;
+    private static boolean isRegalInited = false;
 	
     static {
 		isUsingRegal = System.getProperty("org.lwjgl.opengl.libname").contains("libRegal.so");
