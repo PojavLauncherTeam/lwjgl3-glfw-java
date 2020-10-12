@@ -348,7 +348,7 @@ public final class GL {
         // This fixed framebuffer issue on 1.13+ 64-bit by another making current
         GLFW.nativeEglMakeCurrent();
         
-        if (Long.parseLong(System.getProperty("glfwstub.internal.glthreadid", "-1")) != Thread.currentThread().getId()) {
+        if (isUsingRegal && Long.parseLong(System.getProperty("glfwstub.internal.glthreadid", "-1")) != Thread.currentThread().getId()) {
             nativeRegalMakeCurrent();
         }
         System.setProperty("glfwstub.internal.glthreadid", Long.toString(Thread.currentThread().getId()));
