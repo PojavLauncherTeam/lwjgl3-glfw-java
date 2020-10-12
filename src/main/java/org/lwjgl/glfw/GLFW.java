@@ -565,7 +565,7 @@ public class GLFW
 		 */
 	}
 
-    private static native void nativeEglGetCurrentContext();
+    private static native long nativeEglGetCurrentContext();
 	private static native boolean nativeEglInit();
 	public static native boolean nativeEglMakeCurrent();
 	private static native boolean nativeEglTerminate();
