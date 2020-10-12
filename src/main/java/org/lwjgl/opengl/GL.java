@@ -75,7 +75,7 @@ public final class GL {
     @Nullable
     private static GLXCapabilities capabilitiesGLX;
 
-	private static final boolean isUsingRegal;
+	private static final boolean isUsingRegal, isRegalInited;
 	
     static {
 		isUsingRegal = System.getProperty("org.lwjgl.opengl.libname").contains("libRegal.so");
@@ -343,8 +343,14 @@ public final class GL {
      */
     @SuppressWarnings("AssignmentToMethodParameter")
     public static GLCapabilities createCapabilities(boolean forwardCompatible) {
-        // FIXME: Try fix framebuffer issue by another making current
-        GLFW.glfwMakeContextCurrent(1l /* the stub will not take care of it */);
+        // This fixed framebuffer issue on 1.13+ 64-bit by another making current
+        GLFW.nativeEglMakeCurrent();
+        
+        if (!isRegalInited) {
+            isRegalInited = true;
+            nativeRegalMakeCurrent();
+        }
+        
         FunctionProvider functionProvider = GL.functionProvider;
         if (functionProvider == null) {
             throw new IllegalStateException("OpenGL library has not been loaded.");
@@ -637,7 +643,10 @@ public final class GL {
 		
 		// If using Regal, init it first
 		if (isUsingRegal) {
-            nativeRegalMakeCurrent();
+            if (!isRegalInited) {
+                isRegalInited = true;
+                nativeRegalMakeCurrent();
+            }
             
 			majorVersion = 1;
 			minorVersion = 4;

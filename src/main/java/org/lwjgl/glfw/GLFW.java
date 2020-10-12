@@ -564,7 +564,7 @@ public class GLFW
 	}
 
 	private static native boolean nativeEglInit();
-	private static native boolean nativeEglMakeCurrent();
+	public static native boolean nativeEglMakeCurrent();
 	private static native boolean nativeEglTerminate();
 	private static native boolean nativeEglSwapBuffers();
 	private static native boolean nativeEglSwapInterval(int inverval);
