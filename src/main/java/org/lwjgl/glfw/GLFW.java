@@ -565,6 +565,7 @@ public class GLFW
 		 */
 	}
 
+    private static native void nativeEglGetCurrentContext();
 	private static native boolean nativeEglInit();
 	public static native boolean nativeEglMakeCurrent();
 	private static native boolean nativeEglTerminate();
@@ -814,7 +815,7 @@ public class GLFW
 	@NativeType("GLFWwindow *")
 	public static long glfwGetCurrentContext() {
 		// Stub prevent NULL check
-		return 2L;
+		return nativeEglGetCurrentContext();
 	}
 
 	public static void glfwGetFramebufferSize(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") IntBuffer width, @Nullable @NativeType("int *") IntBuffer height) {
@@ -958,7 +959,7 @@ public class GLFW
 	}
 
 	public static void glfwMakeContextCurrent(long window) {
-        int currentGLThreadId = Integer.parseInt(System.getProperty("glfwstub.internal.glthreadid", "-1"));
+        long currentGLThreadId = Long.parseLong(System.getProperty("glfwstub.internal.glthreadid", "-1"));
         System.out.println("GLFW: glfwMakeContextCurrent() calling from thread ID " + currentGLThreadId + ", name: " + Thread.currentThread().getName());
         if (currentGLThreadId != -1 && currentGLThreadId != Thread.currentThread().getId()) {
             System.out.println("GLFW: Current context is set, creating shared context");
