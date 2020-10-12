@@ -10,6 +10,7 @@ import java.nio.*;
 import javax.annotation.*;
 
 import org.lwjgl.*;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.APIUtil.*;
@@ -533,6 +534,7 @@ public class GLFW
         memPutInt(mGLFWVideoMode.address() + mGLFWVideoMode.BLUEBITS, 8);
         memPutInt(mGLFWVideoMode.address() + mGLFWVideoMode.REFRESHRATE, 60);
         
+        // A way to generate key code names
         Field[] thisFieldArr = GLFW.class.getFields();
         try {
             for (Field thisField : thisFieldArr) {
@@ -956,10 +958,16 @@ public class GLFW
 	}
 
 	public static void glfwMakeContextCurrent(long window) {
-        System.out.println("glfwMakeContextCurrent() calling from thread: " + Thread.currentThread().getName());
-		if (!nativeEglMakeCurrent()) {
-			throw new RuntimeException("eglMakeCurrent() failed, check log file for more details");
-		}
+        int currentGLThreadId = Integer.parseInt(System.getProperty("glfwstub.internal.glthreadid", "-1"));
+        System.out.println("GLFW: glfwMakeContextCurrent() calling from thread ID " + currentGLThreadId + ", name: " + Thread.currentThread().getName());
+        if (currentGLThreadId != -1 && currentGLThreadId != Thread.currentThread().getId()) {
+            System.out.println("GLFW: Current context is set, creating shared context");
+            if (!nativeEglMakeCurrent()) {
+                throw new RuntimeException("eglMakeCurrent() failed, check log file for more details");
+            }
+        } else {
+            System.out.println("GLFW: glfwMakeContextCurrent() request is skipped");
+        }
 	}
 
 	public static void glfwSwapBuffers(long window) {
