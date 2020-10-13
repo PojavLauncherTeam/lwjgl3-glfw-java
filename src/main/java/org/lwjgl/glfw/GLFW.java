@@ -572,15 +572,15 @@ public class GLFW
 	private static native boolean nativeEglSwapBuffers();
 	private static native boolean nativeEglSwapInterval(int inverval);
 
-    private static native void nglfwSetCharCallback(long window, long ptr);
-    private static native void nglfwSetCharModsCallback(long window, long ptr);
-    private static native void nglfwSetCursorEnterCallback(long window, long ptr);
-    private static native void nglfwSetCursorPosCallback(long window, long ptr);
-    private static native void nglfwSetFramebufferSizeCallback(long window, long ptr);
-    private static native void nglfwSetKeyCallback(long window, long ptr);
-    private static native void nglfwSetMouseButtonCallback(long window, long ptr);
-    private static native void nglfwSetScrollCallback(long window, long ptr);
-    private static native void nglfwSetWindowSizeCallback(long window, long ptr);
+    private static native long nglfwSetCharCallback(long window, long ptr);
+    private static native long nglfwSetCharModsCallback(long window, long ptr);
+    private static native long nglfwSetCursorEnterCallback(long window, long ptr);
+    private static native long nglfwSetCursorPosCallback(long window, long ptr);
+    private static native long nglfwSetFramebufferSizeCallback(long window, long ptr);
+    private static native long nglfwSetKeyCallback(long window, long ptr);
+    private static native long nglfwSetMouseButtonCallback(long window, long ptr);
+    private static native long nglfwSetScrollCallback(long window, long ptr);
+    private static native long nglfwSetWindowSizeCallback(long window, long ptr);
     private static native void nglfwSetInputReady();
     
 	private static native void setupEGL(long eglContext, long eglDisplay, long eglReadSurface, long eglDrawSurface);
