@@ -4,6 +4,8 @@
  */
 package org.lwjgl.glfw;
 
+import android.util.*;
+
 import java.lang.reflect.*;
 import java.nio.*;
 
@@ -490,7 +492,7 @@ public class GLFW
     
     private static double mGLFWInitialTime;
     
-    private static Map<Long, GLFWWindowProperties> mGLFWWindowMap;
+    private static ArrayMap<Long, GLFWWindowProperties> mGLFWWindowMap;
 
 	public static boolean mGLFWGrabPosSet, mGLFWIsGrabbing = false;
 
@@ -522,9 +524,9 @@ public class GLFW
 		// nativeEglMakeCurrent();
 		
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
-		mGLFWKeyCodes = new HashMap<Integer, String>();
+		mGLFWKeyCodes = new ArrayMap<>();
         
-        mGLFWWindowMap = new HashMap<>();
+        mGLFWWindowMap = new ArrayMap<>();
         
         mGLFWVideoMode = new GLFWVidMode(ByteBuffer.allocateDirect(GLFWVidMode.SIZEOF));
         memPutInt(mGLFWVideoMode.address() + mGLFWVideoMode.WIDTH, mGLFWWindowWidth);
@@ -582,6 +584,7 @@ public class GLFW
     private static native long nglfwSetScrollCallback(long window, long ptr);
     private static native long nglfwSetWindowSizeCallback(long window, long ptr);
     private static native void nglfwSetInputReady();
+    private static native void nglfwSetShowingWindow(long window);
     
 	private static native void setupEGL(long eglContext, long eglDisplay, long eglReadSurface, long eglDrawSurface);
 	/*
@@ -945,7 +948,7 @@ public class GLFW
 	}
 
 	public static void glfwSwapBuffers(long window) {
-		nativeEglSwapBuffers();
+        nativeEglSwapBuffers();
 	}
 
 	public static void glfwSwapInterval(int interval) {
@@ -998,6 +1001,7 @@ public class GLFW
         // Check window exists
         internalGetWindow(window);
         mGLFWWindowMap.remove(window);
+        nglfwSetShowingWindow(mGLFWWindowMap.size() == 0 ? 0 : mGLFWWindowMap.keyAt(mGLFWWindowMap.size() - 1));
     }
 
 	public static void glfwDefaultWindowHints() {}
@@ -1017,7 +1021,9 @@ public class GLFW
         internalGetWindow(window).height = height;
     }
     
-	public static void glfwShowWindow(long window) {}
+	public static void glfwShowWindow(long window) {
+        nglfwSetShowingWindow(window);
+    }
 	public static void glfwWindowHint(int hint, int value) {}
 	public static void glfwWindowHintString(int hint, @NativeType("const char *") ByteBuffer value) {}
     public static void glfwWindowHintString(int hint, @NativeType("const char *") CharSequence value) {}
