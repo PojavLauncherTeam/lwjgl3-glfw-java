@@ -495,7 +495,8 @@ public final class ArrayMap<K, V> implements Map<K, V> {
             e.fillInStackTrace();
             System.out.println("New hash " + hash
                     + " is before end of array hash " + mHashes[index-1]
-                    + " at index " + index + " key " + key, e);
+                    + " at index " + index + " key " + key);
+            e.printStackTrace();
             put(key, value);
             return;
         }
