@@ -574,6 +574,7 @@ public class GLFW
 	private static native boolean nativeEglSwapBuffers();
 	private static native boolean nativeEglSwapInterval(int inverval);
 
+    private static native void nglfwPollEvents();
     private static native long nglfwSetCharCallback(long window, long ptr);
     private static native long nglfwSetCharModsCallback(long window, long ptr);
     private static native long nglfwSetCursorEnterCallback(long window, long ptr);
@@ -583,7 +584,7 @@ public class GLFW
     private static native long nglfwSetMouseButtonCallback(long window, long ptr);
     private static native long nglfwSetScrollCallback(long window, long ptr);
     private static native long nglfwSetWindowSizeCallback(long window, long ptr);
-    private static native void nglfwSetInputReady();
+    // private static native void nglfwSetInputReady();
     private static native void nglfwSetShowingWindow(long window);
     
 	private static native void setupEGL(long eglContext, long eglDisplay, long eglReadSurface, long eglDrawSurface);
@@ -1050,8 +1051,10 @@ public class GLFW
     public static void glfwPollEvents() {
         if (!CallbackBridge.PENDING_EVENT_READY) { 
             CallbackBridge.PENDING_EVENT_READY = true;
-            nglfwSetInputReady();
+            // nglfwSetInputReady();
         }
+        
+        nglfwPollEvents();
 
 /*
         if (!mGLFWIsCursorEntered && mGLFWCursorEnterCallback != null) {
