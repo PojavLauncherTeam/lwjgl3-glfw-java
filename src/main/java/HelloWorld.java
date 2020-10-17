@@ -89,9 +89,11 @@ public class HelloWorld {
 		// Make the window visible
 		glfwShowWindow(window);
 		
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	}
 
+    private boolean grabbing = false;
+    private long currTime;
 	private void loop() {
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
@@ -113,6 +115,13 @@ public class HelloWorld {
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
+            
+            if (System.currentTimeMillis() - lastTime >= 5000) {
+                currTime = System.currentTimeMillis();
+                grabbing = !grabbing;
+                glfwSetInputMode(window, GLFW_CURSOR, grabbing ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_HIDDEN);
+                System.out.println("Grab state=" + Boolean.toString(grabbing);
+            }
 		}
 	}
 
