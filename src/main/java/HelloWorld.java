@@ -120,7 +120,7 @@ public class HelloWorld {
                 currTime = System.currentTimeMillis();
                 grabbing = !grabbing;
                 glfwSetInputMode(window, GLFW_CURSOR, grabbing ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_HIDDEN);
-                System.out.println("Grab state=" + Boolean.toString(grabbing);
+                System.out.println("Grab state=" + Boolean.toString(grabbing));
             }
 		}
 	}
