@@ -93,7 +93,7 @@ public class HelloWorld {
 	}
 
     private boolean grabbing = false;
-    private long currTime;
+    private long lastTime;
 	private void loop() {
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
@@ -117,7 +117,7 @@ public class HelloWorld {
 			glfwPollEvents();
             
             if (System.currentTimeMillis() - lastTime >= 5000) {
-                currTime = System.currentTimeMillis();
+                lastTime = System.currentTimeMillis();
                 grabbing = !grabbing;
                 glfwSetInputMode(window, GLFW_CURSOR, grabbing ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_HIDDEN);
                 System.out.println("Grab state=" + Boolean.toString(grabbing));
