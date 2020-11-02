@@ -4,6 +4,9 @@ import java.util.*;
 import android.util.*;
 
 public class CallbackBridge {
+    public static final int CLIPBOARD_COPY = 2000;
+    public static final int CLIPBOARD_PASTE = 2001;
+    
     public static final int EVENT_TYPE_CHAR = 1000;
     public static final int EVENT_TYPE_CHAR_MODS = 1001;
     public static final int EVENT_TYPE_CURSOR_ENTER = 1002;
@@ -72,6 +75,9 @@ public class CallbackBridge {
     }
     
     public static native void nativeSendData(boolean isAndroid, int type, String data);
+    public static native boolean nativeSetInputReady(boolean ready);
+    public static native String nativeClipboard(int action, String copy);
+    
     private static native void nativeSetGrabbing(boolean grab);
 }
 

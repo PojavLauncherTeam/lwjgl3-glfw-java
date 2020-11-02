@@ -494,7 +494,7 @@ public class GLFW
     
     private static ArrayMap<Long, GLFWWindowProperties> mGLFWWindowMap;
 
-	public static boolean mGLFWIsGrabbing = false;
+	public static boolean mGLFWIsGrabbing, mGLFWIsInputReady, mGLFWIsUseStackQueue = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -774,6 +774,9 @@ public class GLFW
     }
 
 	public static void glfwTerminate() {
+        mGLFWIsInputReady = false;
+        CallbackBridge.nativeSetInputReady(false);
+        
 		nativeEglTerminate();
 	}
 
@@ -1038,6 +1041,15 @@ public class GLFW
 	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
     public static void glfwPollEvents() {
+        if (!mGLFWIsInputReady) {
+            mGLFWIsInputReady = true;
+            mGLFWIsUseStackQueue = CallbackBridge.nativeSetInputReady(true);
+        }
+        
+        if (!mGLFWIsUseStackQueue) {
+            return;
+        }
+        
         if (!CallbackBridge.PENDING_EVENT_READY) { 
             CallbackBridge.PENDING_EVENT_READY = true;
             // nglfwSetInputReady();
@@ -1188,8 +1200,15 @@ public class GLFW
         return false;
     }
     
+    public static void glfwSetClipboardString(@NativeType("GLFWwindow *") long window, @NativeType("char const *") ByteBuffer string) {
+        glfwSetClipboardString(window, memUTF8Safe(string));
+    }
+
+    public static void glfwSetClipboardString(@NativeType("GLFWwindow *") long window, @NativeType("char const *") CharSequence string) {
+        CallbackBridge.nativeClipboard(CallbackBridge.CLIPBOARD_COPY, string.toString());
+    }
+    
     public static String glfwGetClipboardString(@NativeType("GLFWwindow *") long window) {
-        // TODO implement this method
-        return "";
+        return CallbackBridge.nativeClipboard(CallbackBridge.CLIPBOARD_PASTE, null);
     }
 }
