@@ -494,7 +494,7 @@ public class GLFW
     
     private static ArrayMap<Long, GLFWWindowProperties> mGLFWWindowMap;
 
-	public static boolean mGLFWGrabPosSet, mGLFWIsGrabbing = false;
+	public static boolean mGLFWIsGrabbing = false;
 
 	private static final String PROP_WINDOW_WIDTH = "glfwstub.windowWidth";
 	private static final String PROP_WINDOW_HEIGHT= "glfwstub.windowHeight";
@@ -574,7 +574,6 @@ public class GLFW
 	private static native boolean nativeEglSwapBuffers();
 	private static native boolean nativeEglSwapInterval(int inverval);
 
-    private static native void nglfwPollEvents();
     private static native long nglfwSetCharCallback(long window, long ptr);
     private static native long nglfwSetCharModsCallback(long window, long ptr);
     private static native long nglfwSetCursorEnterCallback(long window, long ptr);
@@ -643,15 +642,6 @@ public class GLFW
             throw new IllegalArgumentException("No window pointer found: " + window);
         }
         return win;
-    }
-    
-    public static void internalResizeWindow(long window, int width, int height) {
-        glfwSetWindowSize(window, width, height);
-        if (mGLFWFramebufferSizeCallback != null) {
-            mGLFWFramebufferSizeCallback.invoke(window, width, height);
-        } if (mGLFWWindowSizeCallback != null) {
-            mGLFWWindowSizeCallback.invoke(window, width, height);
-        }
     }
 
 // Generated stub callback methods
@@ -1047,98 +1037,71 @@ public class GLFW
 	
 	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
-    private static double mGLFWGrabX, mGLFWGrabY;
     public static void glfwPollEvents() {
         if (!CallbackBridge.PENDING_EVENT_READY) { 
             CallbackBridge.PENDING_EVENT_READY = true;
             // nglfwSetInputReady();
         }
         
-        nglfwPollEvents();
-
-/*
-        if (!mGLFWIsCursorEntered && mGLFWCursorEnterCallback != null) {
-            System.out.println("Triggering glfwCursorEnterCallback()");
-            mGLFWIsCursorEntered = true;
-            
-            mGLFWCursorEnterCallback.invoke(1l, false);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {}
-            mGLFWCursorEnterCallback.invoke(1l, true);
-        }
-*/
-/*
-        for (Long ptr : mGLFWWindowMap.keySet()) {
-            GLFWWindowProperties win = internalGetWindow(ptr);
-            if (!win.isCursorEntered && mGLFWCursorEnterCallback != null) {
-                win.isCursorEntered = true;
-                mGLFWCursorEnterCallback.invoke(ptr, true);
-            }
-        }
-
         // Indirect event
         while (CallbackBridge.PENDING_EVENT_LIST.size() > 0) {
-            String[] dataArr = CallbackBridge.PENDING_EVENT_LIST.remove(0).split(":");
-            int type = Integer.parseInt(dataArr[0]);
+            Integer[] dataArr = CallbackBridge.PENDING_EVENT_LIST.remove(0);
             for (Long ptr : mGLFWWindowMap.keySet()) {
-                switch (type) {
-                    case CallbackBridge.JRE_TYPE_KEYCODE_CONTROL:
-                        // TODO add scancode impl
-                        for (char perChar : dataArr[2].toCharArray()) {
-                            if (mGLFWCharCallback != null) {
-                                mGLFWCharCallback.invoke(ptr, perChar);
-                            } else if (mGLFWCharModsCallback != null) {
-                                mGLFWCharModsCallback.invoke(ptr, perChar, Integer.parseInt(dataArr[4]));
-                            } else break;
-                        }
-
-                        if (mGLFWKeyCallback != null && dataArr[2].equals("\u0000")) {
-                            mGLFWKeyCallback.invoke(ptr, Integer.parseInt(dataArr[1]), 0, Boolean.parseBoolean(dataArr[3]) ? 1 : 0, Integer.parseInt(dataArr[4]));
+                switch (dataArr[0]) {
+                    case CallbackBridge.EVENT_TYPE_CHAR:
+                        if (mGLFWCharCallback != null) {
+                            mGLFWCharCallback.invoke(ptr, dataArr[1]);
                         }
                         break;
-                    case CallbackBridge.JRE_TYPE_MOUSE_KEYCODE_CONTROL:
-                        if (mGLFWMouseButtonCallback != null)
-                            mGLFWMouseButtonCallback.invoke(ptr, Integer.parseInt(dataArr[1]), Boolean.parseBoolean(dataArr[2]) ? 1 : 0, Integer.parseInt(dataArr[3]));
+                    case CallbackBridge.EVENT_TYPE_CHAR_MODS:
+                        if (mGLFWCharModsCallback != null) {
+                            mGLFWCharModsCallback.invoke(ptr, dataArr[1], dataArr[2]);
+                        }
                         break;
-                    case CallbackBridge.JRE_TYPE_WINDOW_SIZE:
-                        mGLFWWindowWidth = Integer.parseInt(dataArr[1]);
-                        mGLFWWindowHeight = Integer.parseInt(dataArr[2]);
-                        internalResizeWindow(ptr, mGLFWWindowWidth, mGLFWWindowHeight);
+                    case CallbackBridge.EVENT_TYPE_CURSOR_ENTER:
+                        if (mGLFWCursorEnterCallback != null) {
+                            mGLFWCursorEnterCallback.invoke(ptr, dataArr[1] == 1);
+                        }
                         break;
-                    case CallbackBridge.JRE_TYPE_GRAB_INITIAL_POS_UNSET:
-                        mGLFWGrabPosSet = false;
-                        // System.out.println("GrabCursor: Unset x=" + mGLFWGrabX + ",y=" + mGLFWGrabY);
+                    case CallbackBridge.EVENT_TYPE_KEY:
+                        if (mGLFWKeyCallback != null) {
+                            mGLFWKeyCallback.invoke(ptr, dataArr[1], dataArr[2], dataArr[3], dataArr[4]);
+                        }
+                        break;
+                    case CallbackBridge.EVENT_TYPE_MOUSE_BUTTON:
+                        if (mGLFWMouseButtonCallback != null) {
+                            mGLFWMouseButtonCallback.invoke(ptr, dataArr[1], dataArr[2], dataArr[3]);
+                        }
+                        break;
+                    case CallbackBridge.EVENT_TYPE_SCROLL:
+                        if (mGLFWScrollCallback != null) {
+                            mGLFWScrollCallback.invoke(ptr, dataArr[1], dataArr[2]);
+                        }
+                        break;
+                    case CallbackBridge.EVENT_TYPE_FRAMEBUFFER_SIZE:
+                    case CallbackBridge.EVENT_TYPE_WINDOW_SIZE:
+                        mGLFWWindowWidth = dataArr[1];
+                        mGLFWWindowHeight = dataArr[2];
+                        glfwSetWindowSize(ptr, mGLFWWindowWidth, mGLFWWindowHeight);
+                        if (dataArr[0] == CallbackBridge.EVENT_TYPE_FRAMEBUFFER_SIZE && mGLFWFramebufferSizeCallback != null) {
+                            mGLFWFramebufferSizeCallback.invoke(ptr, mGLFWWindowWidth, mGLFWWindowHeight);
+                        } else if (dataArr[0] == CallbackBridge.EVENT_TYPE_WINDOW_SIZE && mGLFWWindowSizeCallback != null) {
+                            mGLFWWindowSizeCallback.invoke(ptr, mGLFWWindowWidth, mGLFWWindowHeight);
+                        }
                         break;
                     default:
-                        System.err.println("GLFWEvent: unknown callback type " + type);
+                        System.err.println("GLFWEvent: unknown callback type " + dataArr[0]);
                         break;
                 }
             }
         }
         
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null) {
-            if (mGLFWIsGrabbing) {
-                if (mGLFWGrabPosSet) {
-                    mGLFWGrabX += (mGLFWCursorX - mGLFWCursorLastX);
-                    mGLFWGrabY += (mGLFWCursorY - mGLFWCursorLastY);
-                    // System.out.println("GrabCursor: Moved x=" + mGLFWGrabX + ",y=" + mGLFWGrabY);
-                } else {
-                    // System.out.println("GrabCursor: Initial x=" + mGLFWGrabX + ",y=" + mGLFWGrabY);
-                    mGLFWCursorLastX = mGLFWCursorX;
-                    mGLFWCursorLastY = mGLFWCursorY;
-                    mGLFWGrabPosSet = true;
-                    return;
-                }
-            }
             for (Long ptr : mGLFWWindowMap.keySet()) {
-                mGLFWCursorPosCallback.invoke(ptr, mGLFWIsGrabbing ? mGLFWGrabX : mGLFWCursorX, mGLFWIsGrabbing ? mGLFWGrabY : mGLFWCursorY);
+                mGLFWCursorPosCallback.invoke(ptr, mGLFWCursorX, mGLFWCursorY);
             }
-            mGLFWCursorLastX = mGLFWCursorX;
-            mGLFWCursorLastY = mGLFWCursorY;
             // System.out.println("CursorPos updated to x=" + mGLFWCursorX + ",y=" + mGLFWCursorY);
         }
-        */
 	}
 
     public static void glfwWaitEvents() {}

@@ -1,20 +1,23 @@
 package org.lwjgl.glfw;
 import java.io.*;
 import java.util.*;
+import android.util.*;
 
 public class CallbackBridge {
-    public static final int JRE_TYPE_CURSOR_POS = 0;
-    public static final int JRE_TYPE_CURSOR_BUTTON = 1;
-    public static final int JRE_TYPE_KEYCODE_CONTROL = 2;
-    public static final int JRE_TYPE_KEYCODE_CHAR = 3;
-    public static final int JRE_TYPE_MOUSE_KEYCODE_CONTROL = 4;
-    public static final int JRE_TYPE_WINDOW_SIZE = 5;
-    public static final int JRE_TYPE_GRAB_INITIAL_POS_UNSET = 6;
+    public static final int EVENT_TYPE_CHAR = 1000;
+    public static final int EVENT_TYPE_CHAR_MODS = 1001;
+    public static final int EVENT_TYPE_CURSOR_ENTER = 1002;
+    public static final int EVENT_TYPE_CURSOR_POS = 1003;
+    public static final int EVENT_TYPE_FRAMEBUFFER_SIZE = 1004;
+    public static final int EVENT_TYPE_KEY = 1005;
+    public static final int EVENT_TYPE_MOUSE_BUTTON = 1006;
+    public static final int EVENT_TYPE_SCROLL = 1007;
+    public static final int EVENT_TYPE_WINDOW_SIZE = 1008;
     
     public static final int ANDROID_TYPE_GRAB_STATE = 0;
 
     // Should pending events be limited?
-    volatile public static List<String> PENDING_EVENT_LIST = new ArrayList<>(20);
+    volatile public static List<Integer[]> PENDING_EVENT_LIST = new ArrayList<>();
     volatile public static boolean PENDING_EVENT_READY = false;
     
     public static final boolean INPUT_DEBUG_ENABLED;
@@ -47,7 +50,7 @@ public class CallbackBridge {
     }
     
 	// Called from Android side
-	public static void receiveCallback(int type, String data) {
+	public static void receiveCallback(int type, int i1, int i2, int i3, int i4) {
 /*
         if (INPUT_DEBUG_ENABLED) {
             System.out.println("LWJGL GLFW Callback received type=" + Integer.toString(type) + ", data=" + data);
@@ -55,14 +58,11 @@ public class CallbackBridge {
 */
         
         if (PENDING_EVENT_READY) {
-            if (type == JRE_TYPE_CURSOR_POS) {
-                String[] dataArr = data.split(":");
-                GLFW.mGLFWCursorX = Double.parseDouble(dataArr[0]);
-                GLFW.mGLFWCursorY = Double.parseDouble(dataArr[1]);
-                
-                // System.out.println("Receive callback: x=" + GLFW.mGLFWCursorX + ", y=" + GLFW.mGLFWCursorY);
+            if (type == EVENT_TYPE_CURSOR_POS) {
+                GLFW.mGLFWCursorX = i1;
+                GLFW.mGLFWCursorY = i2;
             } else {
-                PENDING_EVENT_LIST.add(type + ":" + data);
+                PENDING_EVENT_LIST.add(new Integer[]{type, i1, i2, i3, i4});
             }
         } // else System.out.println("Event input is not ready yet!");
 	}
