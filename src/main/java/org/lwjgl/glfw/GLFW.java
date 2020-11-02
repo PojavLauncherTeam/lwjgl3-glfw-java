@@ -1165,14 +1165,9 @@ public class GLFW
 	}
 	
     public static void glfwSetCursorPos(@NativeType("GLFWwindow *") long window, double xpos, double ypos) {
-		mGLFWCursorX = mGLFWCursorLastX = xpos;
-		mGLFWCursorY = mGLFWCursorLastY = ypos;
-        
-        if (mGLFWIsGrabbing) {
-            mGLFWGrabX = xpos;
-            mGLFWGrabY = ypos;
-        }
-	}
+        mGLFWCursorX = mGLFWCursorLastX = xpos;
+        mGLFWCursorY = mGLFWCursorLastY = ypos;
+    }
 	
     public static long glfwCreateCursor(@NativeType("const GLFWimage *") GLFWImage image, int xhot, int yhot) {
         return 4L;
