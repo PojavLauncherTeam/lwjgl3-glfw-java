@@ -54,10 +54,11 @@ public class CallbackBridge {
     
 	// Called from Android side
 	public static void receiveCallback(int type, int i1, int i2, int i3, int i4) {
+       /*
         if (INPUT_DEBUG_ENABLED) {
             System.out.println("LWJGL GLFW Callback received type=" + Integer.toString(type) + ", data=" + i1 + ", " + i2 + ", " + i3 + ", " + i4);
         }
-        
+        */
         if (PENDING_EVENT_READY) {
             if (type == EVENT_TYPE_CURSOR_POS) {
                 GLFW.mGLFWCursorX = i1;
