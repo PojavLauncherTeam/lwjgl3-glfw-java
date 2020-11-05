@@ -1040,6 +1040,7 @@ public class GLFW
 	
 	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
+    private boolean logOnce = true;
     public static void glfwPollEvents() {
         if (!mGLFWIsInputReady) {
             mGLFWIsInputReady = true;
@@ -1047,6 +1048,9 @@ public class GLFW
         }
         
         if (!mGLFWIsUseStackQueue) {
+            if (logOnce) {
+                System.out.println("GLFW: skipping glfwPollEvents() because not use stack queue.");
+            }
             return;
         }
         
@@ -1114,6 +1118,8 @@ public class GLFW
             }
             // System.out.println("CursorPos updated to x=" + mGLFWCursorX + ",y=" + mGLFWCursorY);
         }
+        
+        logOnce = false;
 	}
 
     public static void glfwWaitEvents() {}
