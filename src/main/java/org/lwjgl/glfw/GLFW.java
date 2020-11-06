@@ -512,7 +512,11 @@ public class GLFW
             mGLFWWindowHeight = Integer.parseInt(windowHeight);
         }
 
-		System.loadLibrary("pojavexec");
+		try {
+            System.loadLibrary("pojavexec");
+        } catch (UnsatisfiedLinkError e) {
+            e.printStackTrace();
+        }
 		if (Boolean.getBoolean(System.getProperty("glfwstub.initEgl", "true"))) {
 			setupEGL(
 				Long.parseLong(System.getProperty("glfwstub.eglContext")),
