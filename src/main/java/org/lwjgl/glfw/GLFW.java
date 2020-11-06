@@ -1116,9 +1116,7 @@ public class GLFW
             }
             // System.out.println("CursorPos updated to x=" + mGLFWCursorX + ",y=" + mGLFWCursorY);
         }
-        
-        logOnce = false;
-	}
+    }
 
     public static void glfwWaitEvents() {}
 
