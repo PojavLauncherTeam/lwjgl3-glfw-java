@@ -1044,18 +1044,10 @@ public class GLFW
 	
 	public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {}
 
-    private static boolean logOnce = true;
     public static void glfwPollEvents() {
         if (!mGLFWIsInputReady) {
             mGLFWIsInputReady = true;
             mGLFWIsUseStackQueue = CallbackBridge.nativeSetInputReady(true);
-        }
-        
-        if (!mGLFWIsUseStackQueue) {
-            if (logOnce) {
-                System.out.println("GLFW: skipping glfwPollEvents() because not use stack queue.");
-            }
-            return;
         }
         
         if (!CallbackBridge.PENDING_EVENT_READY) { 
