@@ -1113,6 +1113,8 @@ public class GLFW
         }
         
         if ((mGLFWCursorX != mGLFWCursorLastX || mGLFWCursorY != mGLFWCursorLastY) && mGLFWCursorPosCallback != null) {
+            mGLFWCursorLastX = mGLFWCursorX;
+            mGLFWCursorLastY = mGLFWCursorY;
             for (Long ptr : mGLFWWindowMap.keySet()) {
                 mGLFWCursorPosCallback.invoke(ptr, mGLFWCursorX, mGLFWCursorY);
             }
