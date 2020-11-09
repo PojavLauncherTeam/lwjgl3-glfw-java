@@ -511,6 +511,9 @@ public class GLFW
             mGLFWWindowWidth = Integer.parseInt(windowWidth);
             mGLFWWindowHeight = Integer.parseInt(windowHeight);
         }
+        // Minecraft triggers a glfwPollEvents() on splash screen, so update window size there.
+        CallbackBridge.receiveCallback(CallbackBridge.EVENT_TYPE_FRAMEBUFFER_SIZE, mGLFWWindowWidth, mGLFWWindowHeight);
+        CallbackBridge.receiveCallback(CallbackBridge.EVENT_TYPE_WINDOW_SIZE, mGLFWWindowWidth, mGLFWWindowHeight);
 
 		try {
             System.loadLibrary("pojavexec");
@@ -553,7 +556,7 @@ public class GLFW
                 }
             }
         } catch (IllegalAccessException e) {
-            // This will never happend since this is accessing self
+            // This will never happend since this is accessing itself
         }
 
 		/*
