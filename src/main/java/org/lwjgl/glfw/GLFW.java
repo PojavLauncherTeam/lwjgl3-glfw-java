@@ -1061,6 +1061,12 @@ public class GLFW
         // Indirect event
         while (CallbackBridge.PENDING_EVENT_LIST.size() > 0) {
             Integer[] dataArr = CallbackBridge.PENDING_EVENT_LIST.remove(0);
+            
+            if (dataArr == null) { // It should not be null, but still should be catched
+                // System.out.println("GLFW: popped callback is null, skipping");
+                continue;
+            }
+            
             for (Long ptr : mGLFWWindowMap.keySet()) {
                 switch (dataArr[0]) {
                     case CallbackBridge.EVENT_TYPE_CHAR:
