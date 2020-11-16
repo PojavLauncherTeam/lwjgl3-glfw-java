@@ -512,8 +512,8 @@ public class GLFW
             mGLFWWindowHeight = Integer.parseInt(windowHeight);
         }
         // Minecraft triggers a glfwPollEvents() on splash screen, so update window size there.
-        CallbackBridge.receiveCallback(CallbackBridge.EVENT_TYPE_FRAMEBUFFER_SIZE, mGLFWWindowWidth, mGLFWWindowHeight);
-        CallbackBridge.receiveCallback(CallbackBridge.EVENT_TYPE_WINDOW_SIZE, mGLFWWindowWidth, mGLFWWindowHeight);
+        CallbackBridge.receiveCallback(CallbackBridge.EVENT_TYPE_FRAMEBUFFER_SIZE, mGLFWWindowWidth, mGLFWWindowHeight, 0, 0);
+        CallbackBridge.receiveCallback(CallbackBridge.EVENT_TYPE_WINDOW_SIZE, mGLFWWindowWidth, mGLFWWindowHeight, 0, 0);
 
 		try {
             System.loadLibrary("pojavexec");
