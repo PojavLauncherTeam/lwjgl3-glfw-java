@@ -511,6 +511,7 @@ public class GLFW
             mGLFWWindowWidth = Integer.parseInt(windowWidth);
             mGLFWWindowHeight = Integer.parseInt(windowHeight);
         }
+        
         // Minecraft triggers a glfwPollEvents() on splash screen, so update window size there.
         CallbackBridge.receiveCallback(CallbackBridge.EVENT_TYPE_FRAMEBUFFER_SIZE, mGLFWWindowWidth, mGLFWWindowHeight, 0, 0);
         CallbackBridge.receiveCallback(CallbackBridge.EVENT_TYPE_WINDOW_SIZE, mGLFWWindowWidth, mGLFWWindowHeight, 0, 0);
@@ -520,16 +521,7 @@ public class GLFW
         } catch (UnsatisfiedLinkError e) {
             e.printStackTrace();
         }
-		if (Boolean.getBoolean(System.getProperty("glfwstub.initEgl", "true"))) {
-			setupEGL(
-				Long.parseLong(System.getProperty("glfwstub.eglContext")),
-				Long.parseLong(System.getProperty("glfwstub.eglDisplay")),
-				Long.parseLong(System.getProperty("glfwstub.eglSurfaceRead")),
-				Long.parseLong(System.getProperty("glfwstub.eglSurfaceDraw"))
-			);
-		}
-		// nativeEglMakeCurrent();
-		
+        
 		mGLFWErrorCallback = GLFWErrorCallback.createPrint();
 		mGLFWKeyCodes = new ArrayMap<>();
         
@@ -593,7 +585,6 @@ public class GLFW
     // private static native void nglfwSetInputReady();
     private static native void nglfwSetShowingWindow(long window);
     
-	private static native void setupEGL(long eglContext, long eglDisplay, long eglReadSurface, long eglDrawSurface);
 	/*
 	 private static void priGlfwSetError(int error) {
 	 mGLFW_currentError = error;
@@ -887,6 +878,14 @@ public class GLFW
 	public static void glfwSetWindowMonitor(@NativeType("GLFWwindow *") long window, @NativeType("GLFWmonitor *") long monitor, int xpos, int ypos, int width, int height, int refreshRate) {
 		// weird calculation to fake pointer
         mGLFWWindowMonitor = window * monitor;
+    }
+    
+    public static int glfwGetWindowAttrib(@NativeType("GLFWwindow *") long window, int attrib) {
+        return internalGetWindow(window).windowAttribs.get(attrib);
+    }
+
+    public static void glfwSetWindowAttrib(@NativeType("GLFWwindow *") long window, int attrib, int value) {
+        internalGetWindow(window).windowAttribs.put(attrib, value);
     }
 
     public static void glfwGetVersion(IntBuffer major, IntBuffer minor, IntBuffer rev) {
