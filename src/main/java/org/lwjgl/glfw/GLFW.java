@@ -568,7 +568,7 @@ public class GLFW
 
     private static native long nativeEglGetCurrentContext();
 	private static native boolean nativeEglInit();
-	public static native boolean nativeEglMakeCurrent();
+	public static native boolean nativeEglMakeCurrent(long window);
 	private static native boolean nativeEglTerminate();
 	private static native boolean nativeEglSwapBuffers();
 	private static native boolean nativeEglSwapInterval(int inverval);
@@ -939,7 +939,7 @@ public class GLFW
         System.out.println("GLFW: glfwMakeContextCurrent() calling from thread ID " + currentGLThreadId + ", name: " + Thread.currentThread().getName());
         if (currentGLThreadId != -1 && currentGLThreadId != Thread.currentThread().getId()) {
             System.out.println("GLFW: Current context is set, creating shared context");
-            if (!nativeEglMakeCurrent()) {
+            if (!nativeEglMakeCurrent(window)) {
                 throw new RuntimeException("eglMakeCurrent() failed, check log file for more details");
             }
         } else {
