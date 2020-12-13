@@ -935,7 +935,8 @@ public class GLFW
 	}
 
 	public static void glfwMakeContextCurrent(long window) {
-        long currentGLThreadId = Long.parseLong(System.getProperty("glfwstub.internal.glthreadid", "-1"));
+        long currentGLThreadId = Thread.currentThread().getId();
+        // Long.parseLong(System.getProperty("glfwstub.internal.glthreadid", "-1"));
         System.out.println("GLFW: glfwMakeContextCurrent() calling from thread ID " + currentGLThreadId + ", name: " + Thread.currentThread().getName());
         if (currentGLThreadId != -1 && currentGLThreadId != Thread.currentThread().getId()) {
             System.out.println("GLFW: Current context is set, creating shared context");
