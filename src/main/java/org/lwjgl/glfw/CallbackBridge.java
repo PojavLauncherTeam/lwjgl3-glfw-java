@@ -45,11 +45,11 @@ public class CallbackBridge {
 */
     }
     
-    public static void sendGrabbing(boolean grab) {
+    public static void sendGrabbing(boolean grab, int xset, int yset) {
         // sendData(ANDROID_TYPE_GRAB_STATE, Boolean.toString(grab));
         
         GLFW.mGLFWIsGrabbing = grab;
-        nativeSetGrabbing(grab);
+        nativeSetGrabbing(grab, xset, yset);
     }
     
 	// Called from Android side
@@ -77,6 +77,6 @@ public class CallbackBridge {
     public static native boolean nativeSetInputReady(boolean ready);
     public static native String nativeClipboard(int action, String copy);
     
-    private static native void nativeSetGrabbing(boolean grab);
+    private static native void nativeSetGrabbing(boolean grab, int xset, int yset);
 }
 

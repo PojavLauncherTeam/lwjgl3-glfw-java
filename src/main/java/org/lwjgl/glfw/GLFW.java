@@ -1154,9 +1154,9 @@ public class GLFW
         if (mode == GLFW_CURSOR) {
             switch (value) {
                 case GLFW_CURSOR_DISABLED:
-                    CallbackBridge.sendGrabbing(true);
+                    CallbackBridge.sendGrabbing(true, (int) mGLFWCursorX, (int) mGLFWCursorY);
                     break;
-                default: CallbackBridge.sendGrabbing(false);
+                default: CallbackBridge.sendGrabbing(false, (int) mGLFWCursorX, (int) mGLFWCursorY);
             }
         }
         
@@ -1192,6 +1192,8 @@ public class GLFW
     public static void glfwSetCursorPos(@NativeType("GLFWwindow *") long window, double xpos, double ypos) {
         mGLFWCursorX = mGLFWCursorLastX = xpos;
         mGLFWCursorY = mGLFWCursorLastY = ypos;
+        
+        CallbackBridge.sendGrabbing(mGLFWIsGrabbing, (int) xpos, (int) ypos);
     }
 	
     public static long glfwCreateCursor(@NativeType("const GLFWimage *") GLFWImage image, int xhot, int yhot) {
