@@ -1,3 +1,5 @@
+**Warning**: this repository is outdated, the latest source code is currently available at [PojavLauncher repo, jre_lwjgl3glfw directory](https://github.com/PojavLauncherTeam/PojavLauncher/tree/v3_openjdk/jre_lwjgl3glfw).
+
 # lwjgl3-glfw-java
 LWJGL3 GLFW stub java code for Android
 
